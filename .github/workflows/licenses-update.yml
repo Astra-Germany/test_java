@@ -29,9 +29,6 @@ jobs:
         with:
           gradle-version: 7.6
 
-      # - name: Make gradlew executable
-      #   run: chmod +x ./gradlew
-
       - name: Run Gradle Command
         run: gradle wrapper && ./gradlew clean generateLicenseReport
 
@@ -50,7 +47,7 @@ jobs:
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
 
       - name: Create Pull Request
-        # if: env.CHANGES_DETECTED == 'true'
+        if: env.CHANGES_DETECTED == 'true'
         uses: peter-evans/create-pull-request@v6.0.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
