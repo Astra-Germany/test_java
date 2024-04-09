@@ -29,6 +29,9 @@ jobs:
         with:
           gradle-version: 7.6
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Run Gradle Command
         run: ./gradlew clean generateLicenseReport
 
