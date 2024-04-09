@@ -31,45 +31,52 @@ jobs:
         run: ./gradlew clean createExe
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
-      - name: Rename Stirling-PDF.exe
+
+      - name: Rename binarie
         if: matrix.file_suffix != ''
         run: mv ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
 
       - name: Upload Assets
-        id: artifact-upload-binaries-step
         uses: actions/upload-artifact@v4
         with:
           path: ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
           overwrite: true
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: error
-      - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-id }}"
-      - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-url }}"
-      - run: ls -R
-      - name: 📤 Upload zip to release
+      - name: Upload binaries to release
         uses: softprops/action-gh-release@v2
         with:
           files: ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
 
-      # - name: Create binaries
-      #   id: artifact-upload-binaries-step
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     path: ./build/launch4j/Stirling-PDF.exe
-      #     name: Stirling-PDF${{ matrix.file_suffix }}.exe
-      #     overwrite: true
-      #     if-no-files-found: error
-      # - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-id }}"
-      # - name: Upload binaries to release
-      #   uses: shogo82148/actions-upload-release-asset@v1
-      #   with:
-      #     upload_url: ${{ steps.artifact-upload-binaries-step.outputs.artifact-url }}
-      #     asset_path: Stirling-PDF.exe
-      #     overwrite: true
+      - name: Get version number
+        id: versionNumber
+        run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
-      # - name: Get version number
-      #   id: versionNumber
-      #   run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
+      - name: Rename jar binaries
+        if: matrix.file_suffix != ''
+        run: mv ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+
+      - name: Upload Assets jar binaries
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+          overwrite: true
+          retention-days: 1
+          if-no-files-found: error
+      - name: Upload jar binaries to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+
+
+      - name: Upload jar binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar
+          asset_name: Stirling-PDF${{ matrix.file_suffix }}.jar
+          tag: ${{ github.ref }}
+          overwrite: true
 
       # - name: Create jar binaries to release
       #   id: artifact-upload-jar-step
