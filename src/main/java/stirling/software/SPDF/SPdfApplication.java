@@ -21,7 +21,6 @@ import io.github.pixee.security.SystemCommand;
 import jakarta.annotation.PostConstruct;
 import stirling.software.SPDF.config.ConfigInitializer;
 import stirling.software.SPDF.model.ApplicationProperties;
-import stirling.software.SPDF.utils.H2Migration;
 
 @SpringBootApplication
 @EnableScheduling
@@ -46,13 +45,6 @@ public class SPdfApplication {
         // Hier könnten Sie Ihre Datenbankmigration einfügen
         try {
             logger.info("Beginne mit der Datenbankmigration...");
-            // Rufen Sie hier Ihre Migrationsmethode auf, z.B.:
-            H2Migration.migrateDatabase(
-                    "jdbc:h2:~/configs/stirling-pdf-DB",
-                    "sa",
-                    "",
-                    "jdbc:h2:~/configs/stirling-pdf-DB",
-                    "configs/backup.sql");
             logger.info("Datenbankmigration erfolgreich abgeschlossen.");
         } catch (Exception e) {
             logger.error("Fehler bei der Datenbankmigration: {}", e.getMessage());
