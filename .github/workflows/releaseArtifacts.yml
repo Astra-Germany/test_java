@@ -36,7 +36,7 @@ jobs:
         if: matrix.file_suffix != ''
         run: mv ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
 
-      - name: Upload Assets
+      - name: Upload Assets binarie
         uses: actions/upload-artifact@v4
         with:
           path: ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
@@ -63,10 +63,6 @@ jobs:
           overwrite: true
           retention-days: 1
           if-no-files-found: error
-      - name: Upload jar binaries to release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
 
       - name: Upload jar binaries to release
         uses: softprops/action-gh-release@v2
