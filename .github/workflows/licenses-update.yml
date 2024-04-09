@@ -30,7 +30,7 @@ jobs:
           gradle-version: 7.6
 
       - name: Run Gradle Command
-        run: gradle wrapper && ./gradlew clean generateLicenseReport
+        run: ./gradlew clean generateLicenseReport
 
       - name: Move and Rename License File
         run: |
