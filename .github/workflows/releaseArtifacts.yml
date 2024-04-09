@@ -27,6 +27,14 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
+      - run: echo "REPLACE ME!" > assets.txt
+
+      - name: Create a Release
+        id: create_release
+        uses: shogo82148/actions-create-release@v1
+
+      - run: echo "${{ steps.create_release.outputs.upload_url }}"
+
       - name: Generate jar (With Security=${{ matrix.enable_security }})
         run: ./gradlew clean createExe
         env:
