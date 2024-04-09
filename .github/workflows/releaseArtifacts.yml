@@ -32,6 +32,7 @@ jobs:
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
       - name: Rename Stirling-PDF.exe
+        if: matrix.file_suffix != ''
         run: mv ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
 
       - name: Upload Assets
