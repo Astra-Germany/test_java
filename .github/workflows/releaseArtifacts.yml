@@ -43,37 +43,37 @@ jobs:
           asset_name: Stirling-PDF${{ matrix.file_suffix }}.exe
 
 
-      - name: Create binaries
-        id: artifact-upload-binaries-step
-        uses: actions/upload-artifact@v4
-        with:
-          path: ./build/launch4j/Stirling-PDF.exe
-          name: Stirling-PDF${{ matrix.file_suffix }}.exe
-          overwrite: true
-          if-no-files-found: error
-      - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-id }}"
-      - name: Upload binaries to release
-        uses: shogo82148/actions-upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.artifact-upload-binaries-step.outputs.artifact-url }}
-          asset_path: Stirling-PDF.exe
-          overwrite: true
+      # - name: Create binaries
+      #   id: artifact-upload-binaries-step
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     path: ./build/launch4j/Stirling-PDF.exe
+      #     name: Stirling-PDF${{ matrix.file_suffix }}.exe
+      #     overwrite: true
+      #     if-no-files-found: error
+      # - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-id }}"
+      # - name: Upload binaries to release
+      #   uses: shogo82148/actions-upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.artifact-upload-binaries-step.outputs.artifact-url }}
+      #     asset_path: Stirling-PDF.exe
+      #     overwrite: true
 
-      - name: Get version number
-        id: versionNumber
-        run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
+      # - name: Get version number
+      #   id: versionNumber
+      #   run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
-      - name: Create jar binaries to release
-        id: artifact-upload-jar-step
-        uses: actions/upload-artifact@v4
-        with:
-          path: ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar
-          name: Stirling-PDF${{ matrix.file_suffix }}.jar
-          overwrite: true
-          if-no-files-found: error
-      - name: Upload binaries to release
-        uses: shogo82148/actions-upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.artifact-upload-jar-step.outputs.artifact-url }}
-          asset_path: Stirling-PDF${{ matrix.file_suffix }}.jar
-          overwrite: true
+      # - name: Create jar binaries to release
+      #   id: artifact-upload-jar-step
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     path: ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar
+      #     name: Stirling-PDF${{ matrix.file_suffix }}.jar
+      #     overwrite: true
+      #     if-no-files-found: error
+      # - name: Upload binaries to release
+      #   uses: shogo82148/actions-upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.artifact-upload-jar-step.outputs.artifact-url }}
+      #     asset_path: Stirling-PDF${{ matrix.file_suffix }}.jar
+      #     overwrite: true
