@@ -1,0 +1,52 @@
+name: Release Artifacts
+
+on:
+  release:
+    types: [created]
+permissions:
+  contents: write
+  packages: write
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        enable_security: [true, false]
+        include:
+          - enable_security: true
+            file_suffix: "-with-login"
+          - enable_security: false
+            file_suffix: ""
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Generate jar (With Security=${{ matrix.enable_security }})
+        run: ./gradlew clean createExe
+        env:
+          DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
+
+      - name: Upload binaries to release
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./build/launch4j/Stirling-PDF.exe
+          name: Stirling-PDF${{ matrix.file_suffix }}.exe
+          overwrite: true
+          if-no-files-found: error
+
+      - name: Get version number
+        id: versionNumber
+        run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
+
+      - name: Upload jar binaries to release
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar
+          name: Stirling-PDF${{ matrix.file_suffix }}.jar
+          overwrite: true
+          if-no-files-found: error
