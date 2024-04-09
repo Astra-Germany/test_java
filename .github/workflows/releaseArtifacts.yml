@@ -46,7 +46,7 @@ jobs:
       - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-url }}"
       - run: ls -R
       - name: 📤 Upload zip to release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2
         with:
           files: ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
 
