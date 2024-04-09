@@ -34,13 +34,15 @@ jobs:
 
       - name: Create a Release
         id: create_release
-        uses: shogo82148/actions-create-release@v1
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./build/launch4j/Stirling-PDF.exe
+          allowUpdates: true
       - name: Upload Assets
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/launch4j/Stirling-PDF.exe
-          asset_name: Stirling-PDF${{ matrix.file_suffix }}.exe
+          asset_path: Stirling-PDF${{ matrix.file_suffix }}.exe
           overwrite: true
 
 
