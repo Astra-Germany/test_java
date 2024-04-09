@@ -31,18 +31,17 @@ jobs:
         run: ./gradlew clean createExe
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
-
+      - name: Create a Release
+        id: create_release
+        uses: shogo82148/actions-create-release@v1
       - name: Upload Assets
         id: artifact-upload-binaries-step
-        uses: actions/upload-artifact@v4
+        uses: shogo82148/actions-upload-release-asset@v1
         with:
-          name: my-artifact${{ matrix.file_suffix }}
-          path: ./build/launch4j/Stirling-PDF.exe
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_name: my-artifact${{ matrix.file_suffix }}
+          asset_path: ./build/launch4j/Stirling-PDF.exe
           overwrite: true
-          if-no-files-found: error
-      - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-id }}"
-      - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-url }}"
-      - run: ls -R my-artifact
       - run: ls -R
 
       # - name: Create binaries
