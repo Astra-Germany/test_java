@@ -31,13 +31,14 @@ jobs:
         run: ./gradlew clean createExe
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
+      - name: Rename Stirling-PDF.exe
+        run: mv ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
 
       - name: Upload Assets
         id: artifact-upload-binaries-step
         uses: actions/upload-artifact@v4
         with:
-          name: my-artifact${{ matrix.file_suffix }}
-          path: ./build/launch4j/Stirling-PDF.exe
+          path: ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
           overwrite: true
           retention-days: 7
           if-no-files-found: error
