@@ -50,7 +50,7 @@ jobs:
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
 
       - name: Create Pull Request
-        if: env.CHANGES_DETECTED == 'true'
+        # if: env.CHANGES_DETECTED == 'true'
         uses: peter-evans/create-pull-request@v6.0.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
