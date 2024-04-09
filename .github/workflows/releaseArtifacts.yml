@@ -27,22 +27,21 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - run: echo "REPLACE ME!" > assets.txt
-
-      - name: Create a Release
-        id: create_release
-        uses: shogo82148/actions-create-release@v1
-      - uses: shogo82148/actions-upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: assets.txt
-
-      - run: echo "${{ steps.create_release.outputs.upload_url }}"
-
       - name: Generate jar (With Security=${{ matrix.enable_security }})
         run: ./gradlew clean createExe
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
+
+      - name: Create a Release
+        id: create_release
+        uses: shogo82148/actions-create-release@v1
+      - name: Upload Assets
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/launch4j/Stirling-PDF.exe
+          asset_name: Stirling-PDF${{ matrix.file_suffix }}.exe
+
 
       - name: Create binaries
         id: artifact-upload-binaries-step
