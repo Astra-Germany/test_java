@@ -32,18 +32,16 @@ jobs:
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
 
-      - name: Create a Release
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: ./build/launch4j/Stirling-PDF.exe
       - name: Upload Assets
-        uses: shogo82148/actions-upload-release-asset@v1
+        id: artifact-upload-binaries-step
+        uses: actions/upload-artifact@v4
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_name: Stirling-PDF${{ matrix.file_suffix }}.exe
+          name: my-artifact${{ matrix.file_suffix }}
+          path: Stirling-PDF${{ matrix.file_suffix }}.exe
           overwrite: true
-
+          if-no-files-found: error
+      - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-id }}"
+      - run: echo "${{ steps.artifact-upload-binaries-step.outputs.artifact-url }}"
 
       # - name: Create binaries
       #   id: artifact-upload-binaries-step
