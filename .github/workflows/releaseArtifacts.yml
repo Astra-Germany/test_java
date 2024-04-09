@@ -41,6 +41,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./build/launch4j/Stirling-PDF.exe
           asset_name: Stirling-PDF${{ matrix.file_suffix }}.exe
+          overwrite: true
 
 
       # - name: Create binaries
