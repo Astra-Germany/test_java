@@ -36,7 +36,7 @@ jobs:
         id: artifact-upload-binaries-step
         uses: actions/upload-artifact@v4
         with:
-          path: ./build/libs/Stirling-PDF.exe
+          path: ./build/launch4j/Stirling-PDF.exe
           name: Stirling-PDF${{ matrix.file_suffix }}.jar
           overwrite: true
           if-no-files-found: error
