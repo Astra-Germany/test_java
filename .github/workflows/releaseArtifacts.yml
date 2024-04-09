@@ -32,13 +32,10 @@ jobs:
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
 
-      - name: Upload binaries to release
-        uses: actions/upload-artifact@v4
+      - run: zip -r Stirling-PDF${{ matrix.file_suffix }}.exe ./build/launch4j/Stirling-PDF.exe
+      - uses: ncipollo/release-action@v1
         with:
-          path: ./build/launch4j/Stirling-PDF.exe
-          name: Stirling-PDF${{ matrix.file_suffix }}.exe
-          overwrite: true
-          if-no-files-found: error
+          artifacts: Stirling-PDF${{ matrix.file_suffix }}.exe
 
       - name: Get version number
         id: versionNumber
