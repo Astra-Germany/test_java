@@ -33,7 +33,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run Gradle Command
-        run: ./gradlew clean generateLicenseReport
+        run: gradle wrapper && ./gradlew clean generateLicenseReport
 
       - name: Move and Rename License File
         run: |
