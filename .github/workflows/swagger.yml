@@ -18,6 +18,8 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
+      - uses: gradle/actions/setup-gradle@v3
+
       - name: Generate Swagger documentation
         run: ./gradlew generateOpenApiDocs
 
