@@ -29,18 +29,28 @@ jobs:
           gradle-version: 7.6
           arguments: clean build
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Get version number
         id: versionNumber
         run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v2.1.0
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_API }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2.1.0
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -48,11 +58,11 @@ jobs:
 
       - name: Convert repository owner to lowercase
         id: repoowner
-        run: echo "::set-output name=lowercase::$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')"
+        run: echo "name=lowercase::$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
 
       - name: Generate tags
         id: meta
-        uses: docker/metadata-action@v4.4.0
+        uses: docker/metadata-action@v5
         with:
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
@@ -63,13 +73,13 @@ jobs:
             type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2.1.0
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2.5.0
+        uses: docker/setup-buildx-action@v3
 
       - name: Build and push main Dockerfile
-        uses: docker/build-push-action@v4.0.0
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
@@ -83,7 +93,7 @@ jobs:
 
       - name: Generate tags ultra-lite
         id: meta2
-        uses: docker/metadata-action@v4.4.0
+        uses: docker/metadata-action@v5
         if: github.ref != 'refs/heads/main'
         with:
           images: |
@@ -94,7 +104,7 @@ jobs:
             type=raw,value=latest-ultra-lite,enable=${{ github.ref == 'refs/heads/master' }}
 
       - name: Build and push Dockerfile-ultra-lite
-        uses: docker/build-push-action@v4.0.0
+        uses: docker/build-push-action@v5
         if: github.ref != 'refs/heads/main'
         with:
           context: .
@@ -108,7 +118,7 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8
       - name: Generate tags lite
         id: meta3
-        uses: docker/metadata-action@v4.4.0
+        uses: docker/metadata-action@v5
         if: github.ref != 'refs/heads/main'
         with:
           images: |
@@ -117,10 +127,9 @@ jobs:
           tags: |
             type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-lite,enable=${{ github.ref == 'refs/heads/master' }}
             type=raw,value=latest-lite,enable=${{ github.ref == 'refs/heads/master' }}
-    
-    
+
       - name: Build and push Dockerfile-lite
-        uses: docker/build-push-action@v4.0.0
+        uses: docker/build-push-action@v5
         if: github.ref != 'refs/heads/main'
         with:
           context: .
@@ -130,6 +139,10 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta3.outputs.tags }}
           labels: ${{ steps.meta3.outputs.labels }}
-          build-args:
-            VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
