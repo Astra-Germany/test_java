@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
       - main
 
 permissions:
@@ -68,8 +67,8 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
             ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
           tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }},enable=${{ github.ref == 'refs/heads/master' }}
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }},enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Set up QEMU
@@ -100,8 +99,8 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
             ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
           tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite,enable=${{ github.ref == 'refs/heads/master' }}
-            type=raw,value=latest-ultra-lite,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest-ultra-lite,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and push Dockerfile-ultra-lite
         uses: docker/build-push-action@v5
@@ -125,8 +124,8 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
             ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
           tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-lite,enable=${{ github.ref == 'refs/heads/master' }}
-            type=raw,value=latest-lite,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-lite,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest-lite,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and push Dockerfile-lite
         uses: docker/build-push-action@v5
