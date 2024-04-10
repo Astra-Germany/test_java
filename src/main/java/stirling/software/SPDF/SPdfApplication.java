@@ -42,13 +42,6 @@ public class SPdfApplication {
 
     @PostConstruct
     public void init() {
-        // Hier könnten Sie Ihre Datenbankmigration einfügen
-        try {
-            logger.info("Beginne mit der Datenbankmigration...");
-            logger.info("Datenbankmigration erfolgreich abgeschlossen.");
-        } catch (Exception e) {
-            logger.error("Fehler bei der Datenbankmigration: {}", e.getMessage());
-        }
         // Check if the BROWSER_OPEN environment variable is set to true
         String browserOpenEnv = env.getProperty("BROWSER_OPEN");
         boolean browserOpen = browserOpenEnv != null && "true".equalsIgnoreCase(browserOpenEnv);
