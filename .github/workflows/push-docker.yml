@@ -57,7 +57,7 @@ jobs:
 
       - name: Convert repository owner to lowercase
         id: repoowner
-        run: echo "name=lowercase::$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
+        run: echo "lowercase=$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
 
       - name: Generate tags
         id: meta
