@@ -180,7 +180,7 @@ task writeVersion {
 swaggerhubUpload {
     //dependsOn generateOpenApiDocs  // Depends on your task generating Swagger docs
     api 'Stirling-PDF'  // The name of your API on SwaggerHub
-    owner 'Frooodle'  // Your SwaggerHub username (or organization name)
+    owner 'Ludy87'  // Your SwaggerHub username (or organization name)
     version project.version  // The version of your API
     inputFile './SwaggerDoc.json'  // The path to your Swagger docs
     token  "${System.getenv('SWAGGERHUB_API_KEY')}"  // Your SwaggerHub API key, passed as an environment variable
