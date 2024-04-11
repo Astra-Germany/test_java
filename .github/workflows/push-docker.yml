@@ -29,7 +29,11 @@ jobs:
           arguments: clean build
 
       - name: Set up Docker Buildx
+        id: buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
       - name: Cache Docker layers
         uses: actions/cache@v4
         with:
@@ -76,17 +80,15 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build and push main Dockerfile
         uses: docker/build-push-action@v5
         with:
+          builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: ./Dockerfile
           push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,src=/tmp/.buildx-cache
+          cache-to: type=gha,mode=max,dest=/tmp/.buildx-cache-new
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
@@ -111,8 +113,8 @@ jobs:
           context: .
           file: ./Dockerfile-ultra-lite
           push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,src=/tmp/.buildx-cache
+          cache-to: type=gha,mode=max,dest=/tmp/.buildx-cache-new
           tags: ${{ steps.meta2.outputs.tags }}
           labels: ${{ steps.meta2.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
@@ -136,9 +138,14 @@ jobs:
           context: .
           file: ./Dockerfile-lite
           push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,src=/tmp/.buildx-cache
+          cache-to: type=gha,mode=max,dest=/tmp/.buildx-cache-new
           tags: ${{ steps.meta3.outputs.tags }}
           labels: ${{ steps.meta3.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
