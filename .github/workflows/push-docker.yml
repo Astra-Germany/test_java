@@ -149,3 +149,13 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      
+      - name: Delete all containers from package without tags
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v3
+        with:
+            token: ${{ github.token }}
+            repository_owner: ${{ github.repository_owner }}
+            repository: ${{ github.repository }}
+            untagged_only: true
+            owner_type: user # or org
+            except_untagged_multiplatform: true
