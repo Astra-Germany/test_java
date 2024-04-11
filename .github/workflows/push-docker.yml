@@ -67,7 +67,7 @@ jobs:
         with:
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+            ghcr.io/${{ github.repository_owner }}/s-pdf
           tags: |
             type=raw,value=${{ steps.versionNumber.outputs.versionNumber }},enable=${{ github.ref == 'refs/heads/main' }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
