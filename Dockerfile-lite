@@ -27,18 +27,15 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
     apk add --no-cache \
-        musl-dev \
-        libffi-dev \
-        build-base \
         ca-certificates \
         tzdata \
         tini \
         bash \
         curl \
         gcc \
+        libffi-dev \
         openjdk17-jre \
         su-exec \
-        font-noto-cjk \
         shadow \
 # Doc conversion
         libreoffice@testing \
