@@ -68,8 +68,6 @@ jobs:
           result-encoding: string
           script: return 'ghcr.io/${{ github.repository_owner }}/s-pdf'.toLowerCase()
 
-      - run: "Result ${{ steps.repo_slug.outputs.result }}"
-
       - name: Generate tags
         id: meta
         uses: docker/metadata-action@v5
