@@ -28,7 +28,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
     apk add --no-cache \
         musl \
-        libffi \
+        libffi-dev \
         build-base \
         ca-certificates \
         tzdata \
