@@ -17,7 +17,7 @@ function compareVersions(version1, version2) {
 }
 
 async function getLatestReleaseVersion() {
-  const url = "https://api.github.com/repos/Stirling-Tools/Stirling-PDF/releases/latest";
+  const url = "https://api.github.com/repos/Ludy87/Stirling-PDF/releases/latest";
   try {
     const response = await fetch(url);
     const data = await response.json();
