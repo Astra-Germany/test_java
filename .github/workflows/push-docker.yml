@@ -92,6 +92,8 @@ jobs:
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
 
+      - run: "echo ${{github.ref}}"
+
       - name: Generate tags ultra-lite
         id: meta2
         uses: docker/metadata-action@v5
@@ -142,8 +144,3 @@ jobs:
           labels: ${{ steps.meta3.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
-
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
