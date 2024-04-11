@@ -33,7 +33,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         bash \
         curl \
         gcc \
+        musl-dev \
         libffi-dev \
+        # build-base \
         openjdk17-jre \
         su-exec \
         shadow \
