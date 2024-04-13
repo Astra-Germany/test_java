@@ -1,5 +1,5 @@
 # Main stage
-FROM alpine:20240329
+FROM alpine:3.19.1
 
 # Copy necessary files
 COPY scripts /scripts
@@ -38,6 +38,8 @@ RUN apk add --no-cache openjdk17-jre
 RUN apk add --no-cache su-exec
 RUN apk add --no-cache font-noto-cjk
 RUN apk add --no-cache shadow
+# Doc conversion
+RUN apk update && apk add --no-cache libreoffice@testing
 # pdftohtml
 RUN apk add --no-cache poppler-utils
 # OCR MY PDF (unpaper for descew and other advanced featues)
@@ -46,7 +48,7 @@ RUN apk add --no-cache tesseract-ocr-data-eng
 # CV
 RUN apk add --no-cache py3-opencv
 # python3/pip
-RUN apk add --no-cache python3~=3.11 && \
+RUN apk add --no-cache python3 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
@@ -60,8 +62,6 @@ RUN apk add --no-cache python3~=3.11 && \
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
-# Doc conversion
-RUN apk update && apk add --no-cache libreoffice@testing
 
 EXPOSE 8080
 
