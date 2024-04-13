@@ -89,6 +89,20 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
+          file: ./Dockerfile.alpine
+          push: true
+          cache-from: type=gha,src=/tmp/.buildx-cache
+          cache-to: type=gha,mode=max,dest=/tmp/.buildx-cache-new
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+          platforms: linux/amd64,linux/arm64/v8
+
+      - name: Build and push main Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
           file: ./Dockerfile
           push: true
           cache-from: type=gha,src=/tmp/.buildx-cache
