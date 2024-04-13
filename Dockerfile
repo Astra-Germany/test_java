@@ -32,14 +32,14 @@ RUN apk add --no-cache tini
 RUN apk add --no-cache bash
 RUN apk add --no-cache curl
 RUN apk add --no-cache gcc
-RUN apk add --no-cache musl-dev
-RUN apk add --no-cache libffi-dev
+RUN apk add --no-cache musl
+RUN apk add --no-cache libffi
 RUN apk add --no-cache openjdk17-jre
 RUN apk add --no-cache su-exec
 RUN apk add --no-cache font-noto-cjk
 RUN apk add --no-cache shadow
 # Doc conversion
-RUN apk add --no-cache libreoffice
+RUN apk add --no-cache --verbose libreoffice@testing
 # pdftohtml
 RUN apk add --no-cache poppler-utils
 # OCR MY PDF (unpaper for descew and other advanced featues)
