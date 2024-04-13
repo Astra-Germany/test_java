@@ -26,18 +26,17 @@ RUN apk update && apk upgrade
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
-RUN apk add --no-cache tar \
-        ca-certificates \
-        tzdata \
-        tini \
-        bash \
-        curl \
-        gcc \
-        musl-dev \
-        libffi-dev \
-        openjdk17-jre \
-        su-exec \
-        font-noto-cjk \
+RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache tzdata 
+RUN apk add --no-cache tini
+RUN apk add --no-cache bash
+RUN apk add --no-cache curl
+RUN apk add --no-cache gcc
+RUN apk add --no-cache musl-dev
+RUN apk add --no-cache libffi-dev
+RUN apk add --no-cache openjdk17-jre
+RUN apk add --no-cache su-exec
+RUN apk add --no-cache font-noto-cjk \
         shadow \
 # Doc conversion
         libreoffice@testing \
