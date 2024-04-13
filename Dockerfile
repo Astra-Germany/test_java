@@ -38,8 +38,6 @@ RUN apk add --no-cache openjdk17-jre
 RUN apk add --no-cache su-exec
 RUN apk add --no-cache font-noto-cjk
 RUN apk add --no-cache shadow
-# Doc conversion
-RUN apk update && apk add --no-cache libreoffice@testing
 # pdftohtml
 RUN apk add --no-cache poppler-utils
 # OCR MY PDF (unpaper for descew and other advanced featues)
@@ -62,6 +60,8 @@ RUN apk add --no-cache python3~=3.11 && \
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
+# Doc conversion
+RUN apk update && apk add --no-cache libreoffice@testing
 
 EXPOSE 8080
 
