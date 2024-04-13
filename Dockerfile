@@ -39,7 +39,7 @@ RUN apk add --no-cache su-exec
 RUN apk add --no-cache font-noto-cjk
 RUN apk add --no-cache shadow
 # Doc conversion
-RUN apk add --no-cache --verbose libreoffice@testing
+RUN apk update && apk add --no-cache libreoffice@testing
 # pdftohtml
 RUN apk add --no-cache poppler-utils
 # OCR MY PDF (unpaper for descew and other advanced featues)
