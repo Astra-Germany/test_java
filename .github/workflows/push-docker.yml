@@ -22,11 +22,15 @@ jobs:
           distribution: "temurin"
 
       - uses: gradle/actions/setup-gradle@v3
+        with:
+          arguments: clean
+
+      - uses: gradle/actions/setup-gradle@v3
         env:
           DOCKER_ENABLE_SECURITY: false
         with:
           gradle-version: 7.6
-          arguments: clean build
+          arguments: build
 
       - name: Set up Docker Buildx
         id: buildx
