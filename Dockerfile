@@ -26,7 +26,7 @@ RUN apk update && apk upgrade
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
-RUN apk add --no-cache \
+RUN apk add --no-cache tar \
         ca-certificates \
         tzdata \
         tini \
