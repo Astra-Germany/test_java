@@ -36,19 +36,19 @@ RUN apk add --no-cache musl-dev
 RUN apk add --no-cache libffi-dev
 RUN apk add --no-cache openjdk17-jre
 RUN apk add --no-cache su-exec
-RUN apk add --no-cache font-noto-cjk \
-        shadow \
+RUN apk add --no-cache font-noto-cjk
+RUN apk add --no-cache shadow
 # Doc conversion
-        libreoffice@testing \
+RUN apk add --no-cache libreoffice@testing
 # pdftohtml
-        poppler-utils \
+RUN apk add --no-cache poppler-utils
 # OCR MY PDF (unpaper for descew and other advanced featues)
-        ocrmypdf \
-        tesseract-ocr-data-eng \
+RUN apk add --no-cache ocrmypdf
+RUN apk add --no-cache tesseract-ocr-data-eng
 # CV
-        py3-opencv \
+RUN apk add --no-cache py3-opencv
 # python3/pip
-        python3 && \
+RUN apk add --no-cache python3 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
