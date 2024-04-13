@@ -23,13 +23,9 @@ ENV DOCKER_ENABLE_SECURITY=false \
 RUN apk update && apk upgrade
 
 # JDK for app
-# RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories
-# RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories
-# RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update && \
-    apk add tzdata \
-    libreoffice
-RUN apt-get -y install libreoffice --no-install-recommends --no-install-suggests
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
 RUN apk add --no-cache ca-certificates
 RUN apk add --no-cache tzdata 
 RUN apk add --no-cache tini
@@ -52,7 +48,7 @@ RUN apk add --no-cache tesseract-ocr-data-eng
 # CV
 RUN apk add --no-cache py3-opencv
 # python3/pip
-RUN apk add --no-cache python3 && \
+RUN apk add --no-cache python3~=3.11 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
