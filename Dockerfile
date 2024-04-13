@@ -23,9 +23,9 @@ ENV DOCKER_ENABLE_SECURITY=false \
 RUN apk update && apk upgrade
 
 # JDK for app
-RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
+RUN apk --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main add && \
+    apk --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/community add && \
+    apk --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing add && \
     apk add --no-cache \
         ca-certificates \
         tzdata \
