@@ -3,12 +3,14 @@ echo "Running Stirling PDF with DOCKER_ENABLE_SECURITY=${DOCKER_ENABLE_SECURITY}
 if [ "$DOCKER_ENABLE_SECURITY" = "true" ] && [ "$VERSION_TAG" != "alpha" ]; then
     if [ ! -f app-security.jar ]; then
     	echo "Trying to download from: https://github.com/Ludy87/test_java/releases/download/v$VERSION_TAG/Stirling-PDF-with-login.jar"
-        curl -L -o app-security.jar https://github.com/Ludy87/test_java/releases/download/v$VERSION_TAG/Stirling-PDF-with-login.jar
+        # curl -L -o app-security.jar https://github.com/Ludy87/test_java/releases/download/v$VERSION_TAG/Stirling-PDF-with-login.jar
+        wget -O app-security.jar https://github.com/Ludy87/test_java/releases/download/v$VERSION_TAG/Stirling-PDF-with-login.jar
 
         # If the first download attempt failed, try with the 'v' prefix
         if [ $? -ne 0 ]; then
             echo "Trying to download from: https://github.com/Ludy87/test_java/releases/download/$VERSION_TAG/Stirling-PDF-with-login.jar"
-        	curl -L -o app-security.jar https://github.com/Ludy87/test_java/releases/download/$VERSION_TAG/Stirling-PDF-with-login.jar
+        	# curl -L -o app-security.jar https://github.com/Ludy87/test_java/releases/download/$VERSION_TAG/Stirling-PDF-with-login.jar
+            wget -O app-security.jar https://github.com/Ludy87/test_java/releases/download/$VERSION_TAG/Stirling-PDF-with-login.jar
         fi
 
         if [ $? -eq 0 ]; then  # checks if curl was successful
