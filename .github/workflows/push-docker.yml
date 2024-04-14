@@ -36,14 +36,6 @@ jobs:
         with:
           install: true
 
-      # - name: Cache Docker layers
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: /tmp/.buildx-cache
-      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-buildx-
-
       - name: Get version number
         id: versionNumber
         run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
@@ -82,9 +74,17 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Inspect
+      - name: Inspect latest
         run: |
-          "echo ${{ steps.meta.outputs.tags }}"
+          docker image inspect s-pdf:latest
+
+      - name: Inspect alpha
+        run: |
+          docker image inspect s-pdf:alpha
+
+      - name: Inspect ${{ steps.versionNumber.outputs.versionNumber }}
+        run: |
+          docker image inspect s-pdf:${{ steps.versionNumber.outputs.versionNumber }}
 
       - name: Build and push main Dockerfile
         uses: docker/build-push-action@v5
