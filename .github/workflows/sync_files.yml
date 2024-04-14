@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
       - name: Sync versions
-        run: python .github/scripts/gradle_to_chart.py
+        run: "python ${{ github.repository }}.github/scripts/gradle_to_chart.py"
       - name: Set up git config
         run: |
           git config --global user.email "GitHub Action <action@github.com>"
