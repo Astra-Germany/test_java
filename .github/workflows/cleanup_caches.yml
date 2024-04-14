@@ -18,7 +18,11 @@ jobs:
           echo "Deleting caches..."
           for cacheKey in $cacheKeysForPR
           do
-              gh actions-cache delete $cacheKey -R $REPO --confirm
+              if [[ "$cacheKey" != *"gradle-7.6"* ]]; then
+                  gh actions-cache delete $cacheKey -R $REPO --confirm
+              else
+                  echo "Skipping cache key: $cacheKey as it contains 'gradle-7.6'"
+              fi
           done
           echo "Done"
         env:
