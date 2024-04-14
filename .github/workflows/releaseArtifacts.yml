@@ -64,6 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+          name: Stirling-PDF${{ matrix.file_suffix }}.jar
           overwrite: true
           retention-days: 1
           if-no-files-found: error
