@@ -146,6 +146,7 @@ public class AccountWebController {
     @GetMapping("/change-creds")
     public String changeCreds(
             HttpServletRequest request, Model model, Authentication authentication) {
+        model.addAttribute("currentPage", "change-creds");
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/";
         }
