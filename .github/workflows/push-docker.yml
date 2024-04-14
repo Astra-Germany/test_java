@@ -82,6 +82,10 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
 
+      - name: Inspect
+        run: |
+          "echo ${{ steps.meta.outputs.tags }}"
+
       - name: Build and push main Dockerfile
         uses: docker/build-push-action@v5
         with:
