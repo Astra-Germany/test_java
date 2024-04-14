@@ -1,5 +1,5 @@
 # Main stage
-FROM alpine:20240329
+FROM alpine:3.19.1
 
 # Copy necessary files
 COPY scripts /scripts
