@@ -10,11 +10,6 @@ if [ ! -z "$PGID" ] && [ "$PGID" != "$(getent group stirlingpdfgroup | cut -d: -
 fi
 umask "$UMASK" || true
 
-
-if [[ "$INSTALL_BOOK_AND_ADVANCED_HTML_OPS" == "true" ]]; then
-  apk add --no-cache calibre@testing
-fi
-
 /scripts/download-security-jar.sh
 
 echo "Setting permissions and ownership for necessary directories..."
