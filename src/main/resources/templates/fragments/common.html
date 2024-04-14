@@ -63,7 +63,7 @@
 
     <script src="js/tab-container.js"></script>
     <script src="js/darkmode.js"></script>
-    <th:block th:if="${currentPage != 'home' and currentPage != 'login'}">
+    <th:block th:if="${currentPage != 'home' and currentPage != 'login' and currentPage != 'change-creds'}">
     <script th:inline="javascript">
       const pdfPasswordPrompt = /*[[#{error.pdfPassword}]]*/ '';
       const multiple = /*[[${multiple}? ${multiple} : false]]*/ '';
