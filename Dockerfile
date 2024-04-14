@@ -28,9 +28,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
 # python3/pip
 RUN apk add --no-cache build-base libffi openssl
-RUN wget https://www.python.org/ftp/python/3.11.x/Python-3.11.x.tgz && \
-    tar -xzf Python-3.11.x.tgz && \
-    cd Python-3.11.x && \
+RUN wget https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz && \
+    tar -xzf Python-3.11.9.tgz && \
+    cd Python-3.11.9 && \
     ./configure --enable-optimizations && \
     make altinstall && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade
