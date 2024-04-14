@@ -76,15 +76,15 @@ jobs:
 
       - name: Inspect latest
         run: |
-          docker image inspect s-pdf:latest
+          docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest
 
       - name: Inspect alpha
         run: |
-          docker image inspect s-pdf:alpha
+          docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:alpha
 
       - name: Inspect ${{ steps.versionNumber.outputs.versionNumber }}
         run: |
-          docker image inspect s-pdf:${{ steps.versionNumber.outputs.versionNumber }}
+          docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ steps.versionNumber.outputs.versionNumber }}
 
       - name: Build and push main Dockerfile
         uses: docker/build-push-action@v5
