@@ -116,12 +116,12 @@ jobs:
 
       - name: Inspect latest
         run: |
-          docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
           docker pull ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
+          docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
 
-      - name: Inspect ${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite
-        run: |
-          docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite
+      # - name: Inspect ${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite
+      #   run: |
+      #     docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite
 
       # - name: Generate tags lite
       #   id: meta3
