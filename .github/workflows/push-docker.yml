@@ -36,13 +36,13 @@ jobs:
         with:
           install: true
 
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      # - name: Cache Docker layers
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
 
       - name: Get version number
         id: versionNumber
@@ -89,8 +89,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          cache-from: type=gha,src=/tmp/.buildx-cache
-          cache-to: type=gha,mode=max,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
@@ -115,8 +115,8 @@ jobs:
           context: .
           file: ./Dockerfile-ultra-lite
           push: true
-          cache-from: type=gha,src=/tmp/.buildx-cache
-          cache-to: type=gha,mode=max,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ steps.meta2.outputs.tags }}
           labels: ${{ steps.meta2.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
@@ -141,8 +141,8 @@ jobs:
           context: .
           file: ./Dockerfile-lite
           push: true
-          cache-from: type=gha,src=/tmp/.buildx-cache
-          cache-to: type=gha,mode=max,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ steps.meta3.outputs.tags }}
           labels: ${{ steps.meta3.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
