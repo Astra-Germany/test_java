@@ -12,17 +12,14 @@ ENV DOCKER_ENABLE_SECURITY=false \
     PGID=1000 \
     UMASK=022
 
-RUN mkdir -p /usr/share/fonts/opentype/noto
-
 # Copy necessary files
 COPY scripts/download-security-jar.sh /scripts/download-security-jar.sh
-COPY scripts/init-without-ocr.sh /scripts/init-without-ocr.sh
+COPY scripts/init-without-ocr-ultra-lite.sh /scripts/init-without-ocr-ultra-lite.sh
 COPY pipeline /pipeline
 COPY build/libs/*.jar app.jar
 
 
 # Set up necessary directories and permissions
-
 RUN mkdir /configs /logs /customFiles && \
     chmod +x /scripts/*.sh && \
     apk add --no-cache \
