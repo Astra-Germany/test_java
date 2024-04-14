@@ -37,4 +37,6 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 7.6
-          arguments: build --no-build-cache
+
+      - name: Build with Gradle
+        run: ./gradlew build --no-build-cache
