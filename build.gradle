@@ -72,7 +72,7 @@ spotless {
     java {
         target project.fileTree('src/main/java')
 
-        googleJavaFormat('1.19.1').aosp().reorderImports(false)
+        googleJavaFormat('1.22.0').aosp().reorderImports(false)
 
         importOrder('java', 'javax', 'org', 'com', 'net', 'io')
         toggleOffOn()
