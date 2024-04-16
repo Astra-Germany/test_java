@@ -62,31 +62,31 @@ jobs:
         id: repoowner
         run: echo "lowercase=$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
 
-      # - name: Generate tags
-      #   id: meta
-      #   uses: docker/metadata-action@v5
-      #   with:
-      #     images: |
-      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-      #     tags: |
-      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }},enable=${{ github.ref == 'refs/heads/main' }}
-      #       type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-      #       type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
+      - name: Generate tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
+            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+          tags: |
+            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }},enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
 
-      # - name: Build and push main Dockerfile
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./Dockerfile
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta.outputs.tags }}
-      #     labels: ${{ steps.meta.outputs.labels }}
-      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-      #     platforms: linux/amd64,linux/arm64/v8
+      - name: Build and push main Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./Dockerfile
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+          platforms: linux/amd64,linux/arm64/v8
 
       - name: Generate tags ultra-lite
         id: meta2
