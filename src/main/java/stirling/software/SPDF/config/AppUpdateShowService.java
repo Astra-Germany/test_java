@@ -1,4 +1,4 @@
-package stirling.software.SPDF.config.security;
+package stirling.software.SPDF.config;
 
 import java.util.Optional;
 
