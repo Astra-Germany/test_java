@@ -20,35 +20,35 @@ ENV DOCKER_ENABLE_SECURITY=false \
     PGID=1000 \
     UMASK=022
 
-RUN apk update && apk upgrade
 
 # JDK for app
-RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories
-RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories
-RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
-RUN apk add --no-cache ca-certificates
-RUN apk add --no-cache tzdata 
-RUN apk add --no-cache tini
-RUN apk add --no-cache bash
-RUN apk add --no-cache curl
-RUN apk add --no-cache gcc
-RUN apk add --no-cache musl
-RUN apk add --no-cache libffi
-RUN apk add --no-cache openjdk17-jre
-RUN apk add --no-cache su-exec
-RUN apk add --no-cache font-noto-cjk
-RUN apk add --no-cache shadow
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
+    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
+    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
+    apk add --no-cache \
+        ca-certificates \
+        tzdata \
+        tini \
+        bash \
+        curl \
+        gcc \
+        musl \
+        libffi \
+        openjdk17-jre \
+        su-exec \
+        font-noto-cjk \
+        shadow \
 # Doc conversion
-RUN apk update && apk add --no-cache libreoffice@testing
+        libreoffice@testing \
 # pdftohtml
-RUN apk add --no-cache poppler-utils
+        poppler-utils \
 # OCR MY PDF (unpaper for descew and other advanced featues)
-RUN apk add --no-cache ocrmypdf
-RUN apk add --no-cache tesseract-ocr-data-eng
+        ocrmypdf \
+        tesseract-ocr-data-eng \
 # CV
-RUN apk add --no-cache py3-opencv
+        py3-opencv \
 # python3/pip
-RUN apk add --no-cache python3 && \
+        python3 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
