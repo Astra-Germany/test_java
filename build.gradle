@@ -10,13 +10,9 @@ plugins {
 }
 
 import com.github.jk1.license.render.*
-import java.text.SimpleDateFormat
-
-def dateFormat = new SimpleDateFormat("yyyyMMddHHmmss")
-def timestamp = dateFormat.format(new Date())
 
 group = 'stirling.software'
-version = "0.22.8-${timestamp}"
+version = "0.22.8"
 sourceCompatibility = '17'
 
 repositories {
