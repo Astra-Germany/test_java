@@ -45,7 +45,7 @@ class AppUpdateService {
         boolean showUpdateOnlyAdmin = applicationProperties.getSystem().getShowUpdateOnlyAdmin();
         Object authentication = getAuthentication();
 
-        if (userRepository == null || authentication == null || !authentication.isAuthenticated()) {
+        if (userRepository == null || authentication == null || !isAuthenticated(authentication)) {
             return showUpdate && !showUpdateOnlyAdmin;
         }
 
