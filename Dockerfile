@@ -1,5 +1,5 @@
 # Main stage
-FROM alpine:3.19.1
+FROM alpine:20240329
 
 # Copy necessary files
 COPY scripts /scripts
@@ -31,9 +31,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         tini \
         bash \
         curl \
-        gcc \
-        musl \
-        libffi \
+        # gcc \
+        # musl \
+        # libffi \
         openjdk17-jre \
         su-exec \
         font-noto-cjk \
