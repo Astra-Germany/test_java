@@ -34,7 +34,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         # gcc \
         # musl \
         # libffi \
-        pip \
+        py3-pip \
         openjdk17-jre \
         su-exec \
         font-noto-cjk \
@@ -50,7 +50,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 && \
-    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
+    # wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
