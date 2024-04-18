@@ -34,6 +34,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         # gcc \
         # musl \
         # libffi \
+        pip \
         openjdk17-jre \
         su-exec \
         font-noto-cjk \
