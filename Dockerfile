@@ -45,7 +45,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # CV
         py3-opencv \
 # python3/pip
-        python3 && \
+        python3=3.11.8-r0 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
@@ -65,4 +65,3 @@ EXPOSE 8080
 # Set user and run command
 ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
 CMD ["java", "-Dfile.encoding=UTF-8", "-jar", "/app.jar"]
- 
