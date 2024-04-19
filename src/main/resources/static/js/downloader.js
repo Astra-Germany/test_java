@@ -8,8 +8,20 @@ function showErrorBanner(message, stackTrace) {
 let firstErrorOccurred = false;
 
 $(document).ready(function () {
+  window.downloadBtnClcik = false;
+  const downloadBtn = document.getElementById('downloadBtn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', function() {
+      window.downloadBtnClcik = true;
+    });
+  }
   $("form").submit(async function (event) {
     event.preventDefault();
+
+    console.log(window.downloadBtnClcik);
+    if (window.downloadBtnClcik === false) {
+      return;
+    }
     firstErrorOccurred = false;
     const url = this.action;
     const files = $("#fileInput-input")[0].files;
@@ -22,9 +34,6 @@ $(document).ready(function () {
       }
     }
     const override = $("#override").val() || "";
-    if (override == "") {
-      return;
-    }
     const originalButtonText = $("#submitBtn").text();
     $("#submitBtn").text("Processing...");
     console.log(override);
