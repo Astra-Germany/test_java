@@ -31,9 +31,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         tini \
         bash \
         curl \
-        # gcc \
-        # musl \
-        # libffi \
+        gcc \
+        musl \
+        libffi \
         py3-pip \
         openjdk17-jre \
         su-exec \
