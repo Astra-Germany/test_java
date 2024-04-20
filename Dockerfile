@@ -28,7 +28,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 
 # Install necessary packages
 RUN apk add --no-cache ca-certificates tzdata tini bash curl openjdk17-jre su-exec font-noto-cjk shadow \
-    libreoffice@testing poppler-utils ocrmypdf tesseract-ocr-data-eng py3-opencv python3 libffi-dev py3-pip
+    libreoffice@testing poppler-utils ocrmypdf tesseract-ocr-data-eng py3-opencv python3 gcc libffi-dev py3-pip
 
 # Setup Python pip and install Python packages
 RUN python3 -m venv /venv && \
