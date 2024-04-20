@@ -28,7 +28,6 @@ sourceSets {
         java {
             if (System.getenv('DOCKER_ENABLE_SECURITY') == 'false') {
                 exclude 'stirling/software/SPDF/config/security/**'
-                exclude 'stirling/software/SPDF/config/AppUpdateAuthService.java'
                 exclude 'stirling/software/SPDF/controller/api/UserController.java'
                 exclude 'stirling/software/SPDF/controller/web/AccountWebController.java'
                 exclude 'stirling/software/SPDF/model/ApiKeyAuthenticationToken.java'

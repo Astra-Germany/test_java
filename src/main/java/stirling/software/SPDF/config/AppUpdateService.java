@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import stirling.software.SPDF.repository.ShowAdminInterface;
+
 @Service
 class AppUpdateService {
 
