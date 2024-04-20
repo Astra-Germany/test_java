@@ -48,7 +48,7 @@ RUN apk add --no-cache py3-opencv
 RUN apk add --no-cache python3 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # calibre
-    wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin && \
+    wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
