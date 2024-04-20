@@ -28,11 +28,10 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 
 # Install necessary packages
 RUN apk add --no-cache ca-certificates tzdata tini bash curl openjdk17-jre su-exec font-noto-cjk shadow \
-    libreoffice@testing poppler-utils ocrmypdf tesseract-ocr-data-eng py3-opencv python3 py3-cffi gcc libffi
+    libreoffice@testing poppler-utils ocrmypdf tesseract-ocr-data-eng py3-opencv python3 libffi-dev py3-pip
 
 # Setup Python pip and install Python packages
-RUN wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
-    python3 -m venv /venv && \
+RUN python3 -m venv /venv && \
     source /venv/bin/activate && \
     pip install --no-cache-dir unoconv WeasyPrint
 
