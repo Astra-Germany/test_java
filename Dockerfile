@@ -10,10 +10,6 @@ COPY build/libs/*.jar /app.jar
 
 ARG VERSION_TAG
 
-ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/opt/calibre/lib
-ENV PATH $PATH:/opt/calibre/bin
-ENV CALIBRE_INSTALLER_SOURCE_CODE_URL https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py
-
 # Set Environment Variables
 ENV DOCKER_ENABLE_SECURITY=false \
     VERSION_TAG=$VERSION_TAG \
@@ -41,8 +37,7 @@ RUN wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-p
     pip install --no-cache-dir unoconv WeasyPrint
 
 # Calibre Installation
-RUN wget -O- ${CALIBRE_INSTALLER_SOURCE_CODE_URL} | python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main(install_dir='/opt', isolated=True)" && \
-    rm -rf /tmp/calibre-installer-cache
+RUN apk add --no-cache calibre@testing
 
 # Cleanup unnecessary files
 RUN rm -rf /var/cache/apk/* /tmp/*
