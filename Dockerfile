@@ -31,7 +31,7 @@ RUN apk add --no-cache ca-certificates tzdata tini bash curl openjdk17-jre su-ex
     libreoffice@testing poppler-utils ocrmypdf tesseract-ocr-data-eng py3-opencv python3
 
 # Setup Python pip and install Python packages
-RUN wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --no-cache-dir --upgrade && \
+RUN wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
     python3 -m venv /venv && \
     source /venv/bin/activate && \
     pip install --no-cache-dir unoconv WeasyPrint
