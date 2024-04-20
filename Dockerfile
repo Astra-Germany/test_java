@@ -10,6 +10,7 @@ COPY build/libs/*.jar /app.jar
 
 ARG VERSION_TAG
 
+
 # Set Environment Variables
 ENV DOCKER_ENABLE_SECURITY=false \
     VERSION_TAG=$VERSION_TAG \
@@ -19,39 +20,48 @@ ENV DOCKER_ENABLE_SECURITY=false \
     PGID=1000 \
     UMASK=022
 
-# Add repositories and update indexes
+
+# JDK for app
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
-    apk update && \
-    apk upgrade
-
-# Install necessary packages
-RUN apk add --no-cache ca-certificates tzdata tini bash curl openjdk17-jre su-exec font-noto-cjk shadow \
-    libreoffice@testing poppler-utils ocrmypdf tesseract-ocr-data-eng py3-opencv python3 gcc libffi-dev py3-pip
-
-# Setup Python pip and install Python packages
-RUN python3 -m venv /venv && \
-    source /venv/bin/activate && \
-    pip install --no-cache-dir unoconv WeasyPrint
-
-# Calibre Installation
-RUN apk add --no-cache calibre@testing
-
-# Cleanup unnecessary files
-RUN rm -rf /var/cache/apk/* /tmp/*
-
-# Create necessary directories and apply permissions
-RUN mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
+    apk add --no-cache \
+        ca-certificates \
+        tzdata \
+        tini \
+        bash \
+        curl \
+        openjdk17-jre \
+        su-exec \
+        font-noto-cjk \
+        shadow \
+# Doc conversion
+        libreoffice@testing \
+# pdftohtml
+        poppler-utils \
+# OCR MY PDF (unpaper for descew and other advanced featues)
+        ocrmypdf \
+        tesseract-ocr-data-eng \
+# CV
+        py3-opencv \
+# python3/pip
+        python3 && \
+    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
+# uno unoconv and HTML
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
+    mv /usr/share/tessdata /usr/share/tessdata-original && \
+    mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
     chmod +x /scripts/* && \
+    chmod +x /scripts/init.sh && \
+# User permissions
     addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
-    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline /app.jar
+    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
+    chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
+    tesseract --list-langs
 
-# Expose port
 EXPOSE 8080
 
 # Set user and run command
-USER stirlingpdfuser
 ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
 CMD ["java", "-Dfile.encoding=UTF-8", "-jar", "/app.jar"]
