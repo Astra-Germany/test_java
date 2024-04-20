@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import stirling.software.SPDF.model.ApplicationProperties;
 import stirling.software.SPDF.model.User;
-import stirling.software.SPDF.repository.ShowAdminInterface;
 import stirling.software.SPDF.repository.UserRepository;
 
 @Service
