@@ -22,30 +22,30 @@ ENV DOCKER_ENABLE_SECURITY=false \
 
 
 # JDK for app
-RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
-    apk add --no-cache \
-        ca-certificates \
-        tzdata \
-        tini \
-        bash \
-        curl \
-        openjdk17-jre \
-        su-exec \
-        font-noto-cjk \
-        shadow \
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
+RUN apk add --no-cache 
+RUN apk add --no-cache ca-certificates 
+RUN apk add --no-cache tzdata 
+RUN apk add --no-cache tini 
+RUN apk add --no-cache bash 
+RUN apk add --no-cache curl 
+RUN apk add --no-cache openjdk17-jre 
+RUN apk add --no-cache su-exec 
+RUN apk add --no-cache font-noto-cjk 
+RUN apk add --no-cache shadow 
 # Doc conversion
-        libreoffice@testing \
+RUN apk add --no-cache libreoffice@testing 
 # pdftohtml
-        poppler-utils \
+RUN apk add --no-cache poppler-utils 
 # OCR MY PDF (unpaper for descew and other advanced featues)
-        ocrmypdf \
-        tesseract-ocr-data-eng \
+RUN apk add --no-cache ocrmypdf 
+RUN apk add --no-cache tesseract-ocr-data-eng 
 # CV
-        py3-opencv \
+RUN apk add --no-cache py3-opencv 
 # python3/pip
-        python3 && \
+RUN apk add --no-cache python3 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # calibre
     wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin && \
