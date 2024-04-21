@@ -40,6 +40,8 @@ jobs:
         id: versionNumber
         run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
+      - run: ls -l ./build/launch4j
+
       - name: Rename binarie
         if: matrix.file_suffix != ''
         run: cp ./build/launch4j/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.exe ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
