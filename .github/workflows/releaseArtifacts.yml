@@ -36,9 +36,13 @@ jobs:
         env:
           DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
 
+      - name: Get version number
+        id: versionNumber
+        run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
+
       - name: Rename binarie
         if: matrix.file_suffix != ''
-        run: cp ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
+        run: cp ./build/launch4j/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.exe ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
 
       - name: Upload Assets binarie
         uses: actions/upload-artifact@v4
@@ -52,10 +56,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
-
-      - name: Get version number
-        id: versionNumber
-        run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
       - name: Rename jar binaries
         run: cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
