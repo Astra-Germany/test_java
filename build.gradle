@@ -49,7 +49,7 @@ openApi {
 launch4j {
     icon = "${projectDir}/src/main/resources/static/favicon.ico"
 
-    outfile="Stirling-PDF-${project.version}.exe"
+    outfile="Stirling-PDF.exe"
     headerType="console"
     jarTask = tasks.bootJar
 
