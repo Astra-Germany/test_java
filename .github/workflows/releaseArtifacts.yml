@@ -28,13 +28,13 @@ jobs:
           distribution: "temurin"
 
       - uses: gradle/actions/setup-gradle@v3
-        env:
-          DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
         with:
           gradle-version: 7.6
 
       - name: Generate jar (With Security=${{ matrix.enable_security }})
         run: ./gradlew clean createExe
+        env:
+          DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
 
       - name: Rename binarie
         if: matrix.file_suffix != ''
