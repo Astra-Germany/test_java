@@ -35,5 +35,5 @@ jobs:
 
       - name: Run Docker Compose Tests
         run: |
-          # chmod +x ./test.sh
+          chmod +x ./test.sh
           ./test.sh
