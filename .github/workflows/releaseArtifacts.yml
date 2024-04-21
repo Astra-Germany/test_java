@@ -39,8 +39,8 @@ jobs:
       - name: Get version number
         id: versionNumber
         run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
-
-      - run: ls -l ./build/launch4j
+      - name: List contents of a folder
+        run: ls -l ./build/launch4j
 
       - name: Rename binarie
         if: matrix.file_suffix != ''
