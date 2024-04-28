@@ -63,5 +63,5 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 EXPOSE 8080
 
 # Set user and run command
-ENTRYPOINT ["/sbin/tini", "--", "/scripts/init.sh"]
+ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
 CMD ["java", "-Dfile.encoding=UTF-8", "-jar", "/app.jar"]
