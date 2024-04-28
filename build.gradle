@@ -26,7 +26,7 @@ licenseReport {
 sourceSets {
     main {
         java {
-            if (System.getProperty('DOCKER_ENABLE_SECURITY') == 'false') {
+            if (System.getenv('DOCKER_ENABLE_SECURITY') == 'false') {
                 exclude 'stirling/software/SPDF/config/security/**'
                 exclude 'stirling/software/SPDF/controller/api/UserController.java'
                 exclude 'stirling/software/SPDF/controller/web/AccountWebController.java'
@@ -94,7 +94,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.4'
 
-    if (System.getProperty('DOCKER_ENABLE_SECURITY') != 'false') {
+    if (System.getenv('DOCKER_ENABLE_SECURITY') != 'false') {
         implementation 'org.springframework.boot:spring-boot-starter-security:3.2.4'
         implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.1.2.RELEASE'
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:3.2.4"
