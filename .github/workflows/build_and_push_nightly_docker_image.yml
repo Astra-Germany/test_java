@@ -100,12 +100,12 @@ jobs:
           tags: ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ github.sha }}
 
       - name: Post Comment with Docker Image Link
-        uses: thollander/actions-comment-pull-request@v1
+        uses: thollander/actions-comment-pull-request@v2
         with:
-          message: "Docker Image is available: ghcr.io/${{ github.repository }}/s-pdf:${{ github.sha }}"
+          message: "Docker Image is available: https://ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ github.sha }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Post Comment with Artifacts Link
-        uses: thollander/actions-comment-pull-request@v1
+        uses: thollander/actions-comment-pull-request@v2
         with:
           message: "Download the Docker image artifact here: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
