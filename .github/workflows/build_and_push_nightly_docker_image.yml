@@ -92,12 +92,14 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ github.sha }}
+          tags: ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ github.actor }}-${{ steps.versionNumber.outputs.versionNumber }}${{ matrix.file_suffix }}
 
       - name: Post Comment with Docker Image Link
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: "Docker Image is available: https://ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ github.sha }}"
+          message: |
+            "Docker Image is available: https://ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ github.actor }}-${{ steps.versionNumber.outputs.versionNumber }}${{ matrix.file_suffix }}"
+            "```docker pull ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ github.actor }}-${{ steps.versionNumber.outputs.versionNumber }}${{ matrix.file_suffix }}```"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Post Comment with Artifacts Link
         uses: thollander/actions-comment-pull-request@v2
