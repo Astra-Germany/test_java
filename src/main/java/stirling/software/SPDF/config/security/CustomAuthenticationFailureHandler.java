@@ -3,8 +3,6 @@ package stirling.software.SPDF.config.security;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -24,9 +22,6 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Autowired private final UserService userService; // Inject the UserService
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(CustomAuthenticationFailureHandler.class);
-
     public CustomAuthenticationFailureHandler(
             LoginAttemptService loginAttemptService, UserService userService) {
         this.loginAttemptService = loginAttemptService;
@@ -44,11 +39,13 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
         String username = request.getParameter("username");
         if (!isDemoUser(username)) {
-            User user = userService.findByUsername(username).get();
-            if (loginAttemptService.loginAttemptCheck(username)
-                    || exception.getClass().isAssignableFrom(LockedException.class)) {
-                userService.changeUserBlocked(user, true);
+            if (loginAttemptService.loginAttemptCheck(username)) {
                 setDefaultFailureUrl("/login?error=locked");
+
+            } else {
+                if (exception.getClass().isAssignableFrom(LockedException.class)) {
+                    setDefaultFailureUrl("/login?error=locked");
+                }
             }
         }
         if (exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
