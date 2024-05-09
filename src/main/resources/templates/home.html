@@ -32,6 +32,15 @@
                 <p class="card-text" id="app-update"></p>
               </a>
             </div>
+            <div if:th="${@shouldSponsor}" class="feature-card favorite" id="sponsor">
+              <a href="https://www.paypal.com/paypalme/froodleplex" target="_blank" class="nav-link text-body-secondary px-2" rel="noopener">
+                <div class="d-flex align-items-center">
+                  <img class="card-icon home-card-icon home-card-icon-colour" src="images/hand-heart.svg" alt="Icon" width="30" height="30">
+                  <h5 class="card-title ms-2">Sponsor</h5>
+                </div>
+                <p class="card-text lookatme" data-lookatme-text="Support Stirling-PDF: Boost innovation and enhance free, secure PDF tools for all.">Support Stirling-PDF: Boost innovation and enhance free, secure PDF tools for all.</p>
+              </a>
+            </div>
             <div th:replace="~{fragments/card :: card(id='pipeline', cardTitle=#{home.pipeline.title}, cardText=#{home.pipeline.desc}, cardLink='pipeline', svgPath='images/pipeline.svg', tags=#{pipeline.tags})}"></div>
 
             <div th:replace="~{fragments/card :: card(id='view-pdf', cardTitle=#{home.viewPdf.title}, cardText=#{home.viewPdf.desc}, cardLink='view-pdf', svgPath='images/book-opened.svg', tags=#{viewPdf.tags})}"></div>
