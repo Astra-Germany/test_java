@@ -25,8 +25,6 @@ public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHand
     @Autowired SessionRegistry sessionRegistry;
 
     private ApplicationProperties applicationProperties;
-    private static final Logger logger =
-            LoggerFactory.getLogger(CustomOAuth2LogoutSuccessHandler.class);
 
     public CustomOAuth2LogoutSuccessHandler(ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
@@ -44,28 +42,15 @@ public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHand
             return;
         }
         Object pri = authentication.getPrincipal();
-        logger.info(authentication.getPrincipal().getClass().getName());
         if (pri instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) pri;
-            // if (userDetails instanceof User) {
-            //     User user = (User) userDetails;
-            //     isOAuthUser = !user.hasPassword();
-            // } else {
             isOAuthUser = userDetails.getPassword() == null;
-            // }
         } else if (pri instanceof OAuth2User) {
             isOAuthUser = true;
         }
-        logger.info(
-                (pri instanceof OAuth2User)
-                        + " "
-                        + (pri instanceof org.springframework.security.core.userdetails.User));
 
         OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
-
         String provider = oauth.getProvider() != null && isOAuthUser ? oauth.getProvider() : "";
-
-        logger.info(provider);
 
         if (request.getParameter("oauth2AuthenticationError") != null) {
             param = "error=oauth2AuthenticationError";
@@ -86,8 +71,6 @@ public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHand
                                 + "&post_logout_redirect_uri="
                                 + response.encodeRedirectURL(
                                         "http://" + request.getHeader("host") + "/login?" + param);
-
-                logger.info("logout per URL: " + logoutUrl);
                 response.sendRedirect(logoutUrl);
                 break;
             case "google":

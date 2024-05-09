@@ -20,7 +20,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -37,7 +36,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import stirling.software.SPDF.config.security.oauth2.CustomOAuth2AuthenticationFailureHandler;
 import stirling.software.SPDF.config.security.oauth2.CustomOAuth2AuthenticationSuccessHandler;
 import stirling.software.SPDF.config.security.oauth2.CustomOAuth2LogoutSuccessHandler;
-import stirling.software.SPDF.config.security.oauth2.CustomOAuthUserService;
+import stirling.software.SPDF.config.security.oauth2.CustomOAuth2UserService;
 import stirling.software.SPDF.model.ApplicationProperties;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
 import stirling.software.SPDF.model.User;
@@ -48,9 +47,7 @@ import stirling.software.SPDF.repository.JPATokenRepositoryImpl;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    @Autowired private UserDetailsService userDetailsService;
-
-    private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
+    @Autowired private CustomUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -79,7 +76,9 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         if (loginEnabledValue) {
+
             http.csrf(csrf -> csrf.disable());
             http.addFilterBefore(rateLimitingFilter(), UsernamePasswordAuthenticationFilter.class);
             http.addFilterAfter(firstLoginFilter, UsernamePasswordAuthenticationFilter.class);
@@ -97,7 +96,8 @@ public class SecurityConfiguration {
                                     formLogin
                                             .loginPage("/login")
                                             .successHandler(
-                                                    new CustomAuthenticationSuccessHandler())
+                                                    new CustomAuthenticationSuccessHandler(
+                                                            loginAttemptService))
                                             .defaultSuccessUrl("/")
                                             .failureHandler(
                                                     new CustomAuthenticationFailureHandler(
@@ -110,20 +110,7 @@ public class SecurityConfiguration {
                                                     new AntPathRequestMatcher("/logout"))
                                             .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                                             .invalidateHttpSession(true) // Invalidate session
-                                            .deleteCookies("JSESSIONID", "remember-me")
-                            // TODO remove addLogoutHandler
-                            // .addLogoutHandler(
-                            //         (request, response, authentication) -> {
-                            //             HttpSession session =
-                            //                     request.getSession(false);
-                            //             if (session != null) {
-                            //                 String sessionId = session.getId();
-                            //                 sessionRegistry()
-                            //                         .removeSessionInformation(
-                            //                                 sessionId);
-                            //             }
-                            //         })
-                            )
+                                            .deleteCookies("JSESSIONID", "remember-me"))
                     .rememberMe(
                             rememberMeConfigurer ->
                                     rememberMeConfigurer // Use the configurator directly
@@ -167,7 +154,7 @@ public class SecurityConfiguration {
 
             // Handle OAUTH2 Logins
             if (applicationProperties.getSecurity().getOAUTH2().getEnabled()) {
-                logger.info("applicationProperties");
+
                 http.oauth2Login(
                                 oauth2 ->
                                         oauth2.loginPage("/oauth2")
@@ -186,10 +173,11 @@ public class SecurityConfiguration {
                                                         userInfoEndpoint ->
                                                                 userInfoEndpoint
                                                                         .oidcUserService(
-                                                                                new CustomOAuthUserService(
+                                                                                new CustomOAuth2UserService(
                                                                                         applicationProperties))
                                                                         .userAuthoritiesMapper(
                                                                                 userAuthoritiesMapper())))
+                        .userDetailsService(userDetailsService)
                         .logout(
                                 logout ->
                                         logout.logoutSuccessHandler(

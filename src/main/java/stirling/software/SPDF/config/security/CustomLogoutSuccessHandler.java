@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpSession;
 public class CustomLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
     @Autowired SessionRegistry sessionRegistry;
-    private static final Logger logger = LoggerFactory.getLogger(CustomLogoutSuccessHandler.class);
 
     @Override
     public void onLogoutSuccess(

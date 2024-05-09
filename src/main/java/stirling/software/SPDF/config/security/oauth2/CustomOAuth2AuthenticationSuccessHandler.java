@@ -6,23 +6,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.stereotype.Component;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import stirling.software.SPDF.config.security.UserService;
 import stirling.software.SPDF.model.ApplicationProperties;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
 import stirling.software.SPDF.model.AuthenticationType;
+import stirling.software.SPDF.utils.RequestUriUtils;
 
-public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+@Component
+public class CustomOAuth2AuthenticationSuccessHandler
+        extends SavedRequestAwareAuthenticationSuccessHandler {
 
     ApplicationProperties applicationProperties;
     UserService userService;
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(CustomOAuth2AuthenticationSuccessHandler.class);
 
     public CustomOAuth2AuthenticationSuccessHandler(
             ApplicationProperties applicationProperties, UserService userService) {
@@ -33,21 +36,34 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
-        logger.info("onAuthenticationSuccess oAuth2 " + request.getAuthType());
+            throws ServletException, IOException {
+
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-        logger.info("PETER: " + oauthUser.getName());
-        OAUTH2 oAuth = applicationProperties.getSecurity().getOAUTH2();
-        String username = oauthUser.getAttribute(oAuth.getUseAsUsername());
-        if (userService.usernameExistsIgnoreCase(username)
-                && userService.hasPassword(username)
-                && !userService.isAuthenticationTypeByUsername(username, AuthenticationType.OAUTH2)
-                && oAuth.getAutoCreateUser()) {
-            response.sendRedirect(
-                    request.getContextPath() + "/logout?oauth2AuthenticationError=true");
+
+        // Get the saved request
+        HttpSession session = request.getSession(false);
+        SavedRequest savedRequest =
+                session != null
+                        ? (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST")
+                        : null;
+        if (savedRequest != null
+                && !RequestUriUtils.isStaticResource(savedRequest.getRedirectUrl())) {
+            // Redirect to the original destination
+            super.onAuthenticationSuccess(request, response, authentication);
         } else {
-            userService.processOAuth2PostLogin(username, oAuth.getAutoCreateUser());
-            response.sendRedirect("/");
+            OAUTH2 oAuth = applicationProperties.getSecurity().getOAUTH2();
+            String username = oauthUser.getAttribute(oAuth.getUseAsUsername());
+            if (userService.usernameExistsIgnoreCase(username)
+                    && userService.hasPassword(username)
+                    && !userService.isAuthenticationTypeByUsername(
+                            username, AuthenticationType.OAUTH2)
+                    && oAuth.getAutoCreateUser()) {
+                response.sendRedirect(
+                        request.getContextPath() + "/logout?oauth2AuthenticationError=true");
+            } else {
+                userService.processOAuth2PostLogin(username, oAuth.getAutoCreateUser());
+                response.sendRedirect("/");
+            }
         }
     }
 }

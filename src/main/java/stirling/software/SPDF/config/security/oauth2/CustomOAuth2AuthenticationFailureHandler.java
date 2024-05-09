@@ -2,7 +2,11 @@ package stirling.software.SPDF.config.security.oauth2;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -24,9 +28,13 @@ public class CustomOAuth2AuthenticationFailureHandler
             throws IOException, ServletException {
         if (exception instanceof OAuth2AuthenticationException) {
             OAuth2Error error = ((OAuth2AuthenticationException) exception).getError();
-            logger.error("OAuth2 Authentication error: " + error.toString());
             getRedirectStrategy()
                     .sendRedirect(request, response, "/login?error=oAuth::" + error.getErrorCode());
+        } else if (exception instanceof LockedException) {
+            getRedirectStrategy().sendRedirect(request, response, "/login?error=locked");
+        } else if (exception instanceof UsernameNotFoundException) {
+            getRedirectStrategy()
+                    .sendRedirect(request, response, "/login?error=oauth2AuthenticationError");
         } else {
             super.onAuthenticationFailure(request, response, exception);
         }

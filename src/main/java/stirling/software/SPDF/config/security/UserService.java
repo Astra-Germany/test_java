@@ -36,8 +36,6 @@ public class UserService implements UserServiceInterface {
 
     @Autowired private PasswordEncoder passwordEncoder;
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
     // Handle OAUTH2 login and user auto creation.
     public boolean processOAuth2PostLogin(String username, boolean autoCreateUser) {
         Optional<User> existUser = userRepository.findByUsernameIgnoreCase(username);
