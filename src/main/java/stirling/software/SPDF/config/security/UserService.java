@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,9 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import stirling.software.SPDF.controller.api.pipeline.UserServiceInterface;
+import stirling.software.SPDF.model.AuthenticationType;
 import stirling.software.SPDF.model.Authority;
 import stirling.software.SPDF.model.Role;
 import stirling.software.SPDF.model.User;
+import stirling.software.SPDF.repository.AuthorityRepository;
 import stirling.software.SPDF.repository.UserRepository;
 
 @Service
@@ -28,7 +32,24 @@ public class UserService implements UserServiceInterface {
 
     @Autowired private UserRepository userRepository;
 
+    @Autowired private AuthorityRepository authorityRepository;
+
     @Autowired private PasswordEncoder passwordEncoder;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    // Handle OAUTH2 login and user auto creation.
+    public boolean processOAuth2PostLogin(String username, boolean autoCreateUser) {
+        Optional<User> existUser = userRepository.findByUsernameIgnoreCase(username);
+        if (existUser.isPresent()) {
+            return true;
+        }
+        if (autoCreateUser) {
+            saveUser(username, AuthenticationType.OAUTH2);
+            return true;
+        }
+        return false;
+    }
 
     public Authentication getAuthentication(String apiKey) {
         User user = getUserByApiKey(apiKey);
@@ -107,11 +128,22 @@ public class UserService implements UserServiceInterface {
         return userOpt.isPresent() && userOpt.get().getApiKey().equals(apiKey);
     }
 
+    public void saveUser(String username, AuthenticationType authenticationType) {
+        User user = new User();
+        user.setUsername(username);
+        user.setEnabled(true);
+        user.setFirstLogin(false);
+        user.addAuthority(new Authority(Role.USER.getRoleId(), user));
+        user.setAuthenticationType(authenticationType);
+        userRepository.save(user);
+    }
+
     public void saveUser(String username, String password) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setEnabled(true);
+        user.setAuthenticationType(AuthenticationType.WEB);
         userRepository.save(user);
     }
 
@@ -121,6 +153,7 @@ public class UserService implements UserServiceInterface {
         user.setPassword(passwordEncoder.encode(password));
         user.addAuthority(new Authority(role, user));
         user.setEnabled(true);
+        user.setAuthenticationType(AuthenticationType.WEB);
         user.setFirstLogin(firstLogin);
         userRepository.save(user);
     }
@@ -131,6 +164,7 @@ public class UserService implements UserServiceInterface {
         user.setPassword(passwordEncoder.encode(password));
         user.addAuthority(new Authority(role, user));
         user.setEnabled(true);
+        user.setAuthenticationType(AuthenticationType.WEB);
         user.setFirstLogin(false);
         userRepository.save(user);
     }
@@ -184,6 +218,10 @@ public class UserService implements UserServiceInterface {
         return userRepository.findByUsernameIgnoreCase(username);
     }
 
+    public Authority findRole(User user) {
+        return authorityRepository.findByUserId(user.getId());
+    }
+
     public void changeUsername(User user, String newUsername) {
         user.setUsername(newUsername);
         userRepository.save(user);
@@ -199,11 +237,34 @@ public class UserService implements UserServiceInterface {
         userRepository.save(user);
     }
 
+    public void changeRole(User user, String newRole) {
+        Authority userAuthority = this.findRole(user);
+        userAuthority.setAuthority(newRole);
+        authorityRepository.save(userAuthority);
+    }
+
     public boolean isPasswordCorrect(User user, String currentPassword) {
         return passwordEncoder.matches(currentPassword, user.getPassword());
     }
 
     public boolean isUsernameValid(String username) {
         return username.matches("[a-zA-Z0-9]+");
+    }
+
+    public boolean hasPassword(String username) {
+        Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
+        if (user.isPresent() && user.get().hasPassword()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isAuthenticationTypeByUsername(
+            String username, AuthenticationType authenticationType) {
+        Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
+        if (user.isPresent() && user.get().getAuthenticationType() != null) {
+            return user.get().getAuthenticationType().equalsIgnoreCase(authenticationType.name());
+        }
+        return false;
     }
 }

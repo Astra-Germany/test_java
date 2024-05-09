@@ -2,11 +2,12 @@ package stirling.software.SPDF.config.security;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.stereotype.Component;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,11 +15,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import stirling.software.SPDF.utils.RequestUriUtils;
 
-@Component
 public class CustomAuthenticationSuccessHandler
         extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Autowired private LoginAttemptService loginAttemptService;
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
 
     @Override
     public void onAuthenticationSuccess(
@@ -26,7 +29,7 @@ public class CustomAuthenticationSuccessHandler
             throws ServletException, IOException {
         String username = request.getParameter("username");
         loginAttemptService.loginSucceeded(username);
-
+        logger.info("onAuthenticationSuccess");
         // Get the saved request
         HttpSession session = request.getSession(false);
         SavedRequest savedRequest =

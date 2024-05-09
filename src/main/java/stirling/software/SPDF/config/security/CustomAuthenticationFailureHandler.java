@@ -3,6 +3,8 @@ package stirling.software.SPDF.config.security;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -22,6 +24,9 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Autowired private final UserService userService; // Inject the UserService
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(CustomAuthenticationFailureHandler.class);
+
     public CustomAuthenticationFailureHandler(
             LoginAttemptService loginAttemptService, UserService userService) {
         this.loginAttemptService = loginAttemptService;
@@ -34,6 +39,16 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             HttpServletResponse response,
             AuthenticationException exception)
             throws IOException, ServletException {
+        // if (exception instanceof UsernameNotFoundException
+        //         && exception.getMessage().contains("Password must not be null")) {
+        //     response.sendRedirect("/login?error=oAuth");
+        //     return;
+        // }
+        // logger.error(
+        //         ":"
+        //                 + (exception instanceof UsernameNotFoundException)
+        //                 + " "
+        //                 + exception.getMessage());
         String ip = request.getRemoteAddr();
         logger.error("Failed login attempt from IP: " + ip);
 

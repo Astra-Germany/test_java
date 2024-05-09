@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -29,7 +30,6 @@ public class SPdfApplication {
     private static final Logger logger = LoggerFactory.getLogger(SPdfApplication.class);
 
     @Autowired private Environment env;
-    @Autowired private MessageSource messageSource;
 
     @Autowired ApplicationProperties applicationProperties;
 
@@ -67,14 +67,36 @@ public class SPdfApplication {
 
         SpringApplication app = new SpringApplication(SPdfApplication.class);
         app.addInitializers(new ConfigInitializer());
+        Map<String, String> propertyFiles = new HashMap<>();
+
+        // stirling pdf settings file
         if (Files.exists(Paths.get("configs/settings.yml"))) {
-            app.setDefaultProperties(
-                    Collections.singletonMap(
-                            "spring.config.additional-location", "file:configs/settings.yml"));
+            propertyFiles.put("spring.config.additional-location", "file:configs/settings.yml");
         } else {
             logger.warn(
                     "External configuration file 'configs/settings.yml' does not exist. Using default configuration and environment configuration instead.");
         }
+
+        // custom javs settings file
+        if (Files.exists(Paths.get("configs/custom_settings.yml"))) {
+            String existing = propertyFiles.getOrDefault("spring.config.additional-location", "");
+            if (!existing.isEmpty()) {
+                existing += ",";
+            }
+            propertyFiles.put(
+                    "spring.config.additional-location",
+                    existing + "file:configs/custom_settings.yml");
+        } else {
+            logger.warn("Custom configuration file 'configs/custom_settings.yml' does not exist.");
+        }
+
+        if (!propertyFiles.isEmpty()) {
+            app.setDefaultProperties(
+                    Collections.singletonMap(
+                            "spring.config.additional-location",
+                            propertyFiles.get("spring.config.additional-location")));
+        }
+
         app.run(args);
 
         try {

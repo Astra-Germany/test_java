@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired private LoginAttemptService loginAttemptService;
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user =
@@ -37,6 +41,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (loginAttemptService.isBlocked(username)) {
             throw new LockedException(
                     "Your account has been locked due to too many failed login attempts.");
+        }
+
+        if ((user.getPassword() == null || user.getPassword().isEmpty())) {
+            throw new UsernameNotFoundException("Password must not be null");
         }
 
         return new org.springframework.security.core.userdetails.User(

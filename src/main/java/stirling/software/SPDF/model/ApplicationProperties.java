@@ -1,6 +1,10 @@
 package stirling.software.SPDF.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -118,6 +122,7 @@ public class ApplicationProperties {
         private Boolean enableLogin;
         private Boolean csrfDisabled;
         private InitialLogin initialLogin;
+        private OAUTH2 oauth2;
         private int loginAttemptCount;
         private long loginResetTimeMinutes;
 
@@ -145,6 +150,14 @@ public class ApplicationProperties {
             this.initialLogin = initialLogin;
         }
 
+        public OAUTH2 getOAUTH2() {
+            return oauth2 != null ? oauth2 : new OAUTH2();
+        }
+
+        public void setOAUTH2(OAUTH2 oauth2) {
+            this.oauth2 = oauth2;
+        }
+
         public Boolean getEnableLogin() {
             return enableLogin;
         }
@@ -165,6 +178,8 @@ public class ApplicationProperties {
         public String toString() {
             return "Security [enableLogin="
                     + enableLogin
+                    + ", oauth2="
+                    + oauth2
                     + ", initialLogin="
                     + initialLogin
                     + ",  csrfDisabled="
@@ -199,6 +214,111 @@ public class ApplicationProperties {
                         + username
                         + ", password="
                         + (password != null && !password.isEmpty() ? "MASKED" : "NULL")
+                        + "]";
+            }
+        }
+
+        public static class OAUTH2 {
+
+            private boolean enabled;
+            private String issuer;
+            private String clientId;
+            private String clientSecret;
+            private boolean autoCreateUser;
+            private String useAsUsername;
+            private String provider;
+
+            private Collection<String> scopes = new ArrayList<String>();
+
+            public boolean getEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            public String getIssuer() {
+                return issuer;
+            }
+
+            public void setIssuer(String issuer) {
+                this.issuer = issuer;
+            }
+
+            public String getClientId() {
+                return clientId;
+            }
+
+            public void setClientId(String clientId) {
+                this.clientId = clientId;
+            }
+
+            public String getClientSecret() {
+                return clientSecret;
+            }
+
+            public void setClientSecret(String clientSecret) {
+                this.clientSecret = clientSecret;
+            }
+
+            public boolean getAutoCreateUser() {
+                return autoCreateUser;
+            }
+
+            public void setAutoCreateUser(boolean autoCreateUser) {
+                this.autoCreateUser = autoCreateUser;
+            }
+
+            public String getUseAsUsername() {
+                if (useAsUsername != null && useAsUsername.trim().length() > 0) {
+                    return useAsUsername;
+                }
+                return "email";
+            }
+
+            public void setUseAsUsername(String useAsUsername) {
+                this.useAsUsername = useAsUsername;
+            }
+
+            public String getProvider() {
+                return provider;
+            }
+
+            public void setProvider(String provider) {
+                this.provider = provider;
+            }
+
+            public Collection<String> getScopes() {
+                return scopes;
+            }
+
+            public void setScopes(String scpoes) {
+                List<String> scopesList =
+                        Arrays.stream(scpoes.split(","))
+                                .map(String::trim)
+                                .collect(Collectors.toList());
+                this.scopes.addAll(scopesList);
+            }
+
+            @Override
+            public String toString() {
+                return "OAUTH2 [enabled="
+                        + enabled
+                        + ", issuer="
+                        + issuer
+                        + ", clientId="
+                        + clientId
+                        + ", clientSecret="
+                        + (clientSecret != null && !clientSecret.isEmpty() ? "MASKED" : "NULL")
+                        + ", autoCreateUser="
+                        + autoCreateUser
+                        + ", useAsUsername="
+                        + useAsUsername
+                        + ", provider"
+                        + provider
+                        + ", scopes="
+                        + scopes
                         + "]";
             }
         }

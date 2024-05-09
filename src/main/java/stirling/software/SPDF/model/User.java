@@ -19,7 +19,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import stirling.software.SPDF.config.security.LoginAttemptService;
 
 @Entity
 @Table(name = "users")
@@ -48,8 +47,8 @@ public class User {
     @Column(name = "roleName")
     private String roleName;
 
-    @Column(name = "isUserBlocked")
-    private Boolean isUserBlocked = false;
+    @Column(name = "authenticationtype")
+    private String authenticationType;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Authority> authorities = new HashSet<>();
@@ -59,18 +58,6 @@ public class User {
     @Column(name = "setting_value")
     @CollectionTable(name = "user_settings", joinColumns = @JoinColumn(name = "user_id"))
     private Map<String, String> settings = new HashMap<>(); // Key-value pairs of settings.
-
-    public Boolean getIsUserBlocked() {
-        return isUserBlocked;
-    }
-
-    public void setIsUserBlocked(boolean isUserBlocked) {
-        this.isUserBlocked = isUserBlocked;
-    }
-
-    public Boolean isUserBlocked(LoginAttemptService loginAttemptService) {
-        return loginAttemptService.checkUserBlocked(this.username);
-    }
 
     public String getRoleName() {
         return Role.getRoleNameByRoleId(getRolesAsString());
@@ -132,6 +119,14 @@ public class User {
         this.enabled = enabled;
     }
 
+    public void setAuthenticationType(AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType.toString().toLowerCase();
+    }
+
+    public String getAuthenticationType() {
+        return authenticationType;
+    }
+
     public Set<Authority> getAuthorities() {
         return authorities;
     }
@@ -152,5 +147,9 @@ public class User {
         return this.authorities.stream()
                 .map(Authority::getAuthority)
                 .collect(Collectors.joining(", "));
+    }
+
+    public boolean hasPassword() {
+        return this.getPassword() != "" ? true : false;
     }
 }
