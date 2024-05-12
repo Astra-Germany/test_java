@@ -144,6 +144,10 @@
             <div th:if="${error == 'oauth2AuthenticationError'}" th:text="#{userAlreadyExistsMessage}">OAuth2: User already exists.</div>
             <!-- invalidUsername -->
             <div th:if="${error == 'invalidUsername'}" th:text="#{invalidUsernameMessage}">OAUTH2: Invalid username.</div>
+            <!-- badcredentials -->
+            <div th:if="${error == 'badcredentials'}" th:text="#{login.invalid}">Invalid username or password.</div>
+            <!-- locked -->
+            <div th:if="${error == 'locked'}" th:text="#{login.locked}">Your account has been locked. </div>
           </div>
           <hr />
         </div>
@@ -182,10 +186,6 @@
               <th:block th:replace="~{fragments/languages :: langs}"></th:block>
             </div>
           </div>
-        </div>
-        <div class="text-danger text-center">
-          <div th:if="${error == 'badcredentials'}" th:text="#{login.invalid}">Invalid username or password.</div>
-          <div th:if="${error == 'locked'}" th:text="#{login.locked}">Your account has been locked. </div>
         </div>
       </main>
       <th:block th:insert="~{fragments/footer.html :: footer}"></th:block>
