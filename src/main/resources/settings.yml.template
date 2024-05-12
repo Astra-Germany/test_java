@@ -7,6 +7,15 @@ security:
   csrfDisabled: true
   loginAttemptCount: 5 # lock user account after 5 tries
   loginResetTimeMinutes : 120 # lock account for 2 hours after x attempts
+  # oauth2:
+  #   enabled: true # set to 'true' to enable login (Note: enableLogin must also be 'true' for this to work)
+  #   issuer: "" # set to any provider that supports OpenID Connect Discovery (/.well-known/openid-configuration) end-point
+  #   clientId: "" # Client ID from your provider
+  #   clientSecret: "" # Client Secret from your provider
+  #   autoCreateUser: true # set to 'true' to allow auto-creation of non-existing users
+  #   useAsUsername: "email" # Standard ist 'email' es können customfields verwendet werden
+  #   scopes: "openid, profile, email" # "https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile" # 
+  #   provider: "google" # "google"
 
 system:
   defaultLocale: 'en-US' # Set the default language (e.g. 'de-DE', 'fr-FR', etc)
