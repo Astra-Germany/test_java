@@ -58,9 +58,16 @@ public class CustomOAuth2AuthenticationSuccessHandler
                     && oAuth.getAutoCreateUser()) {
                 response.sendRedirect(
                         request.getContextPath() + "/logout?oauth2AuthenticationError=true");
+                return;
             } else {
-                userService.processOAuth2PostLogin(username, oAuth.getAutoCreateUser());
-                response.sendRedirect("/");
+                try {
+                    userService.processOAuth2PostLogin(username, oAuth.getAutoCreateUser());
+                    response.sendRedirect("/");
+                    return;
+                } catch (IllegalArgumentException e) {
+                    response.sendRedirect("/logout?invalidUsername=true");
+                    return;
+                }
             }
         }
     }

@@ -94,8 +94,7 @@ public class SecurityConfiguration {
                                     formLogin
                                             .loginPage("/login")
                                             .successHandler(
-                                                    new CustomAuthenticationSuccessHandler(
-                                                            loginAttemptService))
+                                                    new CustomAuthenticationSuccessHandler())
                                             .defaultSuccessUrl("/")
                                             .failureHandler(
                                                     new CustomAuthenticationFailureHandler(

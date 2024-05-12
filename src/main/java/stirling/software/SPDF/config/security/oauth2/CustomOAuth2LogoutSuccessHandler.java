@@ -52,6 +52,8 @@ public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHand
 
         if (request.getParameter("oauth2AuthenticationError") != null) {
             param = "error=oauth2AuthenticationError";
+        } else if (request.getParameter("invalidUsername") != null) {
+            param = "error=invalidUsername";
         }
         HttpSession session = request.getSession(false);
         if (session != null) {

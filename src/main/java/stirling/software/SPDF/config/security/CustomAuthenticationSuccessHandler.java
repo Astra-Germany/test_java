@@ -17,12 +17,6 @@ import stirling.software.SPDF.utils.RequestUriUtils;
 public class CustomAuthenticationSuccessHandler
         extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private LoginAttemptService loginAttemptService;
-
-    public CustomAuthenticationSuccessHandler(LoginAttemptService loginAttemptService) {
-        this.loginAttemptService = loginAttemptService;
-    }
-
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
