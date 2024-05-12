@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,8 @@ public class InitialSecuritySetup {
 
     @Autowired ApplicationProperties applicationProperties;
 
+    private static final Logger logger = LoggerFactory.getLogger(InitialSecuritySetup.class);
+
     @PostConstruct
     public void init() {
         if (!userService.hasUsers()) {
@@ -29,6 +33,7 @@ public class InitialSecuritySetup {
                     applicationProperties.getSecurity().getInitialLogin().getUsername();
             String initialPassword =
                     applicationProperties.getSecurity().getInitialLogin().getPassword();
+            logger.info(initialUsername);
             if (initialUsername != null && initialPassword != null) {
                 userService.saveUser(initialUsername, initialPassword, Role.ADMIN.getRoleId());
             } else {
