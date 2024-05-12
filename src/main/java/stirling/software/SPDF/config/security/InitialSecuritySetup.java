@@ -33,7 +33,20 @@ public class InitialSecuritySetup {
                     applicationProperties.getSecurity().getInitialLogin().getUsername();
             String initialPassword =
                     applicationProperties.getSecurity().getInitialLogin().getPassword();
-            logger.info(initialUsername);
+            try {
+                // closed #976
+                userService.isUsernameValidWithReturn(initialUsername);
+            } catch (IllegalArgumentException e) {
+                Path pathToFile = Paths.get("configs/settings.yml");
+                try {
+                    if (Files.exists(pathToFile)) {
+                        Files.delete(pathToFile);
+                    }
+                } catch (IOException ex) {
+                    logger.info(ex.getMessage());
+                }
+                throw e;
+            }
             if (initialUsername != null && initialPassword != null) {
                 userService.saveUser(initialUsername, initialPassword, Role.ADMIN.getRoleId());
             } else {
