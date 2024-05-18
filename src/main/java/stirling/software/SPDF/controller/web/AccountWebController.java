@@ -50,6 +50,10 @@ public class AccountWebController {
 
             model.addAttribute("error", request.getParameter("error"));
         }
+        if (request.getParameter("erroroauth") != null) {
+
+            model.addAttribute("erroroauth", request.getParameter("erroroauth"));
+        }
         if (request.getParameter("logout") != null) {
 
             model.addAttribute("logoutMessage", "You have been logged out.");
