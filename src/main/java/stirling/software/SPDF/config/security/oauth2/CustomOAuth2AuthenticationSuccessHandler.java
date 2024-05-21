@@ -80,6 +80,7 @@ public class CustomOAuth2AuthenticationSuccessHandler
                 return;
             } else {
                 try {
+                    logger.info(username);
                     userService.processOAuth2PostLogin(username, oAuth.getAutoCreateUser());
                     response.sendRedirect("/");
                     return;

@@ -26,10 +26,6 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     private static final Logger logger =
             LoggerFactory.getLogger(CustomAuthenticationFailureHandler.class);
 
-    private static final String OAUTH2_AUTH_ERROR = "/login?error=oauth2AuthenticationError";
-    private static final String LOCKED_ERROR = "/login?error=locked";
-    private static final String BAD_CREDENTIALS_ERROR = "/login?error=badcredentials";
-
     public CustomAuthenticationFailureHandler(
             final LoginAttemptService loginAttemptService, UserService userService) {
         this.loginAttemptService = loginAttemptService;
@@ -48,7 +44,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
         if (exception.getClass().isAssignableFrom(InternalAuthenticationServiceException.class)
                 || "Password must not be null".equalsIgnoreCase(exception.getMessage())) {
-            response.sendRedirect(OAUTH2_AUTH_ERROR);
+            response.sendRedirect("/login?error=oauth2AuthenticationError");
             return;
         }
 
@@ -61,13 +57,13 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             loginAttemptService.loginFailed(username);
             if (loginAttemptService.isBlocked(username)
                     || exception.getClass().isAssignableFrom(LockedException.class)) {
-                response.sendRedirect(LOCKED_ERROR);
+                response.sendRedirect("/login?error=locked");
                 return;
             }
         }
         if (exception.getClass().isAssignableFrom(BadCredentialsException.class)
                 || exception.getClass().isAssignableFrom(UsernameNotFoundException.class)) {
-            response.sendRedirect(BAD_CREDENTIALS_ERROR);
+            response.sendRedirect("/login?error=badcredentials");
             return;
         }
 

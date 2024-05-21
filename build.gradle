@@ -12,7 +12,9 @@ plugins {
 import com.github.jk1.license.render.*
 
 group = 'stirling.software'
-version = '0.23.2-a'
+version = '0.24.0-a'
+
+// 17 is lowest but we support and recommend 21
 sourceCompatibility = '17'
 
 repositories {
@@ -27,7 +29,6 @@ licenseReport {
 sourceSets {
     main {
         java {
-            // if (System.getProperty('DOCKER_ENABLE_SECURITY') == 'false') {
             if (System.getenv('DOCKER_ENABLE_SECURITY') == 'false') {
                 exclude 'stirling/software/SPDF/config/security/**'
                 exclude 'stirling/software/SPDF/controller/api/UserController.java'
@@ -55,8 +56,8 @@ launch4j {
   headerType="console"
   jarTask = tasks.bootJar
 
-  errTitle="Encountered error, Do you have Java 17?"
-  downloadUrl="https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe"
+  errTitle="Encountered error, Do you have Java 21?"
+  downloadUrl="https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.exe"
   variables=["BROWSER_OPEN=true", "ENDPOINTS_GROUPS_TO_REMOVE=CLI"]
   jreMinVersion="17"
 
@@ -64,9 +65,9 @@ launch4j {
   windowTitle="Stirling-PDF"
 
   messagesStartupError="An error occurred while starting Stirling-PDF"
-  //messagesJreNotFoundError="This application requires a Java Runtime Environment, Please download Java 17."
-  messagesJreVersionError="You are running the wrong version of Java, Please download Java 17."
-  messagesLauncherError="Java is corrupted. Please uninstall and then install  Java 17."
+  // messagesJreNotFoundError="This application requires a Java Runtime Environment, Please download Java 17."
+  messagesJreVersionError="You are running the wrong version of Java, Please download Java 21."
+  messagesLauncherError="Java is corrupted. Please uninstall and then install  Java 21."
   messagesInstanceAlreadyExists="Stirling-PDF is already running."
 }
 
@@ -155,8 +156,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.commonmark/commonmark
     implementation 'org.commonmark:commonmark:0.22.0'
     implementation 'org.commonmark:commonmark-ext-gfm-tables:0.22.0'
-    // https://mvnrepository.com/artifact/com.github.vladimir-bukhtoyarov/bucket4j-core
-    implementation 'com.bucket4j:bucket4j-core:8.10.1'
+    // https://mvnrepository.com/artifact/com.bucket4j/bucket4j_jdk17
+    implementation 'com.bucket4j:bucket4j_jdk17-core:8.12.1'
 
 	implementation 'com.fathzer:javaluator:3.0.3'
 
@@ -182,7 +183,7 @@ task writeVersion {
 swaggerhubUpload {
     //dependsOn generateOpenApiDocs  // Depends on your task generating Swagger docs
     api 'Stirling-PDF'  // The name of your API on SwaggerHub
-    owner 'Ludy87'  // Your SwaggerHub username (or organization name)
+    owner 'Frooodle'  // Your SwaggerHub username (or organization name)
     version project.version  // The version of your API
     inputFile './SwaggerDoc.json'  // The path to your Swagger docs
     token  "${System.getenv('SWAGGERHUB_API_KEY')}"  // Your SwaggerHub API key, passed as an environment variable

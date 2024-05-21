@@ -1,12 +1,11 @@
 package stirling.software.SPDF.controller.web;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -23,6 +22,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.servlet.http.HttpServletRequest;
 import stirling.software.SPDF.model.ApplicationProperties;
+import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
+import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client;
+import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client.Provider;
+import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client.Providers;
 import stirling.software.SPDF.model.Authority;
 import stirling.software.SPDF.model.Role;
 import stirling.software.SPDF.model.User;
@@ -33,7 +36,20 @@ import stirling.software.SPDF.repository.UserRepository;
 public class AccountWebController {
 
     @Autowired ApplicationProperties applicationProperties;
-    private static final Logger logger = LoggerFactory.getLogger(AccountWebController.class);
+
+    private boolean validateProvider(Provider provider) {
+        return provider != null
+                && provider.getIssuer() != null
+                && !provider.getIssuer().isEmpty()
+                && provider.getClientId() != null
+                && !provider.getClientId().isEmpty()
+                && provider.getClientSecret() != null
+                && !provider.getClientSecret().isEmpty()
+                && provider.getScopes() != null
+                && !provider.getScopes().isEmpty()
+                && provider.getUseAsUsername() != null
+                && !provider.getUseAsUsername().isEmpty();
+    }
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model, Authentication authentication) {
@@ -41,18 +57,109 @@ public class AccountWebController {
             return "redirect:/";
         }
 
+        Map<String, String> providerList = new HashMap<>();
+
+        OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
+        if (oauth != null) {
+            if (oauth.getIssuer() != null
+                    && !oauth.getIssuer().isEmpty()
+                    && oauth.getClientId() != null
+                    && !oauth.getClientId().isEmpty()
+                    && oauth.getClientSecret() != null
+                    && !oauth.getClientSecret().isEmpty()
+                    && oauth.getScopes() != null
+                    && !oauth.getScopes().isEmpty()
+                    && oauth.getUseAsUsername() != null
+                    && !oauth.getUseAsUsername().isEmpty()) {
+                providerList.put("oidc", "OpenID Connect");
+            }
+            Client client = oauth.getClient();
+            if (client != null) {
+                Providers providers = client.getProviders();
+                if (providers != null) {
+                    Provider google = providers.getGoogle();
+                    if (validateProvider(google)) {
+                        providerList.put("google", "Google");
+                    }
+
+                    Provider github = providers.getGithub();
+                    if (validateProvider(github)) {
+                        providerList.put("github", "Github");
+                    }
+
+                    Provider keycloak = providers.getKeycloak();
+                    if (validateProvider(keycloak)) {
+                        providerList.put("keycloak", "Keycloak");
+                    }
+                }
+            }
+        }
+        model.addAttribute("providerlist", providerList);
+
         model.addAttribute(
                 "oAuth2Enabled", applicationProperties.getSecurity().getOAUTH2().getEnabled());
 
         model.addAttribute("currentPage", "login");
 
-        if (request.getParameter("error") != null) {
+        String error = request.getParameter("error");
+        if (error != null) {
 
-            model.addAttribute("error", request.getParameter("error"));
+            switch (error) {
+                case "badcredentials":
+                    error = "login.invalid";
+                    break;
+                case "locked":
+                    error = "login.locked";
+                    break;
+                case "oauth2AuthenticationError":
+                    error = "userAlreadyExistsOAuthMessage";
+                    break;
+                default:
+                    break;
+            }
+
+            model.addAttribute("error", error);
         }
-        if (request.getParameter("erroroauth") != null) {
+        String erroroauth = request.getParameter("erroroauth");
+        if (erroroauth != null) {
 
-            model.addAttribute("erroroauth", request.getParameter("erroroauth"));
+            switch (erroroauth) {
+                case "oauth2AutoCreateDisabled":
+                    erroroauth = "login.oauth2AutoCreateDisabled";
+                    break;
+                case "invalidUsername":
+                    erroroauth = "login.invalid";
+                    break;
+                case "userAlreadyExistsWeb":
+                    erroroauth = "userAlreadyExistsWebMessage";
+                    break;
+                case "oauth2AuthenticationErrorWeb":
+                    erroroauth = "login.oauth2InvalidUserType";
+                    break;
+                case "invalid_token_response":
+                    erroroauth = "login.oauth2InvalidTokenResponse";
+                    break;
+                case "authorization_request_not_found":
+                    erroroauth = "login.oauth2RequestNotFound";
+                    break;
+                case "access_denied":
+                    erroroauth = "login.oauth2AccessDenied";
+                    break;
+                case "invalid_user_info_response":
+                    erroroauth = "login.oauth2InvalidUserInfoResponse";
+                    break;
+                case "invalid_request":
+                    erroroauth = "login.oauth2invalidRequest";
+                    break;
+                default:
+                    break;
+            }
+
+            model.addAttribute("erroroauth", erroroauth);
+        }
+        if (request.getParameter("messageType") != null) {
+
+            model.addAttribute("messageType", "changedCredsMessage");
         }
         if (request.getParameter("logout") != null) {
 
@@ -67,7 +174,8 @@ public class AccountWebController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/addUsers")
-    public String showAddUserForm(Model model, Authentication authentication) {
+    public String showAddUserForm(
+            HttpServletRequest request, Model model, Authentication authentication) {
         List<User> allUsers = userRepository.findAll();
         Iterator<User> iterator = allUsers.iterator();
         Map<String, String> roleDetails = Role.getAllRoleDetails();
@@ -83,6 +191,52 @@ public class AccountWebController {
                     }
                 }
             }
+        }
+
+        String messageType = request.getParameter("messageType");
+
+        String deleteMessage = null;
+        if (messageType != null) {
+            switch (messageType) {
+                case "deleteCurrentUser":
+                    deleteMessage = "deleteCurrentUserMessage";
+                    break;
+                case "deleteUsernameExists":
+                    deleteMessage = "deleteUsernameExistsMessage";
+                    break;
+                default:
+                    break;
+            }
+            model.addAttribute("deleteMessage", deleteMessage);
+
+            String addMessage = null;
+            switch (messageType) {
+                case "usernameExists":
+                    addMessage = "usernameExistsMessage";
+                    break;
+                case "invalidUsername":
+                    addMessage = "invalidUsernameMessage";
+                    break;
+                default:
+                    break;
+            }
+            model.addAttribute("addMessage", addMessage);
+        }
+
+        String changeMessage = null;
+        if (messageType != null) {
+            switch (messageType) {
+                case "userNotFound":
+                    changeMessage = "userNotFoundMessage";
+                    break;
+                case "downgradeCurrentUser":
+                    changeMessage = "downgradeCurrentUserMessage";
+                    break;
+
+                default:
+                    break;
+            }
+            model.addAttribute("changeMessage", changeMessage);
         }
 
         model.addAttribute("users", allUsers);
@@ -143,6 +297,30 @@ public class AccountWebController {
                     return "redirect:/error"; // Example redirection in case of error
                 }
 
+                String messageType = request.getParameter("messageType");
+                if (messageType != null) {
+                    switch (messageType) {
+                        case "notAuthenticated":
+                            messageType = "notAuthenticatedMessage";
+                            break;
+                        case "userNotFound":
+                            messageType = "userNotFoundMessage";
+                            break;
+                        case "incorrectPassword":
+                            messageType = "incorrectPasswordMessage";
+                            break;
+                        case "usernameExists":
+                            messageType = "usernameExistsMessage";
+                            break;
+                        case "invalidUsername":
+                            messageType = "invalidUsernameMessage";
+                            break;
+                        default:
+                            break;
+                    }
+                    model.addAttribute("messageType", messageType);
+                }
+
                 // Add attributes to the model
                 model.addAttribute("username", username);
                 model.addAttribute("role", user.get().getRolesAsString());
@@ -181,6 +359,28 @@ public class AccountWebController {
                     // Handle error appropriately
                     return "redirect:/error"; // Example redirection in case of error
                 }
+
+                String messageType = request.getParameter("messageType");
+                if (messageType != null) {
+                    switch (messageType) {
+                        case "notAuthenticated":
+                            messageType = "notAuthenticatedMessage";
+                            break;
+                        case "userNotFound":
+                            messageType = "userNotFoundMessage";
+                            break;
+                        case "incorrectPassword":
+                            messageType = "incorrectPasswordMessage";
+                            break;
+                        case "usernameExists":
+                            messageType = "usernameExistsMessage";
+                            break;
+                        default:
+                            break;
+                    }
+                    model.addAttribute("messageType", messageType);
+                }
+
                 // Add attributes to the model
                 model.addAttribute("username", username);
             }

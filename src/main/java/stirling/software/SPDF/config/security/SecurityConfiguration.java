@@ -1,7 +1,11 @@
 package stirling.software.SPDF.config.security;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -37,6 +41,9 @@ import stirling.software.SPDF.config.security.oauth2.CustomOAuth2LogoutSuccessHa
 import stirling.software.SPDF.config.security.oauth2.CustomOAuth2UserService;
 import stirling.software.SPDF.model.ApplicationProperties;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
+import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client;
+import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client.Provider;
+import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client.Providers;
 import stirling.software.SPDF.model.User;
 import stirling.software.SPDF.repository.JPATokenRepositoryImpl;
 
@@ -46,6 +53,8 @@ import stirling.software.SPDF.repository.JPATokenRepositoryImpl;
 public class SecurityConfiguration {
 
     @Autowired private CustomUserDetailsService userDetailsService;
+
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -140,6 +149,7 @@ public class SecurityConfiguration {
                                                                 || trimmedUri.startsWith("/images/")
                                                                 || trimmedUri.startsWith("/public/")
                                                                 || trimmedUri.startsWith("/css/")
+                                                                || trimmedUri.startsWith("/fonts/")
                                                                 || trimmedUri.startsWith("/js/")
                                                                 || trimmedUri.startsWith(
                                                                         "/api/v1/info/status");
@@ -150,7 +160,8 @@ public class SecurityConfiguration {
                     .authenticationProvider(authenticationProvider());
 
             // Handle OAUTH2 Logins
-            if (applicationProperties.getSecurity().getOAUTH2().getEnabled()) {
+            if (applicationProperties.getSecurity().getOAUTH2() != null
+                    && applicationProperties.getSecurity().getOAUTH2().getEnabled()) {
 
                 http.oauth2Login(
                                 oauth2 ->
@@ -181,9 +192,10 @@ public class SecurityConfiguration {
                         .logout(
                                 logout ->
                                         logout.logoutSuccessHandler(
-                                                new CustomOAuth2LogoutSuccessHandler(
-                                                        this.applicationProperties,
-                                                        sessionRegistry())));
+                                                        new CustomOAuth2LogoutSuccessHandler(
+                                                                this.applicationProperties,
+                                                                sessionRegistry()))
+                                                .invalidateHttpSession(true));
             }
         } else {
             http.csrf(csrf -> csrf.disable())
@@ -200,19 +212,190 @@ public class SecurityConfiguration {
             havingValue = "true",
             matchIfMissing = false)
     public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(this.oidcClientRegistration());
+        List<ClientRegistration> registrations = new ArrayList<>();
+
+        oidcClientRegistration().ifPresent(registrations::add);
+        googleClientRegistration().ifPresent(registrations::add);
+        github().ifPresent(registrations::add);
+        keycloakClientRegistration().ifPresent(registrations::add);
+
+        // if (registrations.isEmpty()) {
+        //     throw new IllegalStateException("At least one OAuth2 provider must be configured");
+        // }
+
+        return new InMemoryClientRegistrationRepository(registrations);
     }
 
-    private ClientRegistration oidcClientRegistration() {
+    private Optional<ClientRegistration> github() {
+        String ipAddr = null;
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            ipAddr = ip.getHostAddress();
+            logger.info(ipAddr);
+        } catch (UnknownHostException e) {
+            ipAddr = "http://127.0.0.1";
+        }
         OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
-        return ClientRegistrations.fromIssuerLocation(oauth.getIssuer())
-                .registrationId("oidc")
-                .clientId(oauth.getClientId())
-                .clientSecret(oauth.getClientSecret())
-                .scope(oauth.getScopes())
-                .userNameAttributeName(oauth.getUseAsUsername())
-                .clientName("OIDC")
-                .build();
+        if (oauth == null || !oauth.getEnabled()) {
+            return Optional.empty();
+        }
+        Client client = oauth.getClient();
+        if (client == null) {
+            return Optional.empty();
+        }
+        Providers providers = client.getProviders();
+        if (providers == null) {
+            return Optional.empty();
+        }
+        Provider github = providers.getGithub();
+        return validateProviderGithub(github)
+                ? Optional.of(
+                        ClientRegistration.withRegistrationId("github")
+                                .clientId(github.getClientId())
+                                .clientSecret(github.getClientSecret())
+                                .scope("read:user")
+                                .authorizationUri("https://github.com/login/oauth/authorize")
+                                .tokenUri("https://github.com/login/oauth/access_token")
+                                .userInfoUri("https://api.github.com/user")
+                                .userNameAttributeName("login")
+                                .clientName("GitHub")
+                                .redirectUri("http://" + ipAddr + ":8080/login/oauth2/code/github")
+                                .authorizationGrantType(
+                                        org.springframework.security.oauth2.core
+                                                .AuthorizationGrantType.AUTHORIZATION_CODE)
+                                .build())
+                : Optional.empty();
+    }
+
+    private Optional<ClientRegistration> oidcClientRegistration() {
+        OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
+        if (oauth == null
+                || oauth.getIssuer() == null
+                || oauth.getIssuer().isEmpty()
+                || oauth.getClientId() == null
+                || oauth.getClientId().isEmpty()
+                || oauth.getClientSecret() == null
+                || oauth.getClientSecret().isEmpty()
+                || oauth.getScopes() == null
+                || oauth.getScopes().isEmpty()
+                || oauth.getUseAsUsername() == null
+                || oauth.getUseAsUsername().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(
+                ClientRegistrations.fromIssuerLocation(oauth.getIssuer())
+                        .registrationId("oidc")
+                        .clientId(oauth.getClientId())
+                        .clientSecret(oauth.getClientSecret())
+                        .scope(oauth.getScopes())
+                        .userNameAttributeName(oauth.getUseAsUsername())
+                        .clientName("OIDC")
+                        .build());
+    }
+
+    private boolean validateProviderGithub(Provider provider) {
+        return provider != null
+                && provider.getClientId() != null
+                && !provider.getClientId().isEmpty()
+                && provider.getClientSecret() != null
+                && !provider.getClientSecret().isEmpty();
+    }
+
+    private boolean validateProvider(Provider provider) {
+        return provider != null
+                && provider.getIssuer() != null
+                && !provider.getIssuer().isEmpty()
+                && provider.getClientId() != null
+                && !provider.getClientId().isEmpty()
+                && provider.getClientSecret() != null
+                && !provider.getClientSecret().isEmpty()
+                && provider.getScopes() != null
+                && !provider.getScopes().isEmpty()
+                && provider.getUseAsUsername() != null
+                && !provider.getUseAsUsername().isEmpty();
+    }
+
+    private Optional<ClientRegistration> googleClientRegistration() {
+        OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
+        if (oauth == null || !oauth.getEnabled()) {
+            return Optional.empty();
+        }
+        Client client = oauth.getClient();
+        if (client == null) {
+            return Optional.empty();
+        }
+        Providers providers = client.getProviders();
+        if (providers == null) {
+            return Optional.empty();
+        }
+        Provider google = providers.getGoogle();
+        return validateProvider(google)
+                ? Optional.of(
+                        ClientRegistrations.fromIssuerLocation(google.getIssuer())
+                                .registrationId("google")
+                                .clientId(google.getClientId())
+                                .clientSecret(google.getClientSecret())
+                                .scope(google.getScopes())
+                                .userNameAttributeName(google.getUseAsUsername())
+                                .clientName("Google")
+                                .build())
+                : Optional.empty();
+    }
+
+    private Optional<ClientRegistration> githubClientRegistration() {
+        OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
+        if (oauth == null || !oauth.getEnabled()) {
+            return Optional.empty();
+        }
+        Client client = oauth.getClient();
+        if (client == null) {
+            return Optional.empty();
+        }
+        Providers providers = client.getProviders();
+        if (providers == null) {
+            return Optional.empty();
+        }
+        Provider github = providers.getGithub();
+
+        return validateProvider(github)
+                ? Optional.of(
+                        ClientRegistrations.fromIssuerLocation(github.getIssuer())
+                                .registrationId("github")
+                                .clientId(github.getClientId())
+                                .clientSecret(github.getClientSecret())
+                                .scope(github.getScopes())
+                                .userNameAttributeName(github.getUseAsUsername())
+                                .clientName("GitHub")
+                                .build())
+                : Optional.empty();
+    }
+
+    private Optional<ClientRegistration> keycloakClientRegistration() {
+        OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
+        if (oauth == null || !oauth.getEnabled()) {
+            return Optional.empty();
+        }
+        Client client = oauth.getClient();
+        if (client == null) {
+            return Optional.empty();
+        }
+        Providers providers = client.getProviders();
+        if (providers == null) {
+            return Optional.empty();
+        }
+        Provider keycloak = providers.getKeycloak();
+
+        return validateProvider(keycloak)
+                ? Optional.of(
+                        ClientRegistrations.fromIssuerLocation(keycloak.getIssuer())
+                                .registrationId("keycloak")
+                                .clientId(keycloak.getClientId())
+                                .clientSecret(keycloak.getClientSecret())
+                                .scope(keycloak.getScopes())
+                                .userNameAttributeName(keycloak.getUseAsUsername())
+                                .clientName("Keycloak")
+                                .build())
+                : Optional.empty();
     }
 
     /*

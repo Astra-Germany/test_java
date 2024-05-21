@@ -182,13 +182,12 @@ public class ApplicationProperties {
                     + oauth2
                     + ", initialLogin="
                     + initialLogin
-                    + ",  csrfDisabled="
+                    + ", csrfDisabled="
                     + csrfDisabled
                     + "]";
         }
 
         public static class InitialLogin {
-
             private String username;
             private String password;
 
@@ -219,22 +218,21 @@ public class ApplicationProperties {
         }
 
         public static class OAUTH2 {
-
-            private boolean enabled;
+            private Boolean enabled = false;
             private String issuer;
             private String clientId;
             private String clientSecret;
-            private boolean autoCreateUser;
+            private Boolean autoCreateUser = true; // REMOVE before deploy
             private String useAsUsername;
-            private String provider;
-
             private Collection<String> scopes = new ArrayList<String>();
+            private String provider;
+            private Client client = new Client();
 
-            public boolean getEnabled() {
+            public Boolean getEnabled() {
                 return enabled;
             }
 
-            public void setEnabled(boolean enabled) {
+            public void setEnabled(Boolean enabled) {
                 this.enabled = enabled;
             }
 
@@ -262,19 +260,18 @@ public class ApplicationProperties {
                 this.clientSecret = clientSecret;
             }
 
-            public boolean getAutoCreateUser() {
+            public Boolean getAutoCreateUser() {
                 return autoCreateUser;
             }
 
-            public void setAutoCreateUser(boolean autoCreateUser) {
+            public void setAutoCreateUser(Boolean autoCreateUser) {
                 this.autoCreateUser = autoCreateUser;
             }
 
             public String getUseAsUsername() {
-                if (useAsUsername != null && useAsUsername.trim().length() > 0) {
-                    return useAsUsername;
-                }
-                return "email";
+                return useAsUsername != null && !useAsUsername.trim().isEmpty()
+                        ? useAsUsername
+                        : "email";
             }
 
             public void setUseAsUsername(String useAsUsername) {
@@ -293,12 +290,20 @@ public class ApplicationProperties {
                 return scopes;
             }
 
-            public void setScopes(String scpoes) {
+            public void setScopes(String scope) {
                 List<String> scopesList =
-                        Arrays.stream(scpoes.split(","))
+                        Arrays.stream(scope.split(","))
                                 .map(String::trim)
                                 .collect(Collectors.toList());
                 this.scopes.addAll(scopesList);
+            }
+
+            public Client getClient() {
+                return client;
+            }
+
+            public void setClient(Client client) {
+                this.client = client;
             }
 
             @Override
@@ -315,11 +320,151 @@ public class ApplicationProperties {
                         + autoCreateUser
                         + ", useAsUsername="
                         + useAsUsername
-                        + ", provider"
+                        + ", provider="
                         + provider
                         + ", scopes="
                         + scopes
                         + "]";
+            }
+
+            public static class Client {
+                private Providers providers = new Providers();
+
+                public Providers getProviders() {
+                    return providers;
+                }
+
+                public void setProviders(Providers providers) {
+                    this.providers = providers;
+                }
+
+                @Override
+                public String toString() {
+                    return "Client [providers=" + providers + "]";
+                }
+
+                public static class Providers {
+                    private Provider google = new Provider();
+                    private Provider github = new Provider();
+                    private Provider keycloak = new Provider();
+
+                    public Provider getGoogle() {
+                        return google;
+                    }
+
+                    public void setGoogle(Provider google) {
+                        this.google = google;
+                    }
+
+                    public Provider getGithub() {
+                        return github;
+                    }
+
+                    public void setGithub(Provider github) {
+                        this.github = github;
+                    }
+
+                    public Provider getKeycloak() {
+                        return keycloak;
+                    }
+
+                    public void setKeycloak(Provider keycloak) {
+                        this.keycloak = keycloak;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "Providers [google="
+                                + google
+                                + ", github="
+                                + github
+                                + ", keycloak="
+                                + keycloak
+                                + "]";
+                    }
+
+                    public Provider get(String registrationId) {
+                        switch (registrationId) {
+                            case "keycloak":
+                                return this.keycloak;
+                            case "google":
+                                return this.google;
+                            case "github":
+                                return this.github;
+                            default:
+                                return new Provider();
+                        }
+                    }
+                }
+
+                public static class Provider {
+                    private String issuer;
+                    private String clientId;
+                    private String clientSecret;
+                    private Collection<String> scopes = new ArrayList<String>();
+                    private String useAsUsername;
+
+                    public String getIssuer() {
+                        return issuer;
+                    }
+
+                    public void setIssuer(String issuer) {
+                        this.issuer = issuer;
+                    }
+
+                    public String getClientId() {
+                        return clientId;
+                    }
+
+                    public void setClientId(String clientId) {
+                        this.clientId = clientId;
+                    }
+
+                    public String getClientSecret() {
+                        return clientSecret;
+                    }
+
+                    public void setClientSecret(String clientSecret) {
+                        this.clientSecret = clientSecret;
+                    }
+
+                    public Collection<String> getScopes() {
+                        return scopes;
+                    }
+
+                    public void setScopes(String scope) {
+                        List<String> scopesList =
+                                Arrays.stream(scope.split(","))
+                                        .map(String::trim)
+                                        .collect(Collectors.toList());
+                        this.scopes.addAll(scopesList);
+                    }
+
+                    public String getUseAsUsername() {
+                        return useAsUsername;
+                    }
+
+                    public void setUseAsUsername(String useAsUsername) {
+                        this.useAsUsername = useAsUsername;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "Provider [issuer="
+                                + issuer
+                                + "clientId="
+                                + clientId
+                                + ", clientSecret="
+                                + (clientSecret != null && !clientSecret.isEmpty()
+                                        ? "MASKED"
+                                        : "NULL")
+                                + ", scopes="
+                                + scopes
+                                + ", useAsUsername="
+                                + useAsUsername
+                                + "]";
+                    }
+                }
             }
         }
     }
@@ -327,12 +472,9 @@ public class ApplicationProperties {
     public static class System {
         private String defaultLocale;
         private Boolean googlevisibility;
-        private String rootURIPath;
-        private String customStaticFilePath;
-        private Integer maxFileSize;
-        private boolean showUpdate;
+        private Boolean showUpdate;
         private Boolean showUpdateOnlyAdmin;
-        private boolean customHTMLFiles;
+        private Boolean customHTMLFiles;
 
         public boolean isCustomHTMLFiles() {
             return customHTMLFiles;
@@ -384,42 +526,12 @@ public class ApplicationProperties {
             this.googlevisibility = googlevisibility;
         }
 
-        public String getRootURIPath() {
-            return rootURIPath;
-        }
-
-        public void setRootURIPath(String rootURIPath) {
-            this.rootURIPath = rootURIPath;
-        }
-
-        public String getCustomStaticFilePath() {
-            return customStaticFilePath;
-        }
-
-        public void setCustomStaticFilePath(String customStaticFilePath) {
-            this.customStaticFilePath = customStaticFilePath;
-        }
-
-        public Integer getMaxFileSize() {
-            return maxFileSize;
-        }
-
-        public void setMaxFileSize(Integer maxFileSize) {
-            this.maxFileSize = maxFileSize;
-        }
-
         @Override
         public String toString() {
             return "System [defaultLocale="
                     + defaultLocale
                     + ", googlevisibility="
                     + googlevisibility
-                    + ", rootURIPath="
-                    + rootURIPath
-                    + ", customStaticFilePath="
-                    + customStaticFilePath
-                    + ", maxFileSize="
-                    + maxFileSize
                     + ", enableAlphaFunctionality="
                     + enableAlphaFunctionality
                     + ", showUpdate="
@@ -436,8 +548,7 @@ public class ApplicationProperties {
         private String appNameNavbar;
 
         public String getAppName() {
-            if (appName != null && appName.trim().length() == 0) return null;
-            return appName;
+            return appName != null && !appName.trim().isEmpty() ? appName : null;
         }
 
         public void setAppName(String appName) {
@@ -445,8 +556,9 @@ public class ApplicationProperties {
         }
 
         public String getHomeDescription() {
-            if (homeDescription != null && homeDescription.trim().length() == 0) return null;
-            return homeDescription;
+            return homeDescription != null && !homeDescription.trim().isEmpty()
+                    ? homeDescription
+                    : null;
         }
 
         public void setHomeDescription(String homeDescription) {
@@ -454,8 +566,7 @@ public class ApplicationProperties {
         }
 
         public String getAppNameNavbar() {
-            if (appNameNavbar != null && appNameNavbar.trim().length() == 0) return null;
-            return appNameNavbar;
+            return appNameNavbar != null && !appNameNavbar.trim().isEmpty() ? appNameNavbar : null;
         }
 
         public void setAppNameNavbar(String appNameNavbar) {
