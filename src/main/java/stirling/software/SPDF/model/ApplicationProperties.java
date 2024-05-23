@@ -408,9 +408,9 @@ public class ApplicationProperties {
     }
 
     public static class GoogleProvider extends Provider {
-        private String ggClientd;
-        private String ggClientsecret;
-        private Collection<String> ggScope = new ArrayList<>();
+        private String ggclientd;
+        private String ggclientsecret;
+        private Collection<String> ggscope = new ArrayList<>();
         private String googleuseasusername = "email";
 
         private static final String authorizationUri =
@@ -442,15 +442,15 @@ public class ApplicationProperties {
 
         @Override
         public Collection<String> getScope() {
-            if (ggScope == null || ggScope.isEmpty()) {
-                ggScope.add("https://www.googleapis.com/auth/userinfo.email");
-                ggScope.add("https://www.googleapis.com/auth/userinfo.profile");
+            if (ggscope == null || ggscope.isEmpty()) {
+                ggscope.add("https://www.googleapis.com/auth/userinfo.email");
+                ggscope.add("https://www.googleapis.com/auth/userinfo.profile");
             }
-            return ggScope;
+            return ggscope;
         }
 
         public void setGooglescope(String googlescope) {
-            this.ggScope =
+            this.ggscope =
                     Arrays.stream(googlescope.split(","))
                             .map(String::trim)
                             .collect(Collectors.toList());
@@ -458,30 +458,30 @@ public class ApplicationProperties {
 
         @Override
         public String getClientSecret() {
-            return ggClientsecret;
+            return ggclientsecret;
         }
 
         public void setGoogleclientsecret(String googleclientsecret) {
-            this.ggClientsecret = googleclientsecret;
+            this.ggclientsecret = googleclientsecret;
         }
 
         @Override
         public String getClientId() {
-            return ggClientd;
+            return ggclientd;
         }
 
         public void setGoogleclientid(String googleclientid) {
-            this.ggClientd = googleclientid;
+            this.ggclientd = googleclientid;
         }
 
         @Override
         public String toString() {
             return "Google [clientId="
-                    + ggClientd
+                    + ggclientd
                     + ", clientSecret="
-                    + (ggClientsecret != null && !ggClientsecret.isEmpty() ? "MASKED" : "NULL")
+                    + (ggclientsecret != null && !ggclientsecret.isEmpty() ? "MASKED" : "NULL")
                     + ", scope="
-                    + ggScope
+                    + ggscope
                     + ", useAsUsername="
                     + googleuseasusername
                     + "]";
