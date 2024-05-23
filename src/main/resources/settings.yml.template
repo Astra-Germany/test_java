@@ -21,21 +21,21 @@ security:
 #    provider: "google" # Set this to your OAuth provider's name, e.g., 'google' or 'keycloak'
 #    client:
 #      google:
-#        googleClientId: "" # Client ID for Google OAuth2
-#        googleClientSecret: "" # Client Secret for Google OAuth2
-#        googleScope: "https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile" # Scopes for Google OAuth2
-#        googleUseAsUsername: "email" # Field to use as the username for Google OAuth2
+#        ggClientd: "" # Client ID for Google OAuth2
+#        ggClientsecret: "" # Client Secret for Google OAuth2
+#        ggScope: "https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile" # Scopes for Google OAuth2
+#        ggUseasusername: "email" # Field to use as the username for Google OAuth2
 #      github:
-#        githubClientId: "" # Client ID for GitHub OAuth2
-#        githubClientSecret: "" # Client Secret for GitHub OAuth2
-#        githubScope: "read:user" # Scope for GitHub OAuth2
-#        githubUseAsUsername: "login" # Field to use as the username for GitHub OAuth2
+#        ghClientd: "" # Client ID for GitHub OAuth2
+#        ghClientsecret: "" # Client Secret for GitHub OAuth2
+#        ghScope: "read:user" # Scope for GitHub OAuth2
+#        ghUseasusername: "login" # Field to use as the username for GitHub OAuth2
 #      keycloak:
-#        keycloakIssuer: "http://192.168.0.123:8888/realms/stirling-pdf" # URL of the Keycloak realm's OpenID Connect Discovery endpoint
-#        keycloakClientId: "stirling-pdf" # Client ID for Keycloak OAuth2
-#        keycloakClientSecret: "" # Client Secret for Keycloak OAuth2
-#        keycloakScope: "openid, profile, email" # Scopes for Keycloak OAuth2
-#        keycloakUseAsUsername: "email" # Field to use as the username for Keycloak OAuth2
+#        kcIssuer: "http://192.168.0.123:8888/realms/stirling-pdf" # URL of the Keycloak realm's OpenID Connect Discovery endpoint
+#        kcClientd: "stirling-pdf" # Client ID for Keycloak OAuth2
+#        kcClientsecret: "" # Client Secret for Keycloak OAuth2
+#        kcScope: "openid, profile, email" # Scopes for Keycloak OAuth2
+#        kcUseasusername: "email" # Field to use as the username for Keycloak OAuth2
 
 system:
   defaultLocale: 'en-US' # Set the default language (e.g. 'de-DE', 'fr-FR', etc)

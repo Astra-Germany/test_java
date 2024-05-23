@@ -219,7 +219,8 @@ public class SecurityConfiguration {
         keycloakClientRegistration().ifPresent(registrations::add);
 
         if (registrations.isEmpty()) {
-            throw new IllegalStateException("At least one OAuth2 provider must be configured");
+            logger.error("At least one OAuth2 provider must be configured");
+            System.exit(1);
         }
 
         return new InMemoryClientRegistrationRepository(registrations);
