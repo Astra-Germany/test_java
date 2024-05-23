@@ -15,7 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import stirling.software.SPDF.model.ApplicationProperties;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
-import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client.Provider;
+import stirling.software.SPDF.model.Provider;
+import stirling.software.SPDF.utils.UrlUtils;
 
 public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
@@ -47,17 +48,21 @@ public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHand
             String registrationId = oauthToken.getAuthorizedClientRegistrationId();
 
             provider = registrationId;
-
-            Provider pro = oauth.getClient().getProviders().get(registrationId);
-            issuer = pro.getIssuer();
-            clientId = pro.getClientId();
+            logger.info(registrationId);
+            Provider pro;
+            try {
+                pro = oauth.getClient().get(registrationId);
+                issuer = pro.getIssuer();
+                clientId = pro.getClientId();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         } else {
             provider = oauth.getProvider() != null ? oauth.getProvider() : "";
             issuer = oauth.getIssuer();
             clientId = oauth.getClientId();
         }
-        logger.info(issuer);
 
         if (request.getParameter("oauth2AuthenticationErrorWeb") != null) {
             param = "erroroauth=oauth2AuthenticationErrorWeb";
@@ -69,6 +74,8 @@ public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHand
             param = "error=oauth2AutoCreateDisabled";
         }
 
+        String redirect_url = UrlUtils.getOrigin(request) + "/login?" + param;
+
         HttpSession session = request.getSession(false);
         if (session != null) {
             String sessionId = session.getId();
@@ -79,38 +86,28 @@ public class CustomOAuth2LogoutSuccessHandler extends SimpleUrlLogoutSuccessHand
 
         switch (provider) {
             case "keycloak":
+                // Add Keycloak specific logout URL if needed
                 String logoutUrl =
                         issuer
                                 + "/protocol/openid-connect/logout"
                                 + "?client_id="
                                 + clientId
                                 + "&post_logout_redirect_uri="
-                                + response.encodeRedirectURL(
-                                        request.getScheme()
-                                                + "://"
-                                                + request.getHeader("host")
-                                                + "/login?"
-                                                + param);
+                                + response.encodeRedirectURL(redirect_url);
                 logger.info("Redirecting to Keycloak logout URL: " + logoutUrl);
                 response.sendRedirect(logoutUrl);
                 break;
             case "github":
                 // Add GitHub specific logout URL if needed
-                String githubLogoutUrl =
-                        "https://github.com/logout?redirect_uri=http://127.0.0.1:8080";
+                String githubLogoutUrl = "https://github.com/logout";
                 logger.info("Redirecting to GitHub logout URL: " + githubLogoutUrl);
                 response.sendRedirect(githubLogoutUrl);
                 break;
             case "google":
                 // Add Google specific logout URL if needed
                 // String googleLogoutUrl =
-                //         "https://accounts.google.com/Logout?continue="
-                //                 + response.encodeRedirectURL(
-                //                         request.getScheme()
-                //                                 + "://"
-                //                                 + request.getHeader("host")
-                //                                 + "/login?"
-                //                                 + param);
+                // "https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue="
+                //                 + response.encodeRedirectURL(redirect_url);
                 // logger.info("Redirecting to Google logout URL: " + googleLogoutUrl);
                 // response.sendRedirect(googleLogoutUrl);
                 // break;

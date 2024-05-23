@@ -12,32 +12,30 @@ security:
 #    password: "stirling" # Initial password for the first login
 #  oauth2:
 #    enabled: false # set to 'true' to enable login (Note: enableLogin must also be 'true' for this to work)
-#    issuer: "http://localhost:9000" # "https://accounts.google.com" # set to any provider that supports OpenID Connect Discovery (/.well-known/openid-configuration) end-point
-#    clientId: "login-client" # Client ID from your provider
-#    clientSecret: "openid-connect" # Client Secret from your provider
-#    useAsUsername: "sub" # "preferred_username" # Standard ist 'email' es können customfields verwendet werden
-#    scopes: "openid, profile" # "https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile" # 
-#    provider: "Spring" # "google" #
+#    issuer: "" # set to any provider that supports OpenID Connect Discovery (/.well-known/openid-configuration) end-point
+#    clientId: "" # Client ID from your provider
+#    clientSecret: "" # Client Secret from your provider
+#    autoCreateUser: false # set to 'true' to allow auto-creation of non-existing users
+#    useAsUsername: "email" # Default is 'email'; custom fields can be used as the username
+#    scopes: "openid, profile, email" # Specify the scopes for which the application will request permissions
+#    provider: "google" # Set this to your OAuth provider's name, e.g., 'google' or 'keycloak'
 #    client:
-#      providers:
-#        google:
-#          issuer: "https://accounts.google.com"
-#          clientId: ""
-#          clientSecret: ""
-#          scopes: "https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile"
-#          useAsUsername: "email"
-#        github:
-#          issuer: "https://token.actions.githubusercontent.com"
-#          clientId: ""
-#          clientSecret: ""
-#          scopes: user:email
-#          useAsUsername: "email"
-#        keycloak:
-#          issuer: "http://192.168.0.220:8089/realms/stirling-pdf"
-#          clientId: "stirling-pdf"
-#          clientSecret: "wI8QWB1xI2hqXSTzho2njrTINaxvfv50"
-#          scopes: "openid, profile, email"
-#          useAsUsername: "preferred_username"
+#      google:
+#        googleClientId: "" # Client ID for Google OAuth2
+#        googleClientSecret: "" # Client Secret for Google OAuth2
+#        googleScope: "https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile" # Scopes for Google OAuth2
+#        googleUseAsUsername: "email" # Field to use as the username for Google OAuth2
+#      github:
+#        githubClientId: "" # Client ID for GitHub OAuth2
+#        githubClientSecret: "" # Client Secret for GitHub OAuth2
+#        githubScope: "read:user" # Scope for GitHub OAuth2
+#        githubUseAsUsername: "login" # Field to use as the username for GitHub OAuth2
+#      keycloak:
+#        keycloakIssuer: "http://192.168.0.123:8888/realms/stirling-pdf" # URL of the Keycloak realm's OpenID Connect Discovery endpoint
+#        keycloakClientId: "stirling-pdf" # Client ID for Keycloak OAuth2
+#        keycloakClientSecret: "" # Client Secret for Keycloak OAuth2
+#        keycloakScope: "openid, profile, email" # Scopes for Keycloak OAuth2
+#        keycloakUseAsUsername: "email" # Field to use as the username for Keycloak OAuth2
 
 system:
   defaultLocale: 'en-US' # Set the default language (e.g. 'de-DE', 'fr-FR', etc)

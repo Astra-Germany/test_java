@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -22,10 +24,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.servlet.http.HttpServletRequest;
 import stirling.software.SPDF.model.ApplicationProperties;
+import stirling.software.SPDF.model.ApplicationProperties.GithubProvider;
+import stirling.software.SPDF.model.ApplicationProperties.GoogleProvider;
+import stirling.software.SPDF.model.ApplicationProperties.KeycloakProvider;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client;
-import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client.Provider;
-import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client.Providers;
 import stirling.software.SPDF.model.Authority;
 import stirling.software.SPDF.model.Role;
 import stirling.software.SPDF.model.User;
@@ -36,20 +39,7 @@ import stirling.software.SPDF.repository.UserRepository;
 public class AccountWebController {
 
     @Autowired ApplicationProperties applicationProperties;
-
-    private boolean validateProvider(Provider provider) {
-        return provider != null
-                && provider.getIssuer() != null
-                && !provider.getIssuer().isEmpty()
-                && provider.getClientId() != null
-                && !provider.getClientId().isEmpty()
-                && provider.getClientSecret() != null
-                && !provider.getClientSecret().isEmpty()
-                && provider.getScopes() != null
-                && !provider.getScopes().isEmpty()
-                && provider.getUseAsUsername() != null
-                && !provider.getUseAsUsername().isEmpty();
-    }
+    private static final Logger logger = LoggerFactory.getLogger(AccountWebController.class);
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model, Authentication authentication) {
@@ -61,36 +51,24 @@ public class AccountWebController {
 
         OAUTH2 oauth = applicationProperties.getSecurity().getOAUTH2();
         if (oauth != null) {
-            if (oauth.getIssuer() != null
-                    && !oauth.getIssuer().isEmpty()
-                    && oauth.getClientId() != null
-                    && !oauth.getClientId().isEmpty()
-                    && oauth.getClientSecret() != null
-                    && !oauth.getClientSecret().isEmpty()
-                    && oauth.getScopes() != null
-                    && !oauth.getScopes().isEmpty()
-                    && oauth.getUseAsUsername() != null
-                    && !oauth.getUseAsUsername().isEmpty()) {
+            if (oauth.isSettingsValid()) {
                 providerList.put("oidc", "OpenID Connect");
             }
             Client client = oauth.getClient();
             if (client != null) {
-                Providers providers = client.getProviders();
-                if (providers != null) {
-                    Provider google = providers.getGoogle();
-                    if (validateProvider(google)) {
-                        providerList.put("google", "Google");
-                    }
+                GoogleProvider google = client.getGoogle();
+                if (google.isSettingsValid()) {
+                    providerList.put("google", "Google");
+                }
 
-                    Provider github = providers.getGithub();
-                    if (validateProvider(github)) {
-                        providerList.put("github", "Github");
-                    }
+                GithubProvider github = client.getGithub();
+                if (github.isSettingsValid()) {
+                    providerList.put("github", "Github");
+                }
 
-                    Provider keycloak = providers.getKeycloak();
-                    if (validateProvider(keycloak)) {
-                        providerList.put("keycloak", "Keycloak");
-                    }
+                KeycloakProvider keycloak = client.getKeycloak();
+                if (keycloak.isSettingsValid()) {
+                    providerList.put("keycloak", "Keycloak");
                 }
             }
         }
