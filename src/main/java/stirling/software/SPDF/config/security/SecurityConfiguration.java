@@ -232,7 +232,6 @@ public class SecurityConfiguration {
             return Optional.empty();
         }
         Client client = oauth.getClient();
-        logger.info(client + " 123456789");
         if (client == null) {
             return Optional.empty();
         }
@@ -242,7 +241,7 @@ public class SecurityConfiguration {
                         ClientRegistration.withRegistrationId("google")
                                 .clientId(google.getClientId())
                                 .clientSecret(google.getClientSecret())
-                                .scope(google.getScope())
+                                .scope(google.getScopes())
                                 .authorizationUri(google.getAuthorizationuri())
                                 .tokenUri(google.getTokenuri())
                                 .userInfoUri(google.getUserinfouri())
@@ -262,7 +261,6 @@ public class SecurityConfiguration {
             return Optional.empty();
         }
         Client client = oauth.getClient();
-        logger.info(client + " 123456789");
         if (client == null) {
             return Optional.empty();
         }
@@ -274,7 +272,7 @@ public class SecurityConfiguration {
                                 .registrationId("keycloak")
                                 .clientId(keycloak.getClientId())
                                 .clientSecret(keycloak.getClientSecret())
-                                .scope(keycloak.getScope())
+                                .scope(keycloak.getScopes())
                                 .userNameAttributeName(keycloak.getUseAsUsername())
                                 .clientName("Keycloak")
                                 .build())
@@ -287,7 +285,6 @@ public class SecurityConfiguration {
             return Optional.empty();
         }
         Client client = oauth.getClient();
-        logger.info(client + " 123456789");
         if (client == null) {
             return Optional.empty();
         }
@@ -297,7 +294,7 @@ public class SecurityConfiguration {
                         ClientRegistration.withRegistrationId("github")
                                 .clientId(github.getClientId())
                                 .clientSecret(github.getClientSecret())
-                                .scope(github.getScope())
+                                .scope(github.getScopes())
                                 .authorizationUri(github.getAuthorizationuri())
                                 .tokenUri(github.getTokenuri())
                                 .userInfoUri(github.getUserinfouri())

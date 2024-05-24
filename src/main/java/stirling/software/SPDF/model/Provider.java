@@ -2,33 +2,8 @@ package stirling.software.SPDF.model;
 
 import java.util.Collection;
 
-public class Provider {
+public class Provider implements ProviderInterface {
     private String name;
-    private String clientId;
-    private String clientSecret;
-    private String issuer;
-    private String useAsUsername;
-    private Collection<String> scope;
-
-    public Collection<String> getScope() {
-        return scope;
-    }
-
-    public String getUseAsUsername() {
-        return useAsUsername;
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
 
     public String getName() {
         return name;
@@ -50,11 +25,63 @@ public class Provider {
         // throw new IllegalArgumentException(getName() + ": " + name + " is required!");
     }
 
-    public boolean isSettingsValid() {
-        return isValid(this.getIssuer(), "issuer")
-                && isValid(this.getClientId(), "clientId")
-                && isValid(this.getClientSecret(), "clientSecret")
-                && isValid(this.getScope(), "scope")
-                && isValid(this.getUseAsUsername(), "useAsUsername");
+    @Override
+    public Collection<String> getScopes() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getScope'");
+    }
+
+    @Override
+    public void setScopes(String scope) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setScope'");
+    }
+
+    @Override
+    public String getUseAsUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUseAsUsername'");
+    }
+
+    @Override
+    public void setUseAsUsername(String useAsUsername) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setUseAsUsername'");
+    }
+
+    @Override
+    public String getIssuer() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getIssuer'");
+    }
+
+    @Override
+    public void setIssuer(String issuer) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setIssuer'");
+    }
+
+    @Override
+    public String getClientSecret() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getClientSecret'");
+    }
+
+    @Override
+    public void setClientSecret(String clientSecret) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setClientSecret'");
+    }
+
+    @Override
+    public String getClientId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getClientId'");
+    }
+
+    @Override
+    public void setClientId(String clientId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setClientId'");
     }
 }

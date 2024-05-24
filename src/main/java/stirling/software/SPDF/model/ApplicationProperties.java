@@ -408,10 +408,6 @@ public class ApplicationProperties {
     }
 
     public static class GoogleProvider extends Provider {
-        private String ggclientd;
-        private String ggclientsecret;
-        private Collection<String> ggscope = new ArrayList<>();
-        private String googleuseasusername = "email";
 
         private static final String authorizationUri =
                 "https://accounts.google.com/o/oauth2/v2/auth";
@@ -431,59 +427,66 @@ public class ApplicationProperties {
             return userInfoUri;
         }
 
-        @Override
-        public String getUseAsUsername() {
-            return googleuseasusername;
-        }
-
-        public void setGoogleuseasusername(String googleuseasusername) {
-            this.googleuseasusername = googleuseasusername;
-        }
+        private String clientId;
+        private String clientSecret;
+        private Collection<String> scopes = new ArrayList<>();
+        private String useAsUsername = "email";
 
         @Override
-        public Collection<String> getScope() {
-            if (ggscope == null || ggscope.isEmpty()) {
-                ggscope.add("https://www.googleapis.com/auth/userinfo.email");
-                ggscope.add("https://www.googleapis.com/auth/userinfo.profile");
-            }
-            return ggscope;
+        public String getClientId() {
+            return this.clientId;
         }
 
-        public void setGooglescope(String googlescope) {
-            this.ggscope =
-                    Arrays.stream(googlescope.split(","))
-                            .map(String::trim)
-                            .collect(Collectors.toList());
+        @Override
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
         }
 
         @Override
         public String getClientSecret() {
-            return ggclientsecret;
-        }
-
-        public void setGoogleclientsecret(String googleclientsecret) {
-            this.ggclientsecret = googleclientsecret;
+            return this.clientSecret;
         }
 
         @Override
-        public String getClientId() {
-            return ggclientd;
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
         }
 
-        public void setGoogleclientid(String googleclientid) {
-            this.ggclientd = googleclientid;
+        @Override
+        public Collection<String> getScopes() {
+            if (scopes == null || scopes.isEmpty()) {
+                scopes.add("https://www.googleapis.com/auth/userinfo.email");
+                scopes.add("https://www.googleapis.com/auth/userinfo.profile");
+            }
+            return scopes;
+        }
+
+        @Override
+        public void setScopes(String scopes) {
+            this.scopes =
+                    Arrays.stream(scopes.split(",")).map(String::trim).collect(Collectors.toList());
+        }
+
+        @Override
+        public String getUseAsUsername() {
+            return this.useAsUsername;
+        }
+
+        @Override
+        public void setUseAsUsername(String useAsUsername) {
+            this.useAsUsername = useAsUsername;
         }
 
         @Override
         public String toString() {
             return "Google [clientId="
-                    + ggclientd
+                    + clientId
                     + ", clientSecret="
-                    + (ggclientsecret != null && !ggclientsecret.isEmpty() ? "MASKED" : "NULL")
-                    + ", scope="
-                    + ggscope
+                    + (clientSecret != null && !clientSecret.isEmpty() ? "MASKED" : "NULL")
+                    + ", scopes="
+                    + scopes
                     + ", useAsUsername="
-                    + googleuseasusername
+                    + useAsUsername
                     + "]";
         }
 
@@ -492,21 +495,15 @@ public class ApplicationProperties {
             return "google";
         }
 
-        @Override
         public boolean isSettingsValid() {
             return super.isValid(this.getClientId(), "clientId")
                     && super.isValid(this.getClientSecret(), "clientSecret")
-                    && super.isValid(this.getScope(), "scope")
+                    && super.isValid(this.getScopes(), "scopes")
                     && isValid(this.getUseAsUsername(), "useAsUsername");
         }
     }
 
     public static class GithubProvider extends Provider {
-        private String githubclientid;
-        private String githubclientsecret;
-        private Collection<String> ghScope = new ArrayList<>();
-        private String githubuseasusername = "login";
-
         private static final String authorizationUri = "https://github.com/login/oauth/authorize";
         private static final String tokenUri = "https://github.com/login/oauth/access_token";
         private static final String userInfoUri = "https://api.github.com/user";
@@ -523,60 +520,72 @@ public class ApplicationProperties {
             return userInfoUri;
         }
 
-        @Override
-        public String getUseAsUsername() {
-            return githubuseasusername;
-        }
-
-        public void setGithubuseasusername(String githubuseasusername) {
-            this.githubuseasusername = githubuseasusername;
-        }
+        private String clientId;
+        private String clientSecret;
+        private Collection<String> scopes = new ArrayList<>();
+        private String useAsUsername = "login";
 
         @Override
-        public Collection<String> getScope() {
-            if (ghScope == null || ghScope.isEmpty()) {
-                ghScope.add("read:user");
-            }
-            return ghScope;
+        public String getIssuer() {
+            return new String();
         }
 
-        public void setGithubscope(String githubscope) {
-            this.ghScope =
-                    Arrays.stream(githubscope.split(","))
-                            .map(String::trim)
-                            .collect(Collectors.toList());
+        @Override
+        public void setIssuer(String issuer) {}
+
+        @Override
+        public String getClientId() {
+            return this.clientId;
+        }
+
+        @Override
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
         }
 
         @Override
         public String getClientSecret() {
-            return githubclientsecret;
-        }
-
-        public void setGithubclientsecret(String githubclientsecret) {
-            this.githubclientsecret = githubclientsecret;
+            return this.clientSecret;
         }
 
         @Override
-        public String getClientId() {
-            return githubclientid;
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
         }
 
-        public void setGithubclientid(String githubclientid) {
-            this.githubclientid = githubclientid;
+        public Collection<String> getScopes() {
+            if (scopes == null || scopes.isEmpty()) {
+                scopes.add("read:user");
+            }
+            return scopes;
+        }
+
+        @Override
+        public void setScopes(String scopes) {
+            this.scopes =
+                    Arrays.stream(scopes.split(",")).map(String::trim).collect(Collectors.toList());
+        }
+
+        @Override
+        public String getUseAsUsername() {
+            return this.useAsUsername;
+        }
+
+        @Override
+        public void setUseAsUsername(String useAsUsername) {
+            this.useAsUsername = useAsUsername;
         }
 
         @Override
         public String toString() {
             return "GitHub [clientId="
-                    + githubclientid
+                    + clientId
                     + ", clientSecret="
-                    + (githubclientsecret != null && !githubclientsecret.isEmpty()
-                            ? "MASKED"
-                            : "NULL")
-                    + ", scope="
-                    + ghScope
+                    + (clientSecret != null && !clientSecret.isEmpty() ? "MASKED" : "NULL")
+                    + ", scopes="
+                    + scopes
                     + ", useAsUsername="
-                    + githubuseasusername
+                    + useAsUsername
                     + "]";
         }
 
@@ -585,87 +594,88 @@ public class ApplicationProperties {
             return "github";
         }
 
-        @Override
         public boolean isSettingsValid() {
             return super.isValid(this.getClientId(), "clientId")
                     && super.isValid(this.getClientSecret(), "clientSecret")
-                    && super.isValid(this.getScope(), "scope")
+                    && super.isValid(this.getScopes(), "scopes")
                     && isValid(this.getUseAsUsername(), "useAsUsername");
         }
     }
 
     public static class KeycloakProvider extends Provider {
-        private String kcIssuer;
-        private String kcClientd;
-        private String kcClientsecret;
-        private Collection<String> kcScope = new ArrayList<>();
-        private String kcUseasusername = "email";
+        private String issuer;
+        private String clientId;
+        private String clientSecret;
+        private Collection<String> scopes = new ArrayList<>();
+        private String useAsUsername = "email";
 
         @Override
-        public String getUseAsUsername() {
-            return kcUseasusername;
-        }
-
-        public void setKeycloakuseasusername(String keycloakuseasusername) {
-            this.kcUseasusername = keycloakuseasusername;
+        public String getIssuer() {
+            return this.issuer;
         }
 
         @Override
-        public Collection<String> getScope() {
-            if (kcScope == null || kcScope.isEmpty()) {
-                kcScope.add("openid");
-                kcScope.add("profile");
-                kcScope.add("email");
-            }
-            return kcScope;
-        }
-
-        public void setKeycloakscope(String keycloakscope) {
-            this.kcScope =
-                    Arrays.stream(keycloakscope.split(","))
-                            .map(String::trim)
-                            .collect(Collectors.toList());
-        }
-
-        @Override
-        public String getClientSecret() {
-            return kcClientsecret;
-        }
-
-        public void setKeycloakclientsecret(String keycloakclientsecret) {
-            this.kcClientsecret = keycloakclientsecret;
+        public void setIssuer(String issuer) {
+            this.issuer = issuer;
         }
 
         @Override
         public String getClientId() {
-            return kcClientd;
-        }
-
-        public void setKeycloakclientid(String keycloakclientid) {
-            this.kcClientd = keycloakclientid;
+            return this.clientId;
         }
 
         @Override
-        public String getIssuer() {
-            return kcIssuer;
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
         }
 
-        public void setKeycloakIssuer(String keycloakissuer) {
-            this.kcIssuer = keycloakissuer;
+        @Override
+        public String getClientSecret() {
+            return this.clientSecret;
+        }
+
+        @Override
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
+        }
+
+        @Override
+        public Collection<String> getScopes() {
+            if (scopes == null || scopes.isEmpty()) {
+                scopes.add("openid");
+                scopes.add("profile");
+                scopes.add("email");
+            }
+            return scopes;
+        }
+
+        public void setScopes(String scopes) {
+            this.scopes =
+                    Arrays.stream(scopes.split(",")).map(String::trim).collect(Collectors.toList());
+        }
+
+        @Override
+        public String getUseAsUsername() {
+            return this.useAsUsername;
+        }
+
+        @Override
+        public void setUseAsUsername(String useAsUsername) {
+            this.useAsUsername = useAsUsername;
         }
 
         @Override
         public String toString() {
             return "Keycloak [issuer="
-                    + kcIssuer
+                    + issuer
                     + ", clientId="
-                    + kcClientd
+                    + clientId
                     + ", clientSecret="
-                    + (kcClientsecret != null && !kcClientsecret.isEmpty() ? "MASKED" : "NULL")
-                    + ", scope="
-                    + kcScope
+                    + (clientSecret != null && !clientSecret.isEmpty() ? "MASKED" : "NULL")
+                    + ", scopes="
+                    + scopes
                     + ", useAsUsername="
-                    + kcUseasusername
+                    + useAsUsername
                     + "]";
         }
 
@@ -674,9 +684,12 @@ public class ApplicationProperties {
             return "keycloak";
         }
 
-        @Override
         public boolean isSettingsValid() {
-            return super.isSettingsValid();
+            return isValid(this.getIssuer(), "issuer")
+                    && isValid(this.getClientId(), "clientId")
+                    && isValid(this.getClientSecret(), "clientSecret")
+                    && isValid(this.getScopes(), "scopes")
+                    && isValid(this.getUseAsUsername(), "useAsUsername");
         }
     }
 
