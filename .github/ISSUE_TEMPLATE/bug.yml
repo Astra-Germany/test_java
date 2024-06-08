@@ -1,8 +1,6 @@
 name: Bug Report
 description: File a bug report.
 title: "[Bug]: "
-assignees:
-  - octocat
 body:
   - type: markdown
     attributes:
@@ -32,6 +30,7 @@ body:
       placeholder: 0.0.2
       description: What version of Stirling-PDF has the issue?
   - type: input
+    id: last-working-version
     attributes:
       label: What was the last working version of Stirling-PDF?
       placeholder: 0.0.1
@@ -40,17 +39,27 @@ body:
   - type: markdown
     attributes:
       value: |
-        # Details
+        ## Logs
   - type: textarea
+    id: logs
     attributes:
       label: Anything in the logs that might be useful for us?
       description: For example, error message, or stack traces.
       render: txt
+  - type: markdown
+    attributes:
+      value: |
+        ## Additional Information
   - type: textarea
+    id: additional-info
     attributes:
       label: Additional information
       description: >
         If you have any additional information for us, use the field below.
+  - type: markdown
+    attributes:
+      value: |
+        ## Browser Information
   - type: dropdown
     id: browsers
     attributes:
@@ -67,7 +76,7 @@ body:
     id: terms
     attributes:
       label: No duplicate of the issue
-      description: There is no issue with the same problem?
+      description: Please confirm that there are no other issues with the same problem.
       options:
         - label: I have verified that there are no issues related to my problem.
           required: true
