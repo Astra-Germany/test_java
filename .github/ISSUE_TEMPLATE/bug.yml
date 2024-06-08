@@ -36,6 +36,13 @@ body:
       placeholder: 0.0.1
       description: >
         If known, otherwise leave blank.
+  - type: input
+    id: url
+    attributes:
+      label: Page where the problem occurred
+      placeholder: http://localhost:8080/pdf/pipeline
+      description: >
+        If known, otherwise leave blank.
   - type: markdown
     attributes:
       value: |
