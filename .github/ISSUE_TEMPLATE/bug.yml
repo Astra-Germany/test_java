@@ -37,6 +37,11 @@ body:
       placeholder: 0.0.1
       description: >
         If known, otherwise leave blank.
+  - type: textarea
+    attributes:
+      label: Anything in the logs that might be useful for us?
+      description: For example, error message, or stack traces.
+      render: txt
   - type: input
     id: contact
     attributes:
