@@ -37,6 +37,10 @@ body:
       placeholder: 0.0.1
       description: >
         If known, otherwise leave blank.
+  - type: markdown
+    attributes:
+      value: |
+        # Details
   - type: textarea
     attributes:
       label: Anything in the logs that might be useful for us?
