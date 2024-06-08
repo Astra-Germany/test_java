@@ -1,8 +1,6 @@
 name: Bug Report
 description: File a bug report.
 title: "[Bug]: "
-labels: ["bug", "triage"]
-projects: ["octo-org/1", "octo-org/44"]
 assignees:
   - octocat
 body:
@@ -10,6 +8,29 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
+
+        This issue form is for reporting bugs only!
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: The problem
+      description: >-
+        Describe the issue you are experiencing here. Tell us what you were trying to do and what happened.
+
+        Provide a clear and concise description of what the problem is.
+  - type: markdown
+    attributes:
+      value: |
+        ## Environment
+  - type: input
+    id: version
+    validations:
+      required: true
+    attributes:
+      label: Version of Stirling-PDF
+      placeholder: 0.0.1
+      description: What version of Stirling-PDF has the issue?
   - type: input
     id: contact
     attributes:
