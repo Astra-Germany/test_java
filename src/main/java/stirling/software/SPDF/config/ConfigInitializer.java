@@ -74,10 +74,14 @@ public class ConfigInitializer
             throw new IOException("Resource not found: settings.yml.template");
         }
 
-        Path settingsTemplatePath = Paths.get(settingsTemplateResource.toURI());
+        // Create a temporary file to copy the resource content
+        Path tempTemplatePath = Files.createTempFile("settings.yml", ".template");
+        try (InputStream in = settingsTemplateResource.openStream()) {
+            Files.copy(in, tempTemplatePath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
 
         // Initialize YamlFile objects for the template and main settings
-        final YamlFile settingsYamlTemplate = new YamlFile(settingsTemplatePath.toFile());
+        final YamlFile settingsYamlTemplate = new YamlFile(tempTemplatePath.toFile());
         final YamlFile settingsYaml = new YamlFile(settingsPath.toFile());
         final YamlFile tempSetting = new YamlFile(settingsPath.toFile());
 
