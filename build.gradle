@@ -12,7 +12,7 @@ plugins {
 import com.github.jk1.license.render.*
 
 group = 'stirling.software'
-version = '0.25.0'
+version = '0.26.0'
 
 // 17 is lowest but we support and recommend 21
 sourceCompatibility = '17'
@@ -85,6 +85,10 @@ spotless {
     }
 }
 
+tasks.wrapper {
+    gradleVersion = "8.7"
+}
+
 dependencies {
     //security updates
     implementation 'ch.qos.logback:logback-classic:1.5.6'
@@ -95,13 +99,14 @@ dependencies {
 
     implementation 'org.yaml:snakeyaml:2.2'
     
+    // Exclude Tomcat and include Jetty
     implementation('org.springframework.boot:spring-boot-starter-web:3.3.0') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
     implementation 'org.springframework.boot:spring-boot-starter-jetty:3.3.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.0'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.3.0'
+    // implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.3.0'
 
     if (System.getenv('DOCKER_ENABLE_SECURITY') != 'false') {
         implementation 'org.springframework.boot:spring-boot-starter-security:3.3.0'
@@ -154,11 +159,7 @@ dependencies {
     implementation ('org.apache.pdfbox:xmpbox:3.0.2') {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
-
-    implementation 'com.twelvemonkeys.imageio:imageio-webp:3.10.1'
-    // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
-    implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
-
+    implementation 'com.github.Carleslc.Simple-YAML:Simple-Yaml:1.8.4'
 
     implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
     implementation 'org.bouncycastle:bcpkix-jdk18on:1.78.1'
@@ -172,8 +173,6 @@ dependencies {
     implementation 'com.bucket4j:bucket4j_jdk17-core:8.12.1'
 
 	implementation 'com.fathzer:javaluator:3.0.4'
-
-	// implementation 'com.itextpdf:itext-core:8.0.4'
 
     developmentOnly("org.springframework.boot:spring-boot-devtools:3.3.0")
     compileOnly 'org.projectlombok:lombok:1.18.32'
@@ -189,7 +188,7 @@ compileJava {
     options.compilerArgs << '-parameters'
 }
 
-tasks.register('writeVersion') {
+task writeVersion  {
     def propsFile = file('src/main/resources/version.properties')
     def props = new Properties()
     props.setProperty('version', version)
@@ -219,6 +218,6 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.register('printVersion') {
+task printVersion  {
     println project.version
 }

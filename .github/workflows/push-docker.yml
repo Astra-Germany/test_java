@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches:
-      # - master
       - main
 
 permissions:
@@ -24,7 +23,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 7.6
+          gradle-version: 8.7
 
       - name: Run Gradle Command
         run: ./gradlew clean build
@@ -127,14 +126,14 @@ jobs:
           tags: |
             type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat,enable=${{ github.ref == 'refs/heads/main' }}
             type=raw,value=latest-fat,enable=${{ github.ref == 'refs/heads/main' }}
-  
+
       - name: Build and push main Dockerfile fat
         uses: docker/build-push-action@v5
         # if: github.ref != 'refs/heads/main'
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile-fat
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -128,6 +128,15 @@ public class ApplicationProperties {
         private OAUTH2 oauth2;
         private int loginAttemptCount;
         private long loginResetTimeMinutes;
+        private String loginMethod = "all";
+
+        public String getLoginMethod() {
+            return loginMethod;
+        }
+
+        public void setLoginMethod(String loginMethod) {
+            this.loginMethod = loginMethod;
+        }
 
         public int getLoginAttemptCount() {
             return loginAttemptCount;
@@ -187,6 +196,8 @@ public class ApplicationProperties {
                     + initialLogin
                     + ", csrfDisabled="
                     + csrfDisabled
+                    + ", loginMethod="
+                    + loginMethod
                     + "]";
         }
 
@@ -291,9 +302,9 @@ public class ApplicationProperties {
                 return scopes;
             }
 
-            public void setScopes(String scope) {
+            public void setScopes(String scopes) {
                 List<String> scopesList =
-                        Arrays.stream(scope.split(","))
+                        Arrays.stream(scopes.split(","))
                                 .map(String::trim)
                                 .collect(Collectors.toList());
                 this.scopes.addAll(scopesList);
@@ -356,8 +367,8 @@ public class ApplicationProperties {
                 private KeycloakProvider keycloak = new KeycloakProvider();
 
                 public Provider get(String registrationId) throws Exception {
-                    switch (registrationId) {
-                        case "gogole":
+                    switch (registrationId.toLowerCase()) {
+                        case "google":
                             return getGoogle();
                         case "github":
                             return getGithub();
@@ -455,6 +466,7 @@ public class ApplicationProperties {
         @Override
         public Collection<String> getScopes() {
             if (scopes == null || scopes.isEmpty()) {
+                scopes = new ArrayList<>();
                 scopes.add("https://www.googleapis.com/auth/userinfo.email");
                 scopes.add("https://www.googleapis.com/auth/userinfo.profile");
             }
@@ -493,6 +505,11 @@ public class ApplicationProperties {
         @Override
         public String getName() {
             return "google";
+        }
+
+        @Override
+        public String getClientName() {
+            return "Google";
         }
 
         public boolean isSettingsValid() {
@@ -553,8 +570,10 @@ public class ApplicationProperties {
             this.clientSecret = clientSecret;
         }
 
+        @Override
         public Collection<String> getScopes() {
             if (scopes == null || scopes.isEmpty()) {
+                scopes = new ArrayList<>();
                 scopes.add("read:user");
             }
             return scopes;
@@ -592,6 +611,11 @@ public class ApplicationProperties {
         @Override
         public String getName() {
             return "github";
+        }
+
+        @Override
+        public String getClientName() {
+            return "GitHub";
         }
 
         public boolean isSettingsValid() {
@@ -642,13 +666,14 @@ public class ApplicationProperties {
         @Override
         public Collection<String> getScopes() {
             if (scopes == null || scopes.isEmpty()) {
-                scopes.add("openid");
+                scopes = new ArrayList<>();
                 scopes.add("profile");
                 scopes.add("email");
             }
             return scopes;
         }
 
+        @Override
         public void setScopes(String scopes) {
             this.scopes =
                     Arrays.stream(scopes.split(",")).map(String::trim).collect(Collectors.toList());
@@ -684,6 +709,11 @@ public class ApplicationProperties {
             return "keycloak";
         }
 
+        @Override
+        public String getClientName() {
+            return "Keycloak";
+        }
+
         public boolean isSettingsValid() {
             return isValid(this.getIssuer(), "issuer")
                     && isValid(this.getClientId(), "clientId")
@@ -696,10 +726,43 @@ public class ApplicationProperties {
     public static class System {
         private String defaultLocale;
         private Boolean googlevisibility;
-        private Boolean enableAlphaFunctionality;
-        private Boolean showUpdate;
+        private boolean showUpdate;
         private Boolean showUpdateOnlyAdmin;
-        private Boolean customHTMLFiles;
+        private boolean customHTMLFiles;
+
+        public boolean isCustomHTMLFiles() {
+            return customHTMLFiles;
+        }
+
+        public void setCustomHTMLFiles(boolean customHTMLFiles) {
+            this.customHTMLFiles = customHTMLFiles;
+        }
+
+        public boolean getShowUpdateOnlyAdmin() {
+            return showUpdateOnlyAdmin;
+        }
+
+        public void setShowUpdateOnlyAdmin(boolean showUpdateOnlyAdmin) {
+            this.showUpdateOnlyAdmin = showUpdateOnlyAdmin;
+        }
+
+        public boolean getShowUpdate() {
+            return showUpdate;
+        }
+
+        public void setShowUpdate(boolean showUpdate) {
+            this.showUpdate = showUpdate;
+        }
+
+        private Boolean enableAlphaFunctionality;
+
+        public Boolean getEnableAlphaFunctionality() {
+            return enableAlphaFunctionality;
+        }
+
+        public void setEnableAlphaFunctionality(Boolean enableAlphaFunctionality) {
+            this.enableAlphaFunctionality = enableAlphaFunctionality;
+        }
 
         public String getDefaultLocale() {
             return defaultLocale;
@@ -715,30 +778,6 @@ public class ApplicationProperties {
 
         public void setGooglevisibility(Boolean googlevisibility) {
             this.googlevisibility = googlevisibility;
-        }
-
-        public Boolean getEnableAlphaFunctionality() {
-            return enableAlphaFunctionality;
-        }
-
-        public void setEnableAlphaFunctionality(Boolean enableAlphaFunctionality) {
-            this.enableAlphaFunctionality = enableAlphaFunctionality;
-        }
-
-        public Boolean getShowUpdate() {
-            return showUpdate;
-        }
-
-        public void setShowUpdate(Boolean showUpdate) {
-            this.showUpdate = showUpdate;
-        }
-
-        public Boolean getShowUpdateOnlyAdmin() {
-            return showUpdateOnlyAdmin;
-        }
-
-        public void setShowUpdateOnlyAdmin(Boolean showUpdateOnlyAdmin) {
-            this.showUpdateOnlyAdmin = showUpdateOnlyAdmin;
         }
 
         @Override
@@ -763,7 +802,8 @@ public class ApplicationProperties {
         private String appNameNavbar;
 
         public String getAppName() {
-            return appName != null && !appName.trim().isEmpty() ? appName : null;
+            if (appName != null && appName.trim().length() == 0) return null;
+            return appName;
         }
 
         public void setAppName(String appName) {
@@ -771,9 +811,8 @@ public class ApplicationProperties {
         }
 
         public String getHomeDescription() {
-            return homeDescription != null && !homeDescription.trim().isEmpty()
-                    ? homeDescription
-                    : null;
+            if (homeDescription != null && homeDescription.trim().length() == 0) return null;
+            return homeDescription;
         }
 
         public void setHomeDescription(String homeDescription) {
@@ -781,7 +820,8 @@ public class ApplicationProperties {
         }
 
         public String getAppNameNavbar() {
-            return appNameNavbar != null && !appNameNavbar.trim().isEmpty() ? appNameNavbar : null;
+            if (appNameNavbar != null && appNameNavbar.trim().length() == 0) return null;
+            return appNameNavbar;
         }
 
         public void setAppNameNavbar(String appNameNavbar) {

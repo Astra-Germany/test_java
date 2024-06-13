@@ -37,11 +37,9 @@ function toggleFavorite(element) {
     card.classList.remove("favorite");
     localStorage.removeItem(cardId);
   }
-  if (currentPage == "home") {
-    reorderCards();
-    updateFavoritesDropdown();
-    filterCards();
-  }
+  reorderCards();
+  updateFavoritesDropdown();
+  filterCards();
 }
 
 
@@ -81,11 +79,9 @@ function initializeCards() {
       card.classList.add("favorite");
     }
   });
-  if (currentPage == "home") {
-    reorderCards();
-    updateFavoritesDropdown();
-    filterCards();
-  }
+  reorderCards();
+  updateFavoritesDropdown();
+  filterCards();
 }
 
 window.onload = initializeCards;
