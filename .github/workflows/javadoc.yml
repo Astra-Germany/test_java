@@ -1,10 +1,6 @@
 name: Deploy Javadoc
 
-permissions:
-  contents: write
-  
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -13,8 +9,14 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # if you have a protection rule on your repository, you'll need to give write permission to the workflow.
     steps:
-      - name: Deploy javadoc to Github Pages
-        uses: dev-vince/actions-publish-javadoc@v1.0.1
+      - name: Deploy JavaDoc 🚀
+        uses: MathieuSoysal/Javadoc-publisher.yml@v2.5.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          javadoc-branch: main
+          java-version: 17
+          target-folder: test_java
+          project: gradle
