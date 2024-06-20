@@ -4,8 +4,9 @@ env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
   DOCUMENTATIONS_BRANCH: test_java # Configure the documentations branch, which you will use for Github pages
 permissions:
-  contents: read
+  contents: write
   packages: write
+  actions: read
 on:
   workflow_dispatch:
   push:
@@ -22,13 +23,13 @@ jobs:
 
     # Checkout source code
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
     # Cache dependencies for faster build time in future
     - name: Cache dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ./.pip
