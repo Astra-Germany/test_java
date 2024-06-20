@@ -3,7 +3,9 @@ name: Deploy Javadoc
 env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
   DOCUMENTATIONS_BRANCH: test_java # Configure the documentations branch, which you will use for Github pages
-
+permissions:
+  contents: read
+  packages: write
 on:
   workflow_dispatch:
   push:
