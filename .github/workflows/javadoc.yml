@@ -3,10 +3,12 @@ name: Deploy Javadoc
 env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
   DOCUMENTATIONS_BRANCH: test_java # Configure the documentations branch, which you will use for Github pages
+
 permissions:
   contents: write
   packages: write
   actions: read
+
 on:
   workflow_dispatch:
   push:
@@ -25,7 +27,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
       
     # Cache dependencies for faster build time in future
     - name: Cache dependencies
@@ -45,14 +47,16 @@ jobs:
       run: |
         mkdocs build
 
-    # Synchronize & push BUILD directory to docs branch
+    # Configure Git informations
     - name: Configure Git informations
       run: |
         git config --global user.name $GITHUB_ACTOR
         git config --global user.email $GITHUB_ACTOR@users.noreply.github.com
-        
 
+    # Synchronize & push into docs branch
     - name: Synchronize & push into docs branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         DEPLOY_BRANCH=$DOCUMENTATIONS_BRANCH
         GIT_COMMIT=$(git rev-parse --short HEAD)
@@ -78,4 +82,3 @@ jobs:
         git commit -m "Automated documentation build $GIT_COMMIT"
         git push origin $DEPLOY_BRANCH
         cd ..
-        
