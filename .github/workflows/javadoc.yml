@@ -58,7 +58,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        DEPLOY_BRANCH=$DOCUMENTATIONS_BRANCH
+        DEPLOY_BRANCH=test_java
         GIT_COMMIT=$(git rev-parse --short HEAD)
 
         mkdir RELEASE
