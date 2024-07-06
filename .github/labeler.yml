@@ -5,3 +5,11 @@ translation:
 Front End:
   - changed-files:
     - any-glob-to-any-file: '**/*.html'
+
+java:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.java'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.md'
