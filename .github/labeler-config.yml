@@ -4,7 +4,7 @@ translation:
 
 Front End:
   - changed-files:
-    - any-glob-to-any-file: '**/*.html'
+    - any-glob-to-any-file: 'src/main/resources/templates/**/*.html'
 
 java:
   - changed-files:
