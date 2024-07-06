@@ -13,3 +13,8 @@ java:
 documentation:
   - changed-files:
     - any-glob-to-any-file: '**/*.md'
+
+docker:
+  - changed-files:
+    - any-glob-to-any-file: 'Dockerfile'
+    - any-glob-to-any-file: 'Dockerfile-*'
