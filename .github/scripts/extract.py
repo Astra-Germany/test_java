@@ -23,9 +23,7 @@ def get_issue(owner, repo, issue_number):
 
 def extract_version(text):
     # Anpassung des regulären Ausdrucks, um verschiedene Trennzeichen zu unterstützen
-    version_pattern = re.compile(
-        r"### Version of Stirling-PDF\s*\n\s*([\d{1,2}[\.\,\s]\d{1,2}[\.\,\s]\d{2,4}]+)"
-    )
+    version_pattern = re.compile(r'### Version of Stirling-PDF\s*\n\s*(\d{1,3}[\.\,\s]\d{1,3}[\.\,\s]\d{1,3})')
     match = version_pattern.search(text)
     if match:
         return match.group(1)
@@ -50,5 +48,5 @@ if issue_version:
     print(f"Gefundene Version im Issue: {issue_version}")
 else:
     print("Keine Version im Issue gefunden.")
-    message = "Es wurde keine gültige Version von Stirling-PDF im angegebenen Format gefunden. Bitte geben Sie die Version im Format `### Version of Stirling-PDF\nx.y.z` an."
+    message = "Es wurde keine gültige Version von Stirling-PDF im angegebenen Format gefunden. Bitte geben Sie die Version im Format `0.0.2` an."
     post_comment(REPO_OWNER, REPO_NAME, ISSUE_NUMBER, message)
