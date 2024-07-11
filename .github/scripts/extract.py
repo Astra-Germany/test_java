@@ -22,7 +22,8 @@ def get_issue(owner, repo, issue_number):
 
 
 def extract_version(text):
-    version_pattern = re.compile(r'### Version of Stirling-PDF\s*\n\s*(\d+)')
+    # Anpassung des regulären Ausdrucks, um verschiedene Trennzeichen zu unterstützen
+    version_pattern = re.compile(r'### Version of Stirling-PDF\s*\n\s*([\d{1,2}[\.\,\s]\d{1,2}[\.\,\s]\d{2,4}]+)')
     match = version_pattern.search(text)
     if match:
         return match.group(1)
