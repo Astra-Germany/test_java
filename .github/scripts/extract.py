@@ -22,7 +22,7 @@ def get_issue(owner, repo, issue_number):
 
 
 def extract_version(text):
-    version_pattern = re.compile(r"Version of Stirling-PDF:\s*(\d+\.\d+\.\d+)")
+    version_pattern = re.compile(r'### Version of Stirling-PDF\s*\n\s*(\d+)')
     match = version_pattern.search(text)
     if match:
         return match.group(1)
