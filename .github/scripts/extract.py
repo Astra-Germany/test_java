@@ -70,7 +70,7 @@ print(f"Neueste Release-Version: {release_version}")
 # Issue-Details abrufen
 issue = get_issue(REPO_OWNER, REPO_NAME, ISSUE_NUMBER)
 issue_body = issue["body"]
-print(issue_body)
+print(issue)
 issue_version = extract_version(issue_body)
 
 # Ergebnis ausgeben und Kommentar hinzufügen, wenn keine Version gefunden wurde
