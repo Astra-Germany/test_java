@@ -25,4 +25,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
         GITHUB_REPOSITORY: ${{ github.repository }}
-      run: python extract.py
+      run: python .github/scripts/extract.py
