@@ -31,9 +31,7 @@ def get_issue(owner, repo, issue_number):
 
 def extract_version(text):
     # Anpassung des regulären Ausdrucks, um verschiedene Trennzeichen zu unterstützen und 1-3 stellige Zahlen zu erfassen
-    version_pattern = re.compile(
-        r"### Version of Stirling-PDF\s*\n\s*([\d[\.\,\s]\d[\.\,\s]\d]+)"
-    )
+    version_pattern = re.compile(r'### Version of Stirling-PDF\s*\n\s*([\d]{1,3}[\.\,\s][\d]{1,3}[\.\,\s][\d]{1,3})')
     match = version_pattern.search(text)
     if match:
         return match.group(1).replace(" ", ".").replace(",", ".")
