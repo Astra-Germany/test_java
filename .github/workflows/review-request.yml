@@ -62,9 +62,10 @@ jobs:
             const reviewers = "${{ steps.codeowners.outputs.reviewers }}".split(',');
             const { owner, repo } = context.repo;
             const prNumber = context.payload.pull_request.number;
+            const prCreator = context.payload.pull_request.user.login;
 
             for (const reviewer of reviewers) {
-              if (reviewer.trim().startsWith('@')) {
+              if (reviewer.trim().startsWith('@') && reviewer.trim() !== `@${prCreator}`) {
                 await github.rest.issues.createComment({
                   owner,
                   repo,
