@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "Parsing CODEOWNERS file..."
           # Pfad zur CODEOWNERS-Datei
-          CODEOWNERS_FILE=.github/CODEOWNERS
+          CODEOWNERS_FILE=CODEOWNERS
           # Geänderte Dateien im Pull Request
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
