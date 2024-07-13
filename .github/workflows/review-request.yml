@@ -1,0 +1,67 @@
+name: Request Reviewers
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  request-reviewers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Parse CODEOWNERS and request reviews
+        id: codeowners
+        run: |
+          echo "Parsing CODEOWNERS file..."
+          # Pfad zur CODEOWNERS-Datei
+          CODEOWNERS_FILE=.github/CODEOWNERS
+          # Geänderte Dateien im Pull Request
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+
+          REVIEWERS=""
+
+          # Parse CODEOWNERS Datei
+          while IFS= read -r line; do
+            # Zeilen mit Kommentaren oder leere Zeilen ignorieren
+            [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+
+            # Extrahiere Pfadmuster und Benutzer
+            PATTERN=$(echo $line | awk '{print $1}')
+            USERS=$(echo $line | awk '{$1=""; print $0}' | sed 's/ /,/g')
+
+            # Überprüfe, ob geänderte Dateien dem aktuellen Pfadmuster entsprechen
+            for FILE in $CHANGED_FILES; do
+              if [[ "$FILE" == $PATTERN* ]]; then
+                REVIEWERS="$REVIEWERS,$USERS"
+              fi
+            done
+          done < $CODEOWNERS_FILE
+
+          # Entferne doppelte Reviewer und führende/trailing Kommata
+          REVIEWERS=$(echo $REVIEWERS | tr ',' '\n' | sort | uniq | tr '\n' ',' | sed 's/^,*//;s/,*$//')
+
+          echo "Reviewers to be requested: $REVIEWERS"
+
+          echo "::set-output name=reviewers::$REVIEWERS"
+
+      - name: Comment with Review Request
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            const reviewers = "${{ steps.codeowners.outputs.reviewers }}".split(',');
+
+            for (const reviewer of reviewers) {
+              if (reviewer) {
+                await github.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: `@${reviewer.trim()}, could you please review this change?`
+                });
+              }
+            }
