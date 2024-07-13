@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Stellt sicher, dass die letzten zwei Commits abgerufen werden
+          fetch-depth: 20  # Stellt sicher, dass die letzten zwei Commits abgerufen werden
 
       - name: Parse CODEOWNERS and request reviews
         id: codeowners
