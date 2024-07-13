@@ -12,14 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 20  # Stellt sicher, dass die letzten zwei Commits abgerufen werden
+          fetch-depth: 2  # Stellt sicher, dass die letzten zwei Commits abgerufen werden
 
       - name: Parse CODEOWNERS and request reviews
         id: codeowners
         run: |
           echo "Parsing CODEOWNERS file..."
           # Pfad zur CODEOWNERS-Datei
-          CODEOWNERS_FILE=CODEOWNERS
+          CODEOWNERS_FILE=.github/CODEOWNERS
           # Geänderte Dateien im Pull Request
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
 
@@ -32,12 +32,16 @@ jobs:
 
             # Extrahiere Pfadmuster und Benutzer
             PATTERN=$(echo $line | awk '{print $1}')
-            USERS=$(echo $line | awk '{$1=""; print $0}' | sed 's/ /,/g')
+            USERS=$(echo $line | awk '{$1=""; print $0}' | tr ' ' ',')
 
             # Überprüfe, ob geänderte Dateien dem aktuellen Pfadmuster entsprechen
             for FILE in $CHANGED_FILES; do
               if [[ "$FILE" == $PATTERN* ]]; then
-                REVIEWERS="$REVIEWERS,$USERS"
+                if [[ -z "$REVIEWERS" ]]; then
+                  REVIEWERS="$USERS"
+                else
+                  REVIEWERS="$REVIEWERS,$USERS"
+                fi
               fi
             done
           done < $CODEOWNERS_FILE
@@ -60,12 +64,12 @@ jobs:
             const prNumber = context.payload.pull_request.number;
 
             for (const reviewer of reviewers) {
-              if (reviewer.trim()) {
+              if (reviewer.trim().startsWith('@')) {
                 await github.rest.issues.createComment({
                   owner,
                   repo,
                   issue_number: prNumber,
-                  body: `@${reviewer.trim()}, could you please review this change?`
+                  body: `${reviewer.trim()}, could you please review this change?`
                 });
               }
             }
