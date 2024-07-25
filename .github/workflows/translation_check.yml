@@ -31,7 +31,7 @@ jobs:
 
       - name: Run comparison script
         run: |
-          echo $CHANGED_FILES
+          echo ${{ steps.changed_files.outputs.CHANGED_FILES }}
           changed_files=$(echo $CHANGED_FILES | tr ' ' '\n' | grep '^src/main/resources/messages_.*\.properties$')
           if [ -n "$changed_files" ]; then
             python .github/scripts/translation_check.py $changed_files
