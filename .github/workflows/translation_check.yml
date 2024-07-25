@@ -33,7 +33,7 @@ jobs:
         run: |
           changed_files=$(echo $CHANGED_FILES | tr ' ' '\n' | grep '^src/main/resources/messages_.*\.properties$')
           if [ -n "$changed_files" ]; then
-            python compare_properties.py $changed_files
+            python .github/scripts/translation_check.py $changed_files
           else
             echo "No relevant changes in properties files."
           fi
