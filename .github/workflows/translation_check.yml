@@ -26,6 +26,7 @@ jobs:
       - name: Get changed files
         id: changed_files
         run: |
+          git fetch origin main
           echo "CHANGED_FILES=$(git diff --name-only origin/main)" >> $GITHUB_ENV
 
       - name: Run comparison script
@@ -33,6 +34,8 @@ jobs:
           changed_files=$(echo $CHANGED_FILES | tr ' ' '\n' | grep '^src/main/resources/messages_.*\.properties$')
           if [ -n "$changed_files" ]; then
             python compare_properties.py $changed_files
+          else
+            echo "No relevant changes in properties files."
           fi
 
       - name: Create PR comment
