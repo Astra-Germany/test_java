@@ -30,7 +30,7 @@ jobs:
 
       - name: Run comparison script
         run: |
-          changed_files=$(echo $CHANGED_FILES | tr ' ' '\n' | grep '^languages/messages_.*\.properties$')
+          changed_files=$(echo $CHANGED_FILES | tr ' ' '\n' | grep '^src/main/resources/messages_.*\.properties$')
           if [ -n "$changed_files" ]; then
             python compare_properties.py $changed_files
           fi
