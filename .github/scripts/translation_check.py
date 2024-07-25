@@ -22,6 +22,7 @@ results = []
 
 # Geänderte Dateien in der PR durchlaufen
 for file_path in sys.argv[1:]:
+    print(file_path)
     if file_path.startswith(os.getcwd() + '/src/main/resources/messages_') and file_path.endswith('.properties') and file_path != os.getcwd() + '/src/main/resources/messages_en_GB.properties':
         language = file_path.split('_')[1].split('.')[0]
 
