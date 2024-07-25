@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -27,7 +29,8 @@ jobs:
         id: changed_files
         run: |
           git fetch origin main
-          echo "CHANGED_FILES=$(git diff --name-only origin/main)" >> $GITHUB_ENV
+          git diff --name-only origin/main > changed_files.txt
+          echo "CHANGED_FILES=$(cat changed_files.txt)" >> $GITHUB_ENV
 
       - name: Run comparison script
         run: |
@@ -38,6 +41,8 @@ jobs:
           else
             echo "No relevant changes in properties files."
           fi
+        env:
+          CHANGED_FILES: ${{ env.CHANGED_FILES }}
 
       - name: Create PR comment
         if: success() && steps.changed_files.outputs.CHANGED_FILES
