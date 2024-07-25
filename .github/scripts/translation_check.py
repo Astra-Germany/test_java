@@ -14,7 +14,7 @@ def read_properties(file_path):
         return properties
 
 # Hauptsprache (en_GB) einlesen
-en_gb_file_path = 'languages/messages_en_GB.properties'
+en_gb_file_path = 'src/main/resources/messages_en_GB.properties'
 en_gb_properties = read_properties(en_gb_file_path)
 en_gb_keys = set(en_gb_properties.keys())
 
@@ -22,7 +22,7 @@ results = []
 
 # Geänderte Dateien in der PR durchlaufen
 for file_path in sys.argv[1:]:
-    if file_path.startswith('languages/messages_') and file_path.endswith('.properties') and file_path != 'languages/messages_en_GB.properties':
+    if file_path.startswith('src/main/resources/messages_') and file_path.endswith('.properties') and file_path != 'src/main/resources/messages_en_GB.properties':
         language = file_path.split('_')[1].split('.')[0]
 
         properties = read_properties(file_path)
