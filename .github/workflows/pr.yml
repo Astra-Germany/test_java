@@ -18,5 +18,5 @@ jobs:
         uses: Ludy87/action/pr-issues-title-check@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          issues_pattern: '^(fix|feat|chore|docs|style|refactor|perf|test|\\[Feature Request\\]): (?:\w+\b\W*){3,8}$'
+          issues_pattern: '^(\[Feature Request\]|\[Bug\]): (?:\w+\b\W*){3,8}$'
           issues_pattern_flags: gmi
