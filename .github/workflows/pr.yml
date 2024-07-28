@@ -17,5 +17,6 @@ jobs:
       - name: PR Title Verify
         uses: Ludy87/action/pr-issues-title-check@main
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: '(fix|feat|chore|docs|style|refactor|perf|test): (?:\w+\b\W*){3,8}$'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issues_pattern: '(fix|feat|chore|docs|style|refactor|perf|test|\\[Feature Request\\]\\: ): (?:\w+\b\W*){3,8}$'
+          issues_pattern_flags: gmi
