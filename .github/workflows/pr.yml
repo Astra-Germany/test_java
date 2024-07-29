@@ -19,9 +19,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issues_pattern: '^(\[Feature Request\]|\[Bug\]): (?:\w+\b\W*){3,8}$'
-          issues_pattern_flags: gmi
-          issues_comment: |
-            Hier steht ein Text
-            mit zwei Absätzen @${{ github.actor }} und einer leeren Zeile
+          # issues_pattern_flags: gmi
+          # issues_comment: |
+          #   Hier steht ein Text
+          #   mit zwei Absätzen @${{ github.actor }} und einer leeren Zeile
 
-            Hier ist das Ende vom Gelände!
+          #   Hier ist das Ende vom Gelände!
