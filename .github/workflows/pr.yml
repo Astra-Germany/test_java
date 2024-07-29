@@ -20,8 +20,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issues_pattern: '^(\[Feature Request\]|\[Bug\]): (?:\w+\b\W*){3,8}$'
           issues_min_length: 2
-          actor_without_restriction: |
-            Ludy87
+          # actor_without_restriction: |
+          #   Ludy87
           # issues_pattern_flags: gmi
           # issues_comment: |
           #   Hier steht ein Text
