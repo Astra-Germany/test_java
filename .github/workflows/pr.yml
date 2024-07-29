@@ -8,6 +8,8 @@ on:
       - labeled
       - unlabeled
   issues:
+    
+  issue_comment:
 
 jobs:
   check:
