@@ -8,7 +8,7 @@ on:
       - labeled
       - unlabeled
   issues:
-    
+
   issue_comment:
 
 jobs:
@@ -21,8 +21,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issues_pattern: '^(\[Feature Request\]|\[Bug\]): (?:\w+\b\W*){3,8}$'
-          # issues_min_length: 2
-          # actor_without_restriction: |
+          issues_min_length: 2
+          actor_without_restriction: |
+            dependabot[bot]
           #   Ludy87
           # issues_pattern_flags: gmi
           # issues_comment: |
