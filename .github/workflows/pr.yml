@@ -20,7 +20,7 @@ jobs:
         uses: Ludy87/action/pr-issues-title-check@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          issues_pattern: '^(\[Feature Request\]|\[Bug\]): (?:\w+\b\W*){3,8}$'
+          # issues_pattern: '^(\[Feature Request\]|\[Bug\]): (?:\w+\b\W*){3,8}$'
           issues_min_length: 2
           actor_without_restriction: |
             dependabot[bot]
