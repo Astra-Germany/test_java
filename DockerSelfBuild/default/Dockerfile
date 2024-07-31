@@ -51,7 +51,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         libreoffice \
         # pdftohtml
         poppler-utils \
-        # OCR MY PDF (unpaper for descew and other advanced featues)
+        # OCR MY PDF (unpaper for descew and other advanced features)
         ocrmypdf \
         tesseract-ocr-data-eng \
         # CV
