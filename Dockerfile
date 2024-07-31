@@ -8,8 +8,8 @@ WORKDIR /app
 COPY build.gradle settings.gradle /app/
 COPY src /app/src
 
-# Run the build and capture output
-RUN gradle build > build.log 2>&1 || (cat build.log && exit 1)
+# Run the build
+RUN gradle build
 
 # Main stage
 FROM alpine:3.20.0
