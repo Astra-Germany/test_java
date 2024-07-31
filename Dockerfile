@@ -60,7 +60,10 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 \
-        py3-pip && \
+        py3-pip \
+        gcc \
+        musl-dev \
+        libffi-dev && \
         python3 -m venv /opt/venv && \
         # . /opt/venv/bin/activate && \
         /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel && \
