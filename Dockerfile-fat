@@ -9,7 +9,7 @@ COPY . .
 
 # Build the application with DOCKER_ENABLE_SECURITY=false
 RUN DOCKER_ENABLE_SECURITY=true \
-./gradlew clean build 
+./gradlew clean build
 
 # Main stage
 FROM alpine:3.20.0
@@ -32,7 +32,6 @@ ENV DOCKER_ENABLE_SECURITY=false \
     UMASK=022 \
     FAT_DOCKER=true \
     INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
-    
 
 # JDK for app
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
@@ -58,13 +57,11 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         ocrmypdf \
         tesseract-ocr-data-eng \
         font-terminus font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra \
-# CV
-        py3-opencv \
 # python3/pip
         python3 && \
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint opencv-python-headless && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
