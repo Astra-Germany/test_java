@@ -1,3 +1,16 @@
+# First stage: Build the application
+FROM gradle:7.3.3-jdk11 AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the Gradle project files and source code
+COPY build.gradle settings.gradle /app/
+COPY src /app/src
+
+# Build the application
+RUN gradle build
+
 # Main stage
 FROM alpine:3.20.0
 
