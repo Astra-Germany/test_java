@@ -74,6 +74,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
         tesseract --list-langs
 
+# Debugging: Verify that the /pipeline directory exists and has content
+RUN ls -la /pipeline
+
 # Set the PATH to include the virtual environment
 ENV PATH="/opt/venv/bin:$PATH"
 
