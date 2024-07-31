@@ -1,12 +1,26 @@
+# First stage: Build the application
+FROM gradle:8.9.0-jdk21 AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the Gradle project files and source code
+COPY ./build.gradle  /app/
+COPY ./settings.gradle /app/
+COPY ./src /app/src
+
+# Run the build
+RUN gradle build
+
 # Main stage
 FROM alpine:3.20.0
 
-# Copy necessary files
+# Copy necessary files from the build stage
+COPY --from=build /app/build/libs/*.jar /app.jar
 COPY scripts /scripts
 COPY pipeline /pipeline
 COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
 #COPY src/main/resources/static/fonts/*.otf /usr/share/fonts/opentype/noto/
-COPY build/libs/*.jar app.jar
 
 ARG VERSION_TAG
 
