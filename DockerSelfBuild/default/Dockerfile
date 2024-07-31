@@ -5,8 +5,8 @@ FROM gradle:8.9.0-jdk21 AS build
 WORKDIR /app
 
 # Copy the Gradle project files and source code
-COPY build.gradle settings.gradle /app/
-COPY src /app/src
+COPY ../../build.gradle ../../settings.gradle /app/
+COPY ../../src /app/src
 
 # Run the build
 RUN gradle build
@@ -16,9 +16,9 @@ FROM alpine:3.20.0
 
 # Copy necessary files from the build stage
 COPY --from=build /app/build/libs/*.jar /app.jar
-COPY scripts /scripts
-COPY pipeline /pipeline
-COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
+COPY ../../scripts /scripts
+COPY ../../pipeline /pipeline
+COPY ../../src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
 
 ARG VERSION_TAG
 
