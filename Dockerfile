@@ -1,5 +1,5 @@
 # First stage: Build the application
-FROM gradle:7.3.3-jdk17 AS build
+FROM gradle:8.9.0-jdk17 AS build
 
 # Set the working directory
 WORKDIR /app
