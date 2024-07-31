@@ -1,5 +1,5 @@
 # First stage: Build the application
-FROM gradle:7.3.3-jdk11 AS build
+FROM gradle:7.3.3-jdk17 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -8,8 +8,8 @@ WORKDIR /app
 COPY build.gradle settings.gradle /app/
 COPY src /app/src
 
-# Build the application
-RUN gradle build
+# Run the build and capture output
+RUN gradle build > build.log 2>&1 || (cat build.log && exit 1)
 
 # Main stage
 FROM alpine:3.20.0
