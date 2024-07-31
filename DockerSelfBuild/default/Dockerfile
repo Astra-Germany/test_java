@@ -5,7 +5,6 @@ FROM gradle:8.9.0-jdk21 AS build
 WORKDIR /app
 
 # Copy the Gradle project files and source code
-cd /
 COPY ./build.gradle  /app/
 COPY ./settings.gradle /app/
 COPY ./src /app/src
