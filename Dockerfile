@@ -1,5 +1,5 @@
 # First stage: Build the application
-FROM gradle:8.9.0-jdk17 AS build
+FROM gradle:8.9.0-jdk21 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -19,7 +19,6 @@ COPY --from=build /app/build/libs/*.jar /app.jar
 COPY scripts /scripts
 COPY pipeline /pipeline
 COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
-#COPY src/main/resources/static/fonts/*.otf /usr/share/fonts/opentype/noto/
 
 ARG VERSION_TAG
 
@@ -32,7 +31,7 @@ ENV DOCKER_ENABLE_SECURITY=false \
     PGID=1000 \
     UMASK=022
 
-# JDK for app
+# Install necessary packages
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
@@ -58,10 +57,10 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # CV
         py3-opencv \
 # python3/pip
-        python3 && \
-    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
-# uno unoconv and HTML
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
+        python3 \
+        py3-pip && \
+    pip3 install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip3 install --no-cache-dir unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
