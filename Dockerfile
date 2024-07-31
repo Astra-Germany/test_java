@@ -5,7 +5,7 @@ FROM gradle:8.9.0-jdk21 AS build
 WORKDIR /app
 
 # Copy the Gradle project files and source code
-COPY ./build.gradle  /app/
+COPY ./build.gradle /app/
 COPY ./settings.gradle /app/
 COPY ./src /app/src
 
@@ -62,9 +62,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         python3 \
         py3-pip && \
         python3 -m venv /opt/venv && \
-        . /opt/venv/bin/activate && \
-        pip install --no-cache-dir --upgrade pip setuptools wheel && \
-        pip install --no-cache-dir unoconv WeasyPrint && \
+        # . /opt/venv/bin/activate && \
+        /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel && \
+        /opt/venv/bin/pip install --no-cache-dir unoconv WeasyPrint && \
         mv /usr/share/tessdata /usr/share/tessdata-original && \
         mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
         fc-cache -f -v && \
