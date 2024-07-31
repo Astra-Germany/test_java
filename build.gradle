@@ -16,7 +16,7 @@ ext {
 }
 
 group = "stirling.software"
-version = "0.26.1"
+version = "0.26.1a"
 
 // 17 is lowest but we support and recommend 21
 sourceCompatibility = "17"
@@ -105,7 +105,7 @@ dependencies {
 
     // implementation "org.yaml:snakeyaml:2.2"
     implementation 'com.github.Carleslc.Simple-YAML:Simple-Yaml:1.8.4'
-    
+
     // Exclude Tomcat and include Jetty
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
