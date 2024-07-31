@@ -59,9 +59,11 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # CV
         py3-opencv \
 # python3/pip
-        python3 && \
-    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
-# uno unoconv and HTML
+        python3 \
+        py3-pip && \
+        python3 -m venv /opt/venv && \
+        . /opt/venv/bin/activate && \
+        pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
@@ -73,6 +75,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
+
+# Set the PATH to include the virtual environment
+ENV PATH="/opt/venv/bin:$PATH"
 
 EXPOSE 8080/tcp
 
