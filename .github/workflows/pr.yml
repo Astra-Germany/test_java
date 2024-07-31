@@ -1,12 +1,12 @@
 name: 'PR Title Check'
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-      - labeled
-      - unlabeled
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - edited
+  #     - synchronize
+  #     - labeled
+  #     - unlabeled
   issues:
 
   issue_comment:
