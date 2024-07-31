@@ -2,7 +2,7 @@
 FROM alpine:3.20.0
 
 # Copy necessary files from the build stage
-COPY --from=build /app/build/libs/*.jar /app.jar
+COPY build/libs/*.jar app.jar
 COPY ./scripts /scripts
 COPY ./pipeline /pipeline
 COPY ./src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
