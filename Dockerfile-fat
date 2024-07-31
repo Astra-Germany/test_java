@@ -34,9 +34,9 @@ ENV DOCKER_ENABLE_SECURITY=false \
     INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
 
 # JDK for app
-RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/v3.20/main" | tee -a /etc/apk/repositories && \
+    echo "@testing https://dl-cdn.alpinelinux.org/alpine/v3.20/community" | tee -a /etc/apk/repositories && \
+    echo "@testing https://dl-cdn.alpinelinux.org/alpine/v3.20/testing" | tee -a /etc/apk/repositories && \
     apk upgrade --no-cache -a && \
     apk add --no-cache \
         ca-certificates \
