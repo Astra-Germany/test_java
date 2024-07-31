@@ -67,7 +67,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --no-cache-dir --upgrade unoconv WeasyPrint && \
-    apk add --no-cache py3-opencv=4.5.3-r1 && \
+    apk add --no-cache py3-opencv=4.9.0 && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
