@@ -1,26 +1,12 @@
-# First stage: Build the application
-FROM gradle:8.9.0-jdk21 AS build
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the Gradle project files and source code
-COPY ./build.gradle  /app/
-COPY ./settings.gradle /app/
-COPY ./src /app/src
-
-# Run the build
-RUN gradle build
-
 # Main stage
 FROM alpine:3.20.0
 
-# Copy necessary files from the build stage
-COPY --from=build /app/build/libs/*.jar /app.jar
+# Copy necessary files
 COPY scripts /scripts
 COPY pipeline /pipeline
 COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
 #COPY src/main/resources/static/fonts/*.otf /usr/share/fonts/opentype/noto/
+COPY build/libs/*.jar app.jar
 
 ARG VERSION_TAG
 
@@ -59,11 +45,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # CV
         py3-opencv \
 # python3/pip
-        python3 \
-        py3-pip && \
-        python3 -m venv /opt/venv && \
-        . /opt/venv/bin/activate && \
-        pip install --no-cache-dir --upgrade pip setuptools wheel && \
+        python3 && \
+    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
+# uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
@@ -75,9 +59,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
-
-# Set the PATH to include the virtual environment
-ENV PATH="/opt/venv/bin:$PATH"
 
 EXPOSE 8080/tcp
 
