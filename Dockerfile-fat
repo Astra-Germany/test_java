@@ -64,7 +64,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         font-noto-extra \
 # python3/pip
         python3 && \
-    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --no-cache-dir --upgrade && \
+    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --no-cache-dir --upgrade unoconv WeasyPrint && \
     apk add --no-cache py3-opencv && \
