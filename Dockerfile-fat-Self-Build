@@ -33,7 +33,6 @@ ENV DOCKER_ENABLE_SECURITY=false \
     FAT_DOCKER=true \
     INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
 
-
 # JDK for app
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
@@ -62,7 +61,11 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 \
-        py3-pip && \
+        py3-pip \
+# Add missing dependencies
+        libffi-dev \
+        gcc \
+        musl-dev && \
         python3 -m venv /opt/venv && \
         . /opt/venv/bin/activate && \
         pip install --no-cache-dir --upgrade pip setuptools wheel && \
