@@ -130,7 +130,7 @@ jobs:
             type=raw,value=latest-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and push main Dockerfile fat self build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         # if: github.ref != 'refs/heads/main'
         with:
           builder: ${{ steps.buildx.outputs.name }}
