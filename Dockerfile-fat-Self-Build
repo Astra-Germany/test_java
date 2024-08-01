@@ -33,38 +33,37 @@ ENV DOCKER_ENABLE_SECURITY=false \
     FAT_DOCKER=true \
     INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
 
-# JDK for app
+# Add testing repositories
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
 
-# Upgrade packages
+# Upgrade all packages
 RUN apk upgrade --no-cache -a
 
-# Install necessary packages
-RUN apk add --no-cache \
-    ca-certificates \
-    tzdata \
-    tini \
-    bash \
-    curl \
-    shadow \
-    su-exec \
-    openssl \
-    openssl-dev \
-    openjdk21-jre \
-    libreoffice \
-    poppler-utils \
-    ocrmypdf \
-    tesseract-ocr-data-eng \
-    font-terminus font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra \
-    py3-opencv \
-    python3 \
-    py3-pip \
-    libffi-dev \
-    gcc \
-    musl-dev \
-    python3-dev
+# Install necessary packages one by one for debugging
+RUN apk add --no-cache ca-certificates && \
+    apk add --no-cache tzdata && \
+    apk add --no-cache tini && \
+    apk add --no-cache bash && \
+    apk add --no-cache curl && \
+    apk add --no-cache shadow && \
+    apk add --no-cache su-exec && \
+    apk add --no-cache openssl && \
+    apk add --no-cache openssl-dev && \
+    apk add --no-cache openjdk21-jre && \
+    apk add --no-cache libreoffice && \
+    apk add --no-cache poppler-utils && \
+    apk add --no-cache ocrmypdf && \
+    apk add --no-cache tesseract-ocr-data-eng && \
+    apk add --no-cache font-terminus font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra && \
+    apk add --no-cache py3-opencv && \
+    apk add --no-cache python3 && \
+    apk add --no-cache py3-pip && \
+    apk add --no-cache libffi-dev && \
+    apk add --no-cache gcc && \
+    apk add --no-cache musl-dev && \
+    apk add --no-cache python3-dev
 
 # Create virtual environment and install Python packages
 RUN python3 -m venv /opt/venv && \
