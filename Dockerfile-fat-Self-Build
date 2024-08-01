@@ -36,52 +36,52 @@ ENV DOCKER_ENABLE_SECURITY=false \
 # JDK for app
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
-    apk upgrade --no-cache -a && \
-    apk add --no-cache \
-        ca-certificates \
-        tzdata \
-        tini \
-        bash \
-        curl \
-        shadow \
-        su-exec \
-        openssl \
-        openssl-dev \
-        openjdk21-jre \
-# Doc conversion
-        libreoffice \
-# pdftohtml
-        poppler-utils \
-# OCR MY PDF (unpaper for descew and other advanced features)
-        ocrmypdf \
-        tesseract-ocr-data-eng \
-        font-terminus font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra \
-# CV
-        py3-opencv \
-# python3/pip
-        python3 \
-        py3-pip \
-# Add missing dependencies
-        libffi-dev \
-        gcc \
-        musl-dev \
-        python3-dev && \
-        python3 -m venv /opt/venv && \
-        . /opt/venv/bin/activate && \
-        pip install --no-cache-dir --upgrade pip setuptools wheel && \
-# uno unoconv and HTML
-        pip install --no-cache-dir unoconv WeasyPrint && \
-        mv /usr/share/tessdata /usr/share/tessdata-original && \
-        mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
-        fc-cache -f -v && \
-        chmod +x /scripts/* && \
-        chmod +x /scripts/init.sh && \
-# User permissions
-        addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
-        chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
-        chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
-        tesseract --list-langs
+    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
+
+# Upgrade packages
+RUN apk upgrade --no-cache -a
+
+# Install necessary packages
+RUN apk add --no-cache \
+    ca-certificates \
+    tzdata \
+    tini \
+    bash \
+    curl \
+    shadow \
+    su-exec \
+    openssl \
+    openssl-dev \
+    openjdk21-jre \
+    libreoffice \
+    poppler-utils \
+    ocrmypdf \
+    tesseract-ocr-data-eng \
+    font-terminus font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra \
+    py3-opencv \
+    python3 \
+    py3-pip \
+    libffi-dev \
+    gcc \
+    musl-dev \
+    python3-dev
+
+# Create virtual environment and install Python packages
+RUN python3 -m venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir unoconv WeasyPrint
+
+# Additional setup
+RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
+    mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
+    fc-cache -f -v && \
+    chmod +x /scripts/* && \
+    chmod +x /scripts/init.sh && \
+    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
+    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
+    chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
+    tesseract --list-langs
 
 # Set the PATH to include the virtual environment
 ENV PATH="/opt/venv/bin:$PATH"
