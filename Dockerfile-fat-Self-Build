@@ -1,25 +1,24 @@
-# First stage: Build the application
+# Build the application
 FROM gradle:8.9.0-jdk21 AS build
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the Gradle project files and source code
-COPY ./build.gradle  /app/
-COPY ./settings.gradle /app/
-COPY ./src /app/src
+# Copy the entire project to the working directory
+COPY . .
 
-# Run the build
-RUN gradle build
+# Build the application with DOCKER_ENABLE_SECURITY=false
+RUN DOCKER_ENABLE_SECURITY=true \
+    gradle clean build
 
 # Main stage
 FROM alpine:3.20.0
 
-# Copy necessary files from the build stage
+# Copy necessary files
 COPY --from=build /app/build/libs/*.jar /app.jar
-COPY ./scripts /scripts
-COPY ./pipeline /pipeline
-COPY ./src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
+COPY scripts /scripts
+COPY pipeline /pipeline
+COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
 
 ARG VERSION_TAG
 
@@ -30,9 +29,12 @@ ENV DOCKER_ENABLE_SECURITY=false \
     HOME=/home/stirlingpdfuser \
     PUID=1000 \
     PGID=1000 \
-    UMASK=022
+    UMASK=022 \
+    FAT_DOCKER=true \
+    INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
 
-# Install necessary packages
+
+# JDK for app
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
@@ -55,6 +57,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # OCR MY PDF (unpaper for descew and other advanced features)
         ocrmypdf \
         tesseract-ocr-data-eng \
+        font-terminus font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra \
 # CV
         py3-opencv \
 # python3/pip
@@ -63,6 +66,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         python3 -m venv /opt/venv && \
         . /opt/venv/bin/activate && \
         pip install --no-cache-dir --upgrade pip setuptools wheel && \
+# uno unoconv and HTML
         pip install --no-cache-dir unoconv WeasyPrint && \
         mv /usr/share/tessdata /usr/share/tessdata-original && \
         mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
