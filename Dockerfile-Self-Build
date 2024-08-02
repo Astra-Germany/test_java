@@ -60,7 +60,12 @@ RUN apk add --no-cache ca-certificates && \
     apk add --no-cache py3-opencv && \
 # python3/pip
     apk add --no-cache python3 && \
-    apk add --no-cache py3-pip
+    apk add --no-cache py3-pip && \
+    apk add --no-cache libffi-dev && \
+    apk add --no-cache gcc && \
+    apk add --no-cache musl-dev && \
+    apk add --no-cache python3-dev
+
 # Create virtual environment and install Python packages
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
