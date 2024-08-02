@@ -1,14 +1,14 @@
-# First stage: Build the application
-FROM gradle:8.9.0-jdk21 AS build
+# Build the application
+FROM gradle:8.9.0-jdk21-alpine AS build
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the Gradle project files and source code
+# Copy the entire project to the working directory
 COPY . .
 
 # Run the build
-RUN gradle build
+RUN gradle clean build
 
 # Main stage
 FROM alpine:3.20.0
@@ -33,45 +33,51 @@ ENV DOCKER_ENABLE_SECURITY=false \
 # Install necessary packages
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
-    apk upgrade --no-cache -a && \
-    apk add --no-cache \
-        ca-certificates \
-        tzdata \
-        tini \
-        bash \
-        curl \
-        shadow \
-        su-exec \
-        openssl \
-        openssl-dev \
-        openjdk21-jre \
+    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories
+
+# Upgrade all packages
+RUN apk upgrade --no-cache -a
+
+# Install necessary packages one by one for debugging
+RUN apk add --no-cache ca-certificates && \
+    apk add --no-cache tzdata && \
+    apk add --no-cache tini && \
+    apk add --no-cache bash && \
+    apk add --no-cache curl && \
+    apk add --no-cache shadow && \
+    apk add --no-cache su-exec && \
+    apk add --no-cache openssl && \
+    apk add --no-cache openssl-dev && \
+    apk add --no-cache openjdk21-jre && \
 # Doc conversion
-        libreoffice \
+    apk add --no-cache libreoffice && \
 # pdftohtml
-        poppler-utils \
+    apk add --no-cache poppler-utils && \
 # OCR MY PDF (unpaper for descew and other advanced features)
-        ocrmypdf \
-        tesseract-ocr-data-eng \
+    apk add --no-cache ocrmypdf && \
+    apk add --no-cache tesseract-ocr-data-eng && \
 # CV
-        py3-opencv \
+    apk add --no-cache py3-opencv && \
 # python3/pip
-        python3 \
-        py3-pip && \
-        python3 -m venv /opt/venv && \
-        . /opt/venv/bin/activate && \
-        pip install --no-cache-dir --upgrade pip setuptools wheel && \
-        pip install --no-cache-dir unoconv WeasyPrint && \
-        mv /usr/share/tessdata /usr/share/tessdata-original && \
-        mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
-        fc-cache -f -v && \
-        chmod +x /scripts/* && \
-        chmod +x /scripts/init.sh && \
+    apk add --no-cache python3 && \
+    apk add --no-cache py3-pip
+# Create virtual environment and install Python packages
+RUN python3 -m venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir unoconv WeasyPrint
+
+# Additional setup
+RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
+    mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
+    fc-cache -f -v && \
+    chmod +x /scripts/* && \
+    chmod +x /scripts/init.sh && \
 # User permissions
-        addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
-        chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
-        chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
-        tesseract --list-langs
+    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
+    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
+    chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
+    tesseract --list-langs
 
 # Set the PATH to include the virtual environment
 ENV PATH="/opt/venv/bin:$PATH"
