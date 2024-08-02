@@ -144,31 +144,31 @@ jobs:
       #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
       #     platforms: linux/amd64,linux/arm64/v8
 
-      - name: Generate tags fat self build
-        id: meta4
-        uses: docker/metadata-action@v5
-        # if: github.ref != 'refs/heads/main'
-        with:
-          images: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-          tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value=latest-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
+      # - name: Generate tags fat self build
+      #   id: meta4
+      #   uses: docker/metadata-action@v5
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     images: |
+      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
+      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+      #     tags: |
+      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
+      #       type=raw,value=latest-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build and push main Dockerfile fat self build
-        uses: docker/build-push-action@v6
-        # if: github.ref != 'refs/heads/main'
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: ./Dockerfile-fat-Self-Build
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.meta4.outputs.tags }}
-          labels: ${{ steps.meta4.outputs.labels }}
-          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+      # - name: Build and push main Dockerfile fat self build
+      #   uses: docker/build-push-action@v6
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./Dockerfile-fat-Self-Build
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta4.outputs.tags }}
+      #     labels: ${{ steps.meta4.outputs.labels }}
+      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
 
       - name: Generate tags self build
