@@ -169,7 +169,7 @@ jobs:
       #     tags: ${{ steps.meta4.outputs.tags }}
       #     labels: ${{ steps.meta4.outputs.labels }}
       #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-          platforms: linux/amd64,linux/arm64/v8
+      #     platforms: linux/amd64,linux/arm64/v8
 
       - name: Generate tags self build
         id: meta5
