@@ -25,7 +25,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.7
+          gradle-version: 8.9
 
       - name: Run Gradle Command
         run: gradle clean build --no-daemon
