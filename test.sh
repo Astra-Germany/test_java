@@ -102,9 +102,9 @@ main() {
 
 
     # Building Docker images with security enabled
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest -f ./Dockerfile-Self-Build .
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite -f ./Dockerfile-ultra-lite-Self-Build .
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-fat -f ./Dockerfile-fat-Self-Build .
+    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-Self-Build -f ./Dockerfile-Self-Build .
+    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite-Self-Build -f ./Dockerfile-ultra-lite-Self-Build .
+    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-fat-Self-Build -f ./Dockerfile-fat-Self-Build .
 
 
     # Test each configuration with security
