@@ -113,7 +113,7 @@ main() {
     run_tests "Stirling-PDF-Security" "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml"
 	docker-compose -f "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml" down
 
-	run_tests "Stirling-PDF-Security-Fa-Self-Buildt" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
+	run_tests "Stirling-PDF-Security-Fa-Self-Build" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
 	docker-compose -f "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml" down
 
     # Report results
