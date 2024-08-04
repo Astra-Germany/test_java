@@ -21,7 +21,7 @@ services:
       DOCKER_ENABLE_SECURITY: "false"
       SECURITY_ENABLELOGIN: "false"
       SYSTEM_DEFAULTLOCALE: en-US
-      UI_APPNAME: Stirling-PDF-Ultra-lite-Self-Build
+      UI_APPNAME: Stirling-PDF-Ultra-Lite-Self-Build
       UI_HOMEDESCRIPTION: Demo site for Stirling-PDF-Ultra-lite Latest-Self-Build
       UI_APPNAMENAVBAR: Stirling-PDF-Ultra-lite Latest-Self-Build
       SYSTEM_MAXFILESIZE: "100"
