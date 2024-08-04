@@ -73,8 +73,8 @@ main() {
 
 
     # Building Docker images
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest -f ./Dockerfile .
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite -f ./Dockerfile-ultra-lite .
+    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-Self-Build -f ./Dockerfile-Self-Build .
+    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite-Self-Build -f ./Dockerfile-ultra-lite-Self-Build .
 
     # Test each configuration
     run_tests "Stirling-PDF-Ultra-Lite" "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml"
