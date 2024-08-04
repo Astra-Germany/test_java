@@ -81,7 +81,7 @@ main() {
 	docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml" down
 
 
-    run_tests "Stirling-PDF" "./exampleYmlFiles/docker-compose-latest-Self-Build.yml"
+    run_tests "Stirling-PDF-Self-Build" "./exampleYmlFiles/docker-compose-latest-Self-Build.yml"
 	if [ $? -eq 0 ]; then
 		cd cucumber
 		if behave; then
@@ -110,10 +110,9 @@ main() {
     # Test each configuration with security
     run_tests "Stirling-PDF-Ultra-Lite-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml"
 	docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml" down
-    run_tests "Stirling-PDF-Security" "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml"
+    run_tests "Stirling-PDF-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml"
 	docker-compose -f "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml" down
-
-	run_tests "Stirling-PDF-Security-Fa-Self-Build" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
+	run_tests "Stirling-PDF-Security-Fat-Self-Build" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
 	docker-compose -f "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml" down
 
     # Report results

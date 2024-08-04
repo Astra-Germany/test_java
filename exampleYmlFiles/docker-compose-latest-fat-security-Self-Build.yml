@@ -25,9 +25,9 @@ services:
       PGID: 1002
       UMASK: "022"
       SYSTEM_DEFAULTLOCALE: en-US
-      UI_APPNAME: Stirling-PDF
-      UI_HOMEDESCRIPTION: Demo site for Stirling-PDF Latest-fat-Self-Build with Security
-      UI_APPNAMENAVBAR: Stirling-PDF Latest-fat-Self-Build
+      UI_APPNAME: Stirling-PDF-Security-Fat-Self-Build
+      UI_HOMEDESCRIPTION: Demo site for Stirling-PDF-Fat-Self-Build with Security
+      UI_APPNAMENAVBAR: Stirling-PDF-Security-Fat-Self-Build
       SYSTEM_MAXFILESIZE: "100"
       METRICS_ENABLED: "true"
       SYSTEM_GOOGLEVISIBILITY: "true"
