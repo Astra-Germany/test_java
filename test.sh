@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Function to check the health of the service with a timeout of 80 seconds
+# Function to check the health of the service with a timeout of 60 seconds
 check_health() {
     local service_name=$1
     local compose_file=$2
@@ -11,7 +11,7 @@ check_health() {
         sleep 3
         echo -n "."
         if [ $SECONDS -ge $end ]; then
-            echo -e "\n$service_name health check timed out after 80 seconds."
+            echo -e "\n$service_name health check timed out after 60 seconds."
             echo "Printing logs for $service_name:"
             docker logs "$service_name"
             return 1
