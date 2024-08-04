@@ -13,7 +13,7 @@ Feature: API Validation
     Then the response content type should be "application/pdf"
     And the response file should have size greater than 0
     And the response PDF is not passworded
-	  And the response status code should be 200
+  And the response status code should be 200
 
   @negative @password
   Scenario: Remove password wrong password
