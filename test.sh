@@ -7,18 +7,18 @@ check_health() {
     local end=$((SECONDS+60))
 
     echo -n "Waiting for $service_name to become healthy..."
-	until [ "$(docker inspect --format='{{json .State.Health.Status}}' "$service_name")" == '"healthy"' ] || [ $SECONDS -ge $end ]; do
-		sleep 3
-		echo -n "."
-		if [ $SECONDS -ge $end ]; then
-			echo -e "\n$service_name health check timed out after 80 seconds."
-			echo "Printing logs for $service_name:"
+    until [ "$(docker inspect --format='{{json .State.Health.Status}}' "$service_name")" == '"healthy"' ] || [ $SECONDS -ge $end ]; do
+        sleep 3
+        echo -n "."
+        if [ $SECONDS -ge $end ]; then
+            echo -e "\n$service_name health check timed out after 80 seconds."
+            echo "Printing logs for $service_name:"
             docker logs "$service_name"
-			return 1
-		fi
-	done
-	echo -e "\n$service_name is healthy!"
-	echo "Printing logs for $service_name:"
+            return 1
+        fi
+    done
+    echo -e "\n$service_name is healthy!"
+    echo "Printing logs for $service_name:"
     docker logs "$service_name"
     return 0
 }
@@ -62,7 +62,7 @@ run_tests() {
 
 # Main testing routine
 main() {
-	SECONDS=0
+    SECONDS=0
 
     export DOCKER_ENABLE_SECURITY=false
     # Run the gradlew build command and check if it fails
@@ -78,20 +78,20 @@ main() {
 
     # Test each configuration
     run_tests "Stirling-PDF-Ultra-Lite" "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml"
-	docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml" down
+    docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml" down
 
 
     run_tests "Stirling-PDF-Self-Build" "./exampleYmlFiles/docker-compose-latest-Self-Build.yml"
-	if [ $? -eq 0 ]; then
-		cd cucumber
-		if behave; then
-			passed_tests+=("Stirling-PDF-Regression")
-		else
-			failed_tests+=("Stirling-PDF-Regression")
-		fi
-		cd ..
-	fi
-	docker-compose -f "./exampleYmlFiles/docker-compose-latest-Self-Build.yml" down
+    if [ $? -eq 0 ]; then
+        cd cucumber
+        if behave; then
+            passed_tests+=("Stirling-PDF-Regression")
+        else
+            failed_tests+=("Stirling-PDF-Regression")
+        fi
+        cd ..
+    fi
+    docker-compose -f "./exampleYmlFiles/docker-compose-latest-Self-Build.yml" down
 
     export DOCKER_ENABLE_SECURITY=true
     # Run the gradlew build command and check if it fails
@@ -109,26 +109,26 @@ main() {
 
     # Test each configuration with security
     run_tests "Stirling-PDF-Ultra-Lite-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml"
-	docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml" down
+    docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml" down
     run_tests "Stirling-PDF-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml"
-	docker-compose -f "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml" down
-	run_tests "Stirling-PDF-Security-Fat-Self-Build" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
-	docker-compose -f "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml" down
+    docker-compose -f "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml" down
+    run_tests "Stirling-PDF-Security-Fat-Self-Build" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
+    docker-compose -f "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml" down
 
     # Report results
     echo "All tests completed in $SECONDS seconds."
 
 
-	if [ ${#passed_tests[@]} -ne 0 ]; then
-		echo "Passed tests:"
-	fi
+    if [ ${#passed_tests[@]} -ne 0 ]; then
+        echo "Passed tests:"
+    fi
     for test in "${passed_tests[@]}"; do
         echo -e "\e[32m$test\e[0m"  # Green color for passed tests
     done
 
-	if [ ${#failed_tests[@]} -ne 0 ]; then
-		echo "Failed tests:"
-	fi
+    if [ ${#failed_tests[@]} -ne 0 ]; then
+        echo "Failed tests:"
+    fi
     for test in "${failed_tests[@]}"; do
         echo -e "\e[31m$test\e[0m"  # Red color for failed tests
     done
