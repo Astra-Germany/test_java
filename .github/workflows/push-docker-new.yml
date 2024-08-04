@@ -1,4 +1,4 @@
-name: Push Docker Image with VersionNumber
+name: Push Docker Image with VersionNumber New
 
 on:
   workflow_dispatch:
