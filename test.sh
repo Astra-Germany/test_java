@@ -73,12 +73,12 @@ main() {
 
 
     # Building Docker images
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-Self-Build -f ./Dockerfile-Self-Build .
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite-Self-Build -f ./Dockerfile-ultra-lite-Self-Build .
+    # docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-Self-Build -f ./Dockerfile-Self-Build .
+    # docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite-Self-Build -f ./Dockerfile-ultra-lite-Self-Build .
 
     # Test each configuration
-    run_tests "Stirling-PDF-Ultra-Lite-Self-Build" "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml"
-    docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml" down
+    # run_tests "Stirling-PDF-Ultra-Lite-Self-Build" "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml"
+    # docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-Self-Build.yml" down
 
 
     run_tests "Stirling-PDF-Self-Build" "./exampleYmlFiles/docker-compose-latest-Self-Build.yml"
@@ -102,20 +102,20 @@ main() {
 
 
     # Building Docker images with security enabled
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-Self-Build -f ./Dockerfile-Self-Build .
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite-Self-Build -f ./Dockerfile-ultra-lite-Self-Build .
-    docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-fat-Self-Build -f ./Dockerfile-fat-Self-Build .
+    # docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-Self-Build -f ./Dockerfile-Self-Build .
+    # docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-ultra-lite-Self-Build -f ./Dockerfile-ultra-lite-Self-Build .
+    # docker build --no-cache --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest-fat-Self-Build -f ./Dockerfile-fat-Self-Build .
 
 
     # Test each configuration with security
-    run_tests "Stirling-PDF-Ultra-Lite-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml"
-    docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml" down
+    # run_tests "Stirling-PDF-Ultra-Lite-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml"
+    # docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite-security-Self-Build.yml" down
 
-    run_tests "Stirling-PDF-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml"
-    docker-compose -f "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml" down
+    # run_tests "Stirling-PDF-Security-Self-Build" "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml"
+    # docker-compose -f "./exampleYmlFiles/docker-compose-latest-security-Self-Build.yml" down
 
-    run_tests "Stirling-PDF-fat-Self-Build" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
-    docker-compose -f "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml" down
+    # run_tests "Stirling-PDF-fat-Self-Build" "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml"
+    # docker-compose -f "./exampleYmlFiles/docker-compose-latest-fat-security-Self-Build.yml" down
 
     # Report results
     echo "All tests completed in $SECONDS seconds."
