@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   stirling-pdf:
-    container_name: Stirling-PDF-Ultra-Lite
+    container_name: Stirling-PDF-Ultra-Lite-Self-Build
     image: ludy87/s-pdf:latest-ultra-lite-Self-Build
     deploy:
       resources:

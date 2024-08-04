@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   stirling-pdf:
-    container_name: Stirling-PDF-Security
+    container_name: Stirling-PDF-Security-Self-Build
     image: ludy87/s-pdf:latest-Self-Build
     deploy:
       resources:
