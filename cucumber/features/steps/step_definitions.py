@@ -38,7 +38,7 @@ def step_use_example_file(context, filePath, fileInput):
     context.file_name = filePath.split('/')[-1]
     if not hasattr(context, 'files'):
         context.files = {}
-    
+
     # Ensure the file exists before opening
     try:
         example_file = open(filePath, 'rb')
@@ -161,17 +161,17 @@ def step_pdf_contains_pages_with_random_text(context, page_count):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
-    
+
     for _ in range(page_count):
         text = ''.join(random.choices(string.ascii_letters + string.digits, k=100))
         c.drawString(100, height - 100, text)
         c.showPage()
-        
+
     c.save()
-    
+
     with open(context.file_name, 'wb') as f:
         f.write(buffer.getvalue())
-        
+
     context.files[context.param_name].close()
     context.files[context.param_name] = open(context.file_name, 'rb')
 
@@ -180,16 +180,16 @@ def step_pdf_pages_contain_text(context, text):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
-    
+
     for _ in range(len(PdfReader(context.file_name).pages)):
         c.drawString(100, height - 100, text)
         c.showPage()
-        
+
     c.save()
-    
+
     with open(context.file_name, 'wb') as f:
         f.write(buffer.getvalue())
-        
+
     context.files[context.param_name].close()
     context.files[context.param_name] = open(context.file_name, 'rb')
 
@@ -238,7 +238,7 @@ def step_send_get_request_with_params(context, endpoint):
     response = requests.get(full_url, params=params)
     context.response = response
 
-@when('I send the API request to the endpoint "{endpoint}"')
+@when(' "{endpoint}"')
 def step_send_api_request(context, endpoint):
     url = f"http://localhost:8080{endpoint}"
     files = context.files if hasattr(context, 'files') else {}
@@ -350,7 +350,7 @@ def step_check_response_zip_doc_page_count(context, doc_count, pages_per_doc):
     with zipfile.ZipFile(io.BytesIO(response_file.getvalue())) as zip_file:
         actual_doc_count = len(zip_file.namelist())
         assert actual_doc_count == doc_count, f"Expected {doc_count} documents but got {actual_doc_count} documents"
-        
+
         for file_name in zip_file.namelist():
             with zip_file.open(file_name) as pdf_file:
                 reader = PdfReader(pdf_file)
