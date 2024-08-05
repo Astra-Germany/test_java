@@ -40,7 +40,8 @@ jobs:
 
       - name: Pip requirements
         run: |
-           pip install -r ./cucumber/requirements.txt
+          pip install --upgrade pip
+          pip install -r ./cucumber/requirements.txt
 
       - name: Run Docker Compose Tests
         run: |
