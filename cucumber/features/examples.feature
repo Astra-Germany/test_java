@@ -13,7 +13,7 @@ Feature: API Validation
     Then the response content type should be "application/pdf"
     And the response file should have size greater than 0
     And the response PDF is not passworded
-  And the response status code should be 200
+    And the response status code should be 200
 
   @negative @password
   Scenario: Remove password wrong password
@@ -33,7 +33,7 @@ Feature: API Validation
     When I send the API request to the endpoint "/api/v1/security/get-info-on-pdf"
     Then the response content type should be "application/json"
     And the response file should have size greater than 100
-	And the response status code should be 200
+	  And the response status code should be 200
 
   @positive @password
   Scenario: Add password
@@ -46,7 +46,7 @@ Feature: API Validation
     Then the response content type should be "application/pdf"
     And the response file should have size greater than 100
     And the response PDF is passworded
-	And the response status code should be 200
+	  And the response status code should be 200
 
   @positive @password
   Scenario: Add password with other params
