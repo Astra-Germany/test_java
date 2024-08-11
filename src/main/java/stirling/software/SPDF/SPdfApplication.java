@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ import io.github.pixee.security.SystemCommand;
 import jakarta.annotation.PostConstruct;
 import stirling.software.SPDF.config.ConfigInitializer;
 import stirling.software.SPDF.model.ApplicationProperties;
+import stirling.software.SPDF.plugin.PluginInterface;
+import stirling.software.SPDF.plugin.PluginLoader;
 
 @SpringBootApplication
 @EnableScheduling
@@ -79,7 +82,8 @@ public class SPdfApplication {
 
         // custom javs settings file
         if (Files.exists(Paths.get("configs/custom_settings.yml"))) {
-            String existingLocation = propertyFiles.getOrDefault("spring.config.additional-location", "");
+            String existingLocation =
+                    propertyFiles.getOrDefault("spring.config.additional-location", "");
             if (!existingLocation.isEmpty()) {
                 existingLocation += ",";
             }
@@ -111,6 +115,16 @@ public class SPdfApplication {
             Files.createDirectories(Path.of("customFiles/templates/"));
         } catch (Exception e) {
             logger.error("Error creating directories: {}", e.getMessage());
+        }
+        try {
+            PluginLoader pluginLoader = new PluginLoader();
+            List<PluginInterface> plugins = pluginLoader.loadPlugins();
+
+            for (PluginInterface plugin : plugins) {
+                plugin.execute();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         printStartupLogs();
     }
