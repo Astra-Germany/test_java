@@ -55,7 +55,17 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         musl-dev \
         linux-headers \
         clang-dev \
-        git
+        git \
+        build-essential \
+        libfreetype6-dev \
+        libgl1-mesa-dev \
+        libglu1-mesa-dev \
+        libx11-dev \
+        libxext-dev \
+        libxi-dev \
+        libxmu-dev \
+        libgl1-mesa-glx \
+        libgl1-mesa-dri \
 
 # Setze Arbeitsverzeichnis
 WORKDIR /tmp
