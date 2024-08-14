@@ -58,7 +58,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         git
 
 # Clone and build PyMuPDF
-RUN git clone --recursive https://git.ghostscript.com/mupdf.git && \
+RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
     mkdir -p /tmp/PyMuPDF && \
     cd /tmp/PyMuPDF && \
     PYMUPDF_SETUP_MUPDF_BUILD=../mupdf pip install .
