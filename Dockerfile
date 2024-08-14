@@ -55,16 +55,20 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         musl-dev \
         linux-headers \
         clang-dev \
-        git \
-        sudo
+        git
+
+RUN apk search mupdf
+RUN apk info mupdf
+RUN apk add --update mupdf
+
 
 # Setze Arbeitsverzeichnis
-WORKDIR /tmp
-RUN git clone https://github.com/pymupdf/PyMuPDF.git && \
-# Klone MuPDF-Repository
-    git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
-    ls -la
-WORKDIR /
+# WORKDIR /tmp
+# RUN git clone https://github.com/pymupdf/PyMuPDF.git && \
+# # Klone MuPDF-Repository
+#     git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
+#     ls -la
+# WORKDIR /
 
 # # Setze Arbeitsverzeichnis für PyMuPDF
 # WORKDIR /tmp/mupdf
@@ -79,7 +83,7 @@ WORKDIR /
 # RUN pip install .
 
 # WORKDIR /
-RUN python3 /tmp/PyMuPDF/scripts/sysinstall.py --mupdf-dir /tmp/mupdf --pymupdf-dir /tmp/PyMuPDF
+# RUN python3 /tmp/PyMuPDF/scripts/sysinstall.py --mupdf-dir /tmp/mupdf --pymupdf-dir /tmp/PyMuPDF
 
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
