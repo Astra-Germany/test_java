@@ -67,7 +67,12 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         # Install additional packages for OpenGL
         mesa-gl \
         glfw \
-        freeglut
+        freeglut \
+        xorg-server-dev \
+        libxrandr-dev \
+        libx11-dev \
+        libxext-dev \
+        libxft-dev
 
 # Clone and build MuPDF
 WORKDIR /tmp
