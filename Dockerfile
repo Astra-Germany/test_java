@@ -47,7 +47,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # python3/pip
         python3 \
         py3-pip \
-        mupdf
+        mupdf \
+        build-base \
+        make
 
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
