@@ -111,7 +111,7 @@ RUN rm -rf /tmp/mupdf
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint installer
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint PyMuPDF
 #     PyMuPDF
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
