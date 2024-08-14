@@ -81,9 +81,6 @@ RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
     make -j $(nproc) && \
     make install
 
-# Verify installation
-RUN mupdf -version
-
 # Clean up
 RUN rm -rf /tmp/mupdf
 
