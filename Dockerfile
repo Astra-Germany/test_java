@@ -47,73 +47,14 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # python3/pip
         python3 \
         py3-pip \
-# Build tools
-        build-base \
-        make \
-        gcc \
-        g++ \
-        musl-dev \
-        linux-headers \
-        clang-dev \
-        git \
-        cmake \
-        zlib-dev \
-        freetype-dev \
-        jpeg-dev \
-        libpng-dev \
-        mesa-dev \
-        glfw-dev \
-        freeglut-dev \
-        # Install additional packages for OpenGL
-        mesa-gl \
-        glfw \
-        freeglut \
-        xorg-server-dev \
-        libxrandr-dev \
-        libx11-dev \
-        libxext-dev \
-        libxft-dev
-
-# Clone and build MuPDF
-WORKDIR /tmp
-RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
-    cd mupdf && \
-    make -j $(nproc) && \
-    make install
-
-# Clean up
-RUN rm -rf /tmp/mupdf
-
-
-# Setze Arbeitsverzeichnis
-# WORKDIR /tmp
-# RUN git clone https://github.com/pymupdf/PyMuPDF.git && \
-# # Klone MuPDF-Repository
-#     git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
-#     ls -la
-# WORKDIR /
-
-# # Setze Arbeitsverzeichnis für PyMuPDF
-# WORKDIR /tmp/mupdf
-
-# # Installiere MuPDF (Beispiel-Befehl, könnte je nach Makefile variieren)
-# RUN make -j $(nproc) && make install
-
-# # Setze Arbeitsverzeichnis für PyMuPDF
-# WORKDIR /tmp/PyMuPDF
-
-# # Installiere PyMuPDF
-# RUN pip install .
-
-# WORKDIR /
-# RUN python3 /tmp/PyMuPDF/scripts/sysinstall.py --mupdf-dir /tmp/mupdf --pymupdf-dir /tmp/PyMuPDF
+        mupdf
 
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint PyMuPDF
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint
 #     PyMuPDF
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
