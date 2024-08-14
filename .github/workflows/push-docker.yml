@@ -28,7 +28,7 @@ jobs:
           gradle-version: 8.7
 
       - name: Run Gradle Command
-        run: gradle clean build --no-daemon
+        run: ./gradlew clean build
         env:
           DOCKER_ENABLE_SECURITY: false
 
