@@ -1,55 +1,34 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" th:dir="#{language.direction}" th:data-language="${#locale.toString()}" xmlns:th="https://www.thymeleaf.org">
   <head>
-  <th:block th:insert="~{fragments/common :: head(title=#{pdfToWebp.title}, header=#{pdfToWebp.header})}"></th:block>
+  <th:block th:insert="~{fragments/common :: head(title=#{pdfToWebP.title}, header=#{pdfToWebP.header})}"></th:block>
   </head>
 
   <body>
     <th:block th:insert="~{fragments/common :: game}"></th:block>
     <div id="page-container">
       <div id="content-wrap">
-        <th:block th:insert="~{fragments/navbar.html :: navbar}"></th:block>
+        <th:block th:insert="~{fragments/navbar :: navbar}"></th:block>
         <br><br>
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-6 bg-card">
               <div class="tool-header">
-                <span class="material-symbols-rounded tool-header-icon image">image</span>
-                <span class="tool-header-text" th:text="#{pdfToWebp.header}"></span>
+                <span class="material-symbols-rounded tool-header-icon convert">panorama</span>
+                <span class="tool-header-text" th:text="#{pdfToWebP.header}"></span>
               </div>
               <p th:text="#{processTimeWarning}"></p>
               <form method="post" enctype="multipart/form-data" th:action="@{'/api/v1/convert/pdf/webp'}">
                 <div th:replace="~{fragments/common :: fileSelector(name='fileInput', multiple=false, accept='application/pdf')}"></div>
                 <div class="mb-3">
-                  <label th:text="#{pdfToWebp.selectText}"></label>
-                  <select class="form-control" name="imageFormat">
-                    <option value="png">PNG</option>
-                    <option value="jpg">JPG</option>
-                    <option value="gif">GIF</option>
-                    <option value="tiff">TIFF</option>
-                    <option value="bmp">BMP</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label th:text="#{pdfToWebp.singleOrMultiple}"></label>
-                  <select class="form-control" name="singleOrMultiple">
-                    <option value="multiple" th:text="#{pdfToWebp.multi}"></option>
-                    <option value="single" th:text="#{pdfToWebp.single}"></option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label th:text="#{pdfToWebp.colorType}"></label>
-                  <select class="form-control" name="colorType">
-                    <option value="color" th:text="#{pdfToWebp.color}"></option>
-                    <option value="greyscale" th:text="#{pdfToWebp.grey}"></option>
-                    <option value="blackwhite" th:text="#{pdfToWebp.blackwhite}"></option>
-                  </select>
-                </div>
-                <div class="mb-3">
                   <label for="dpi">DPI:</label>
                   <input type="number" name="dpi" class="form-control" id="dpi" min="1" step="1" value="300" required>
                 </div>
-                <button type="submit" id="submitBtn" class="btn btn-primary" th:text="#{pdfToWebp.submit}"></button>
+                <div class="mb-3">
+                  <label for="quality" th:text="#{pdfToWebP.quality}">Quality:</label>
+                  <input type="number" name="quality" class="form-control" id="quality" min="1" max="100" step="1" value="100" required>
+                </div>
+                <button type="submit" id="submitBtn" class="btn btn-primary" th:text="#{pdfToWebP.submit}"></button>
               </form>
             </div>
           </div>

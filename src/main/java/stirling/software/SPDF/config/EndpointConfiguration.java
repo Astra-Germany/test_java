@@ -138,6 +138,7 @@ public class EndpointConfiguration {
         addEndpointToGroup("Other", "auto-rename");
         addEndpointToGroup("Other", "get-info-on-pdf");
         addEndpointToGroup("Other", "show-javascript");
+        addEndpointToGroup("Other", "remove-image-pdf");
 
         // CLI
         addEndpointToGroup("CLI", "compress-pdf");
@@ -156,6 +157,7 @@ public class EndpointConfiguration {
         addEndpointToGroup("CLI", "book-to-pdf");
         addEndpointToGroup("CLI", "pdf-to-book");
         addEndpointToGroup("CLI", "pdf-to-rtf");
+        addEndpointToGroup("CLI", "pdf-to-webp");
 
         // Calibre
         addEndpointToGroup("Calibre", "book-to-pdf");
@@ -166,10 +168,12 @@ public class EndpointConfiguration {
         addEndpointToGroup("Python", REMOVE_BLANKS);
         addEndpointToGroup("Python", "html-to-pdf");
         addEndpointToGroup("Python", "url-to-pdf");
+        addEndpointToGroup("Python", "pdf-to-webp");
 
         // openCV
         addEndpointToGroup("OpenCV", "extract-image-scans");
         addEndpointToGroup("OpenCV", REMOVE_BLANKS);
+        addEndpointToGroup("OpenCV", "pdf-to-webp");
 
         // LibreOffice
         addEndpointToGroup("LibreOffice", "repair");
@@ -194,7 +198,6 @@ public class EndpointConfiguration {
         addEndpointToGroup("Java", "rotate-pdf");
         addEndpointToGroup("Java", "pdf-to-img");
         addEndpointToGroup("Java", "img-to-pdf");
-        addEndpointToGroup("Java", "pdf-to-webp");
         addEndpointToGroup("Java", "add-password");
         addEndpointToGroup("Java", "remove-password");
         addEndpointToGroup("Java", "change-permissions");
@@ -223,6 +226,7 @@ public class EndpointConfiguration {
         addEndpointToGroup("Java", "split-pdf-by-sections");
         addEndpointToGroup("Java", REMOVE_BLANKS);
         addEndpointToGroup("Java", "pdf-to-text");
+        addEndpointToGroup("Java", "remove-image-pdf");
 
         // Javascript
         addEndpointToGroup("Javascript", "pdf-organizer");

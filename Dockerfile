@@ -1,26 +1,12 @@
-# First stage: Build the application
-FROM gradle:8.9.0-jdk21 AS build
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the Gradle project files and source code
-COPY ./build.gradle /app/
-COPY ./settings.gradle /app/
-COPY ./src /app/src
-
-# Run the build
-RUN gradle build
-
 # Main stage
-FROM alpine:3.20.0
+FROM alpine:3.20.2
 
-# Copy necessary files from the build stage
-COPY --from=build /app/build/libs/*.jar /app.jar
-COPY ./scripts /scripts
-COPY ./pipeline /pipeline
-COPY ./src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
-
+# Copy necessary files
+COPY scripts /scripts
+COPY pipeline /pipeline
+COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
+#COPY src/main/resources/static/fonts/*.otf /usr/share/fonts/opentype/noto/
+COPY build/libs/*.jar app.jar
 
 ARG VERSION_TAG
 
@@ -33,7 +19,7 @@ ENV DOCKER_ENABLE_SECURITY=false \
     PGID=1000 \
     UMASK=022
 
-# Install necessary packages
+# JDK for app
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
@@ -53,34 +39,28 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         libreoffice \
 # pdftohtml
         poppler-utils \
-# OCR MY PDF (unpaper for descew and other advanced features)
+# OCR MY PDF (unpaper for descew and other advanced featues)
         ocrmypdf \
         tesseract-ocr-data-eng \
 # CV
         py3-opencv \
+# PyMuPDF for webp
+        PyMuPDF \
 # python3/pip
         python3 \
-        py3-pip \
-        gcc \
-        musl-dev \
-        libffi-dev && \
-        python3 -m venv /opt/venv && \
-        # . /opt/venv/bin/activate && \
-        /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel && \
-        /opt/venv/bin/pip install --no-cache-dir unoconv WeasyPrint && \
-        mv /usr/share/tessdata /usr/share/tessdata-original && \
-        mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
-        fc-cache -f -v && \
-        chmod +x /scripts/* && \
-        chmod +x /scripts/init.sh && \
+    py3-pip && \
+# uno unoconv and HTML
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
+    mv /usr/share/tessdata /usr/share/tessdata-original && \
+    mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
+    fc-cache -f -v && \
+    chmod +x /scripts/* && \
+    chmod +x /scripts/init.sh && \
 # User permissions
-        addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
-        chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
-        chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
-        tesseract --list-langs
-
-# Set the PATH to include the virtual environment
-ENV PATH="/opt/venv/bin:$PATH"
+    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
+    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
+    chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
+    tesseract --list-langs
 
 EXPOSE 8080/tcp
 

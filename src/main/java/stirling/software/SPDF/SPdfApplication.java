@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -23,8 +22,6 @@ import io.github.pixee.security.SystemCommand;
 import jakarta.annotation.PostConstruct;
 import stirling.software.SPDF.config.ConfigInitializer;
 import stirling.software.SPDF.model.ApplicationProperties;
-import stirling.software.SPDF.plugin.PluginInterface;
-import stirling.software.SPDF.plugin.PluginLoader;
 
 @SpringBootApplication
 @EnableScheduling
@@ -48,7 +45,6 @@ public class SPdfApplication {
         // Check if the BROWSER_OPEN environment variable is set to true
         String browserOpenEnv = env.getProperty("BROWSER_OPEN");
         boolean browserOpen = browserOpenEnv != null && "true".equalsIgnoreCase(browserOpenEnv);
-
         if (browserOpen) {
             try {
                 String url = "http://localhost:" + getNonStaticPort();
@@ -115,16 +111,6 @@ public class SPdfApplication {
             Files.createDirectories(Path.of("customFiles/templates/"));
         } catch (Exception e) {
             logger.error("Error creating directories: {}", e.getMessage());
-        }
-        try {
-            PluginLoader pluginLoader = new PluginLoader();
-            List<PluginInterface> plugins = pluginLoader.loadPlugins();
-
-            for (PluginInterface plugin : plugins) {
-                plugin.execute();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         printStartupLogs();
     }

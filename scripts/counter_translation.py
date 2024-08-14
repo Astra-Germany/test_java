@@ -80,7 +80,7 @@ def write_readme(progress_list: list[tuple[str, int]]) -> None:
 
 
 def compare_files(
-    default_file_path, file_paths, translation_status_file
+    default_file_path, file_paths, ignore_translation_file
 ) -> list[tuple[str, int]]:
     """Compares the default properties file with other
     properties files in the directory.
@@ -100,11 +100,11 @@ def compare_files(
     )
 
     result_list = []
-    sort_translation_status: tomlkit.TOMLDocument
+    sort_ignore_translation: tomlkit.TOMLDocument
 
     # read toml
-    with open(translation_status_file, encoding="utf-8") as f:
-        sort_translation_status = tomlkit.parse(f.read())
+    with open(ignore_translation_file, encoding="utf-8") as f:
+        sort_ignore_translation = tomlkit.parse(f.read())
 
     for file_path in file_paths:
         language = (
@@ -119,21 +119,21 @@ def compare_files(
             result_list.append(("en_US", 100))
             continue
 
-        if language not in sort_translation_status:
-            sort_translation_status[language] = tomlkit.table()
+        if language not in sort_ignore_translation:
+            sort_ignore_translation[language] = tomlkit.table()
 
         if (
-            "ignore" not in sort_translation_status[language]
-            or len(sort_translation_status[language].get("ignore", [])) < 1
+            "ignore" not in sort_ignore_translation[language]
+            or len(sort_ignore_translation[language].get("ignore", [])) < 1
         ):
-            sort_translation_status[language]["ignore"] = tomlkit.array(
+            sort_ignore_translation[language]["ignore"] = tomlkit.array(
                 ["language.direction"]
             )
 
-        # if "missing" not in sort_translation_status[language]:
-        #     sort_translation_status[language]["missing"] = tomlkit.array()
-        # elif "language.direction" in sort_translation_status[language]["missing"]:
-        #     sort_translation_status[language]["missing"].remove("language.direction")
+        # if "missing" not in sort_ignore_translation[language]:
+        #     sort_ignore_translation[language]["missing"] = tomlkit.array()
+        # elif "language.direction" in sort_ignore_translation[language]["missing"]:
+        #     sort_ignore_translation[language]["missing"].remove("language.direction")
 
         with open(default_file_path, encoding="utf-8") as default_file, open(
             file_path, encoding="utf-8"
@@ -152,37 +152,38 @@ def compare_files(
                     # Ignoring empty lines and lines start with #
                     if line_default.strip() == "" or line_default.startswith("#"):
                         continue
-
                     default_key, default_value = line_default.split("=", 1)
                     file_key, file_value = line_file.split("=", 1)
                     if (
                         default_value.strip() == file_value.strip()
                         and default_key.strip()
-                        not in sort_translation_status[language]["ignore"]
+                        not in sort_ignore_translation[language]["ignore"]
                     ):
                         print(
                             f"{language}: Line {line_num} is missing the translation."
                         )
-                        # if default_key.strip() not in sort_translation_status[language]["missing"]:
+                        # if default_key.strip() not in sort_ignore_translation[language]["missing"]:
                         #     missing_array = tomlkit.array()
                         #     missing_array.append(default_key.strip())
                         #     missing_array.multiline(True)
-                        #     sort_translation_status[language]["missing"].extend(missing_array)
+                        #     sort_ignore_translation[language]["missing"].extend(missing_array)
                         fails += 1
-                    # elif default_key.strip() in sort_translation_status[language]["ignore"]:
-                    #     if default_key.strip() in sort_translation_status[language]["missing"]:
-                    #         sort_translation_status[language]["missing"].remove(default_key.strip())
+                    # elif default_key.strip() in sort_ignore_translation[language]["ignore"]:
+                    #     if default_key.strip() in sort_ignore_translation[language]["missing"]:
+                    #         sort_ignore_translation[language]["missing"].remove(default_key.strip())
                     if default_value.strip() != file_value.strip():
-                        # if default_key.strip() in sort_translation_status[language]["missing"]:
-                        #     sort_translation_status[language]["missing"].remove(default_key.strip())
+                        # if default_key.strip() in sort_ignore_translation[language]["missing"]:
+                        #     sort_ignore_translation[language]["missing"].remove(default_key.strip())
                         if (
                             default_key.strip()
-                            in sort_translation_status[language]["ignore"]
+                            in sort_ignore_translation[language]["ignore"]
                         ):
-                            sort_translation_status[language]["ignore"].remove(
+                            sort_ignore_translation[language]["ignore"].remove(
                                 default_key.strip()
                             )
-
+                except ValueError:
+                    print(f"{line_default}|{line_file}")
+                    exit(1)
                 except IndexError:
                     pass
 
@@ -193,9 +194,9 @@ def compare_files(
                 int((num_lines - fails) * 100 / num_lines),
             )
         )
-    translation_status = convert_to_multiline(sort_translation_status)
-    with open(translation_status_file, "w", encoding="utf-8") as file:
-        file.write(tomlkit.dumps(translation_status))
+    ignore_translation = convert_to_multiline(sort_ignore_translation)
+    with open(ignore_translation_file, "w", encoding="utf-8") as file:
+        file.write(tomlkit.dumps(ignore_translation))
 
     unique_data = list(set(result_list))
     unique_data.sort(key=lambda x: x[1], reverse=True)
@@ -209,7 +210,7 @@ if __name__ == "__main__":
     reference_file = os.path.join(directory, "messages_en_GB.properties")
 
     scripts_directory = os.path.join(os.getcwd(), "scripts")
-    translation_state_file = os.path.join(scripts_directory, "translation_status.toml")
+    translation_state_file = os.path.join(scripts_directory, "ignore_translation.toml")
 
     write_readme(
         compare_files(reference_file, messages_file_paths, translation_state_file)
