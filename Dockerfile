@@ -55,7 +55,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         musl-dev \
         linux-headers \
         clang-dev \
-        git
+        git \
+        sudo
 
 # Setze Arbeitsverzeichnis
 WORKDIR /tmp
