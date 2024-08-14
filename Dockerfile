@@ -51,7 +51,10 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         build-base \
         make \
         gcc \
+        g++ \
         musl-dev \
+        linux-headers \
+        clang-dev \
         mupdf
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
