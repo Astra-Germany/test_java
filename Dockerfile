@@ -59,8 +59,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 
 # Clone and build PyMuPDF
 RUN git clone --recursive https://git.ghostscript.com/mupdf.git && \
-    mkdir PyMuPDF && \
-    cd PyMuPDF && \
+    mkdir -p /tmp/PyMuPDF && \
+    cd /tmp/PyMuPDF && \
     PYMUPDF_SETUP_MUPDF_BUILD=../mupdf pip install .
 
 # uno unoconv and HTML
