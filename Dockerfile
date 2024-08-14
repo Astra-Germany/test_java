@@ -46,11 +46,17 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 \
-        py3-pip
+        py3-pip \
+# Build tools
+        build-base \
+        make \
+        gcc \
+        musl-dev
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
+    pip install --upgrade pip && \
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint PyMuPDF
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
