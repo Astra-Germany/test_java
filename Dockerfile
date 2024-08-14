@@ -30,6 +30,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         tini \
         bash \
         curl \
+        mupdf \
         shadow \
         su-exec \
         openssl \
@@ -46,18 +47,10 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 \
-        py3-pip \
-        mupdf \
-        build-base \
-        make && \
-
+    py3-pip && \
 # uno unoconv and HTML
-    pip install --upgrade pip && \
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
-    pip install --no-cache-dir --upgrade pymupdf==1.23.0
-#     PyMuPDF
-
-RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint pymupdf==1.23.0 && \
+    mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
     chmod +x /scripts/* && \
