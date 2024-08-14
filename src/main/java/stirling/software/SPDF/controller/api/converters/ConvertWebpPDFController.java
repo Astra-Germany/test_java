@@ -89,7 +89,7 @@ public class ConvertWebpPDFController {
                     .runCommandWithOutputHandling(Arrays.asList("python", "--version"));
             pythonVersion = "python";
         }
-        String venvPath = "/opt/venv";
+        String venvPath = "venv";
         List<String> createVenvCommand = Arrays.asList(
                 pythonVersion,
                 "-m",
