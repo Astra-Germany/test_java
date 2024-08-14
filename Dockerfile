@@ -65,7 +65,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         libxi-dev \
         libxmu-dev \
         libgl1-mesa-glx \
-        libgl1-mesa-dri \
+        libgl1-mesa-dri
 
 # Setze Arbeitsverzeichnis
 WORKDIR /tmp
