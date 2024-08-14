@@ -62,8 +62,7 @@ WORKDIR /tmp
 RUN git clone https://github.com/pymupdf/PyMuPDF.git && \
 # Klone MuPDF-Repository
     git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
-    ls -la && \
-    python3 /tmp/PyMuPDF/scripts/sysinstall.py --mupdf-dir /mupdf --pymupdf-dir /PyMuPDF
+    ls -la
 WORKDIR /
 
 # # Setze Arbeitsverzeichnis für PyMuPDF
@@ -78,7 +77,8 @@ WORKDIR /
 # # Installiere PyMuPDF
 # RUN pip install .
 
-WORKDIR /
+# WORKDIR /
+RUN python3 /tmp/PyMuPDF/scripts/sysinstall.py --mupdf-dir /tmp/mupdf --pymupdf-dir /tmp/PyMuPDF
 
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
