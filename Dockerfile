@@ -48,7 +48,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 \
-        py3-pip
+        py3-pip \
+        git
 
 # Set working directory
 WORKDIR /tmp
@@ -58,8 +59,7 @@ RUN wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/${PYMUPDF_VERSION}
         && tar -xzf ${PYMUPDF_VERSION}.tar.gz \
         && rm ${PYMUPDF_VERSION}.tar.gz \
         && cd PyMuPDF-${PYMUPDF_VERSION} \
-        && python3 setup.py build \
-        && python3 setup.py install
+        && pip install .
 # # Build tools
 #         build-base \
 #         make \
