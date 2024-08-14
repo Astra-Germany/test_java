@@ -56,12 +56,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         liblcms2-dev \
         libx11-dev \
         libxext-dev \
-        zlib1g-dev
+        zlib1g-dev && \
 
 # uno unoconv and HTML
-# Create virtual environment and install Python packages
-RUN python3 -m venv /opt/venv && \
-    . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     pip install --no-cache-dir --upgrade pymupdf==1.23.0
