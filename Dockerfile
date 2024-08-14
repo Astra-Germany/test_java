@@ -55,13 +55,20 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         musl-dev \
         linux-headers \
         clang-dev \
-        mupdf
+        git
+
+# Clone and build PyMuPDF
+RUN git clone --recursive https://git.ghostscript.com/mupdf.git && \
+    mkdir PyMuPDF && \
+    cd PyMuPDF && \
+    PYMUPDF_SETUP_MUPDF_BUILD=../mupdf pip install .
+
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint PyMuPDF==1.24.2
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint
 #     PyMuPDF
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
