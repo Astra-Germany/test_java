@@ -32,7 +32,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         su-exec \
-        mupdf \
+        # mupdf \
         openssl \
         openssl-dev \
         openjdk21-jre \
@@ -60,6 +60,11 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
+
+RUN python3 -m venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    pip install --upgrade pip && \
+    pip install --break-system-packages --no-cache-dir --upgrade pymupdf
 
 EXPOSE 8080/tcp
 

@@ -89,28 +89,6 @@ public class ConvertWebpPDFController {
                     .runCommandWithOutputHandling(Arrays.asList("python", "--version"));
             pythonVersion = "python";
         }
-        String venvPath = "venv";
-        List<String> createVenvCommand = Arrays.asList(
-                pythonVersion,
-                "-m",
-                "venv",
-                venvPath
-        );
-        // Virtuelle Umgebung erstellen
-        ProcessExecutorResult venvCreationResult = ProcessExecutor.getInstance(ProcessExecutor.Processes.PYTHON_OPENCV)
-        .runCommandWithOutputHandling(createVenvCommand);
-
-        // Aktivieren der virtuellen Umgebung und Installation des Pakets
-        String activateScript = venvPath + "/bin/activate";
-        List<String> installCommand = Arrays.asList(
-                "bash",
-                "-c",
-                "source " + activateScript + " && pip install pymupdf"
-        );
-
-        ProcessExecutorResult installResult = ProcessExecutor.getInstance(ProcessExecutor.Processes.PYTHON_OPENCV)
-                .runCommandWithOutputHandling(installCommand);
-
         // Run the Python script to convert PDF to WebP
         List<String> command =
                 Arrays.asList(
