@@ -1,6 +1,8 @@
 # Main stage
 FROM alpine:3.20.2
 
+ARG PYMUPDF_VERSION=1.24.9
+
 # Copy necessary files
 COPY scripts /scripts
 COPY pipeline /pipeline
@@ -46,18 +48,29 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 \
-        py3-pip \
-# Build tools
-        build-base \
-        make \
-        gcc \
-        musl-dev
+        py3-pip
+
+# Set working directory
+WORKDIR /tmp
+
+# Download, build, and install PyMuPDF
+RUN wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/${PYMUPDF_VERSION}.tar.gz \
+        && tar -xzf ${PYMUPDF_VERSION}.tar.gz \
+        && rm ${PYMUPDF_VERSION}.tar.gz \
+        && cd PyMuPDF-${PYMUPDF_VERSION} \
+        && python3 setup.py build \
+        && python3 setup.py install
+# # Build tools
+#         build-base \
+#         make \
+#         gcc \
+#         musl-dev
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint PyMuPDF
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
