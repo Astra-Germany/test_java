@@ -59,26 +59,25 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 
 # Setze Arbeitsverzeichnis
 WORKDIR /tmp
-
-RUN git clone https://github.com/pymupdf/PyMuPDF.git
-
+RUN wget https://raw.githubusercontent.com/pymupdf/PyMuPDF/8118358218e4f54da9e57970f681ffd97c33c286/scripts/sysinstall.py && \
+    git clone https://github.com/pymupdf/PyMuPDF.git && \
 # Klone MuPDF-Repository
-RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git
-
+    git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
+    ls -la && \
+    python3 sysinstall.py --mupdf-dir /mupdf --pymupdf-dir /PyMuPDF
 WORKDIR /
-RUN python3 scripts/sysinstall.py --mupdf-dir /tmp/mupdf --pymupdf-dir /tmp/PyMuPDF
 
-# Setze Arbeitsverzeichnis für PyMuPDF
-WORKDIR /tmp/mupdf
+# # Setze Arbeitsverzeichnis für PyMuPDF
+# WORKDIR /tmp/mupdf
 
-# Installiere MuPDF (Beispiel-Befehl, könnte je nach Makefile variieren)
-RUN make -j $(nproc) && make install
+# # Installiere MuPDF (Beispiel-Befehl, könnte je nach Makefile variieren)
+# RUN make -j $(nproc) && make install
 
-# Setze Arbeitsverzeichnis für PyMuPDF
-WORKDIR /tmp/PyMuPDF
+# # Setze Arbeitsverzeichnis für PyMuPDF
+# WORKDIR /tmp/PyMuPDF
 
-# Installiere PyMuPDF
-RUN pip install .
+# # Installiere PyMuPDF
+# RUN pip install .
 
 WORKDIR /
 
