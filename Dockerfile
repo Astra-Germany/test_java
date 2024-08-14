@@ -33,7 +33,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         shadow \
         su-exec \
         # mupdf \
-        make\
+        gcc musl-dev linux-headers make g++ clang-dev \
         # mupdf \
         openssl \
         openssl-dev \
@@ -66,7 +66,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install --break-system-packages --no-cache-dir --upgrade pymupdf
+    pip install --no-cache-dir --upgrade pymupdf
 
 EXPOSE 8080/tcp
 
