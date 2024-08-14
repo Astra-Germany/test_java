@@ -67,7 +67,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # Create virtual environment and install Python packages
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint PyMuPDF
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint PyMuPDF==1.24.2
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
