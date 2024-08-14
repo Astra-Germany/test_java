@@ -55,23 +55,18 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         musl-dev \
         linux-headers \
         clang-dev \
-        git \
-        build-essential \
-        libfreetype6-dev \
-        libgl1-mesa-dev \
-        libglu1-mesa-dev \
-        libx11-dev \
-        libxext-dev \
-        libxi-dev \
-        libxmu-dev \
-        libgl1-mesa-glx \
-        libgl1-mesa-dri
+        git
 
 # Setze Arbeitsverzeichnis
 WORKDIR /tmp
 
+RUN git clone https://github.com/pymupdf/PyMuPDF.git
+
 # Klone MuPDF-Repository
 RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git
+
+WORKDIR /
+RUN python3 scripts/sysinstall.py --mupdf-dir /tmp/mupdf --pymupdf-dir /tmp/PyMuPDF
 
 # Setze Arbeitsverzeichnis für PyMuPDF
 WORKDIR /tmp/mupdf
@@ -92,7 +87,7 @@ WORKDIR /
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint installer
 #     PyMuPDF
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
