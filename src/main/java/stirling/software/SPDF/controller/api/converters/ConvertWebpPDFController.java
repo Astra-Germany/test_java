@@ -89,6 +89,19 @@ public class ConvertWebpPDFController {
                     .runCommandWithOutputHandling(Arrays.asList("python", "--version"));
             pythonVersion = "python";
         }
+
+        List<String> command0 =
+                Arrays.asList(
+                        pythonVersion,
+                        "-m",
+                        "pip", // Python script to handle the conversion
+                        "install",
+                        "pymupdf");
+
+        ProcessExecutorResult result0 =
+                ProcessExecutor.getInstance(ProcessExecutor.Processes.PYTHON_OPENCV)
+                        .runCommandWithOutputHandling(command0);
+
         // Run the Python script to convert PDF to WebP
         List<String> command =
                 Arrays.asList(
