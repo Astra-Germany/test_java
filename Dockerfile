@@ -36,6 +36,13 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         openssl \
         openssl-dev \
         openjdk21-jre \
+        gcc \
+        musl-dev \
+        openjpeg-dev \
+        jpeg-dev \
+        swig \
+        make \
+        g++ \
 # Doc conversion
         libreoffice \
 # pdftohtml
