@@ -59,13 +59,11 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 
 # Setze Arbeitsverzeichnis
 WORKDIR /tmp
-RUN wget https://raw.githubusercontent.com/pymupdf/PyMuPDF/main/scripts/sysinstall.py && \
-    wget https://raw.githubusercontent.com/pymupdf/PyMuPDF/main/scripts/test.py && \
-    git clone https://github.com/pymupdf/PyMuPDF.git && \
+RUN git clone https://github.com/pymupdf/PyMuPDF.git && \
 # Klone MuPDF-Repository
     git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
     ls -la && \
-    python3 sysinstall.py --mupdf-dir /mupdf --pymupdf-dir /PyMuPDF
+    python3 /PyMuPDF/scripts/sysinstall.py --mupdf-dir /mupdf --pymupdf-dir /PyMuPDF
 WORKDIR /
 
 # # Setze Arbeitsverzeichnis für PyMuPDF
