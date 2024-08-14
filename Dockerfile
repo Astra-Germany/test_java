@@ -49,7 +49,14 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-pip \
         mupdf \
         build-base \
-        make
+        make \
+        build-essential \
+        libfreetype6-dev \
+        libjpeg-dev \
+        liblcms2-dev \
+        libx11-dev \
+        libxext-dev \
+        zlib1g-dev
 
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
@@ -57,7 +64,7 @@ RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip && \
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
-    pip install --no-cache-dir --upgrade pymupdf==1.24.2
+    pip install --no-cache-dir --upgrade pymupdf==1.23.0
 #     PyMuPDF
 
 RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
