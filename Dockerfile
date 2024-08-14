@@ -60,7 +60,14 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         zlib-dev \
         freetype-dev \
         jpeg-dev \
-        libpng-dev
+        libpng-dev \
+        mesa-dev \
+        glfw-dev \
+        freeglut-dev \
+        # Install additional packages for OpenGL
+        mesa-gl \
+        glfw \
+        freeglut
 
 # Clone and build MuPDF
 WORKDIR /tmp
