@@ -49,14 +49,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-pip \
         mupdf \
         build-base \
-        make \
-        build-essential \
-        libfreetype6-dev \
-        libjpeg-dev \
-        liblcms2-dev \
-        libx11-dev \
-        libxext-dev \
-        zlib1g-dev && \
+        make && \
 
 # uno unoconv and HTML
     pip install --upgrade pip && \
