@@ -49,7 +49,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # python3/pip
         python3 \
         py3-pip \
-        git
+        wget \
+        tar
 
 # Set working directory
 WORKDIR /tmp
@@ -60,6 +61,9 @@ RUN wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/${PYMUPDF_VERSION}
         && rm ${PYMUPDF_VERSION}.tar.gz \
         && cd PyMuPDF-${PYMUPDF_VERSION} \
         && pip install .
+# Clean up
+WORKDIR /
+RUN rm -rf /tmp/PyMuPDF-${PYMUPDF_VERSION}
 # # Build tools
 #         build-base \
 #         make \
