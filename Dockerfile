@@ -43,6 +43,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         swig \
         make \
         g++ \
+        linux-headers \
+        clang-dev \
 # Doc conversion
         libreoffice \
 # pdftohtml
