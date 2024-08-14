@@ -57,11 +57,25 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         clang-dev \
         git
 
-# Clone and build PyMuPDF
-RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
-    mkdir -p /tmp/PyMuPDF && \
-    cd /tmp/PyMuPDF && \
-    PYMUPDF_SETUP_MUPDF_BUILD=../mupdf pip install .
+# Setze Arbeitsverzeichnis
+WORKDIR /tmp
+
+# Klone MuPDF-Repository
+RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git
+
+# Setze Arbeitsverzeichnis für PyMuPDF
+WORKDIR /tmp/mupdf
+
+# Installiere MuPDF (Beispiel-Befehl, könnte je nach Makefile variieren)
+RUN make -j $(nproc) && make install
+
+# Setze Arbeitsverzeichnis für PyMuPDF
+WORKDIR /tmp/PyMuPDF
+
+# Installiere PyMuPDF
+RUN pip install .
+
+WORKDIR /
 
 # uno unoconv and HTML
 # Create virtual environment and install Python packages
