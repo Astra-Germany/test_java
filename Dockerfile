@@ -55,11 +55,25 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         musl-dev \
         linux-headers \
         clang-dev \
-        git
+        git \
+        cmake \
+        zlib-dev \
+        freetype-dev \
+        jpeg-dev \
+        libpng-dev
 
-RUN apk search mupdf
-RUN apk info mupdf
-RUN apk add --update mupdf
+# Clone and build MuPDF
+WORKDIR /tmp
+RUN git clone --recursive https://github.com/ArtifexSoftware/mupdf.git && \
+    cd mupdf && \
+    make -j $(nproc) && \
+    make install
+
+# Verify installation
+RUN mupdf -version
+
+# Clean up
+RUN rm -rf /tmp/mupdf
 
 
 # Setze Arbeitsverzeichnis
