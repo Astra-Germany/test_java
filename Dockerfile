@@ -33,9 +33,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         shadow \
         su-exec \
         # mupdf \
-        libjpeg-turbo-dev \
-        git \
-        mupdf \
+        gcc musl-dev linux-headers make g++ clang-dev \
+        # mupdf \
         openssl \
         openssl-dev \
         openjdk21-jre \
@@ -52,7 +51,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         python3 \
     py3-pip && \
 # uno unoconv and HTML
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint pymupdf==1.24.2 && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
@@ -68,11 +67,11 @@ RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
     pip install --upgrade pip
 
-WORKDIR /tmp
-RUN git clone https://github.com/Ludy87/PyMuPDF.git
-WORKDIR /tmp/PyMuPDF
-RUN python3 scripts/sysinstall.py --mupdf-do 0
-WORKDIR /
+# WORKDIR /tmp
+# RUN git clone https://github.com/Ludy87/PyMuPDF.git
+# WORKDIR /tmp/PyMuPDF
+# RUN python3 scripts/sysinstall.py --mupdf-do 0
+# WORKDIR /
 
 EXPOSE 8080/tcp
 
