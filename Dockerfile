@@ -33,13 +33,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         shadow \
         su-exec \
         # mupdf \
-        freetype-dev \
-        harfbuzz-dev \
-        jbig2dec-dev \
         libjpeg-turbo-dev \
-        leptonica-dev \
-        openjpeg-dev \
-        gcc musl-dev linux-headers make g++ clang-dev git \
+        git \
         mupdf \
         openssl \
         openssl-dev \
