@@ -33,7 +33,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         shadow \
         su-exec \
         # mupdf \
-        build-base \
         freetype-dev \
         harfbuzz-dev \
         jbig2dec-dev \
