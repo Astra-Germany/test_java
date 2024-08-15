@@ -35,14 +35,12 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         # mupdf \
         build-base \
         freetype-dev \
-        gumbo-dev \
         harfbuzz-dev \
         jbig2dec-dev \
         libjpeg-turbo-dev \
         leptonica-dev \
         openjpeg-dev \
-        tesseract5-dev \
-        gcc musl-dev linux-headers make g++ clang-dev git libglut-dev libtesseract-dev \
+        gcc musl-dev linux-headers make g++ clang-dev git \
         mupdf \
         openssl \
         openssl-dev \
