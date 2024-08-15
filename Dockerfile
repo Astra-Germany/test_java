@@ -1,6 +1,6 @@
 # Main stage
-FROM ludy87/pymupdf:latest
-# alpine:3.20.2
+# FROM ludy87/pymupdf:latest
+FROM alpine:3.20.2
 
 # Copy necessary files
 COPY scripts /scripts
