@@ -35,7 +35,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         # pymupdf
-        make build-base swig \
+        make build-base swig git \
         # pymupdf
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         su-exec \
@@ -77,7 +77,7 @@ RUN <<EOF
     cd .. && \
     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
 EOF
-RUN apk del make build-base swig
+RUN apk del make build-base swig git
 WORKDIR /
 
 EXPOSE 8080/tcp
