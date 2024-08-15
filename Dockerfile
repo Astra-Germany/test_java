@@ -71,8 +71,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 RUN mkdir -p /tmp/pymupdf
 
 # Download PyMuPDF build results
-RUN curl -L -o pymupdf-build.zip https://github.com/your-repo/pymupdf-build/releases/download/latest/pymupdf-build.zip && \
+RUN curl -L -o pymupdf-build.zip https://github.com/Ludy87/test_java/actions/runs/10411206722/artifacts/1817787266 && \
     unzip pymupdf-build.zip -d /tmp/pymupdf && \
+    # Assuming the artifact contains the PyMuPDF package directory
     cp -r /tmp/pymupdf/pymupdf/* /usr/local/lib/python3.12/site-packages/ && \
     rm -rf /tmp/pymupdf pymupdf-build.zip
 
