@@ -14,4 +14,4 @@ RUN <<EOF
   PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
 EOF
 
-WORKDIR /project
+WORKDIR /
