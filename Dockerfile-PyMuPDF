@@ -1,6 +1,7 @@
 FROM alpine:3.20.2
 
 RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
+# RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 
 ENV VERSION=1.24.9
 
@@ -11,7 +12,9 @@ RUN <<EOF
   wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
   tar -xvf $VERSION.tar.gz
   cd PyMuPDF-$VERSION
-  PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
+  PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
 EOF
+
+RUN apk del python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 
 WORKDIR /
