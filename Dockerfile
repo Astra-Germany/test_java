@@ -11,6 +11,8 @@ COPY build/libs/*.jar app.jar
 
 ARG VERSION_TAG
 
+ENV VERSION=1.24.9
+
 # Set Environment Variables
 ENV DOCKER_ENABLE_SECURITY=false \
     VERSION_TAG=$VERSION_TAG \
@@ -33,7 +35,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         # pymupdf
-        musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig \
+        # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         su-exec \
         openssl \
         openssl-dev \
@@ -63,17 +65,17 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-ENV VERSION=1.24.9
-
 WORKDIR /tmp
-
 RUN <<EOF
-    pip install --break-system-packages libclang
+    pip install --break-system-packages --no-cache-dir libclang
     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
     tar -xvf $VERSION.tar.gz
     cd PyMuPDF-$VERSION
-    PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+    PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install && \
+    cd .. && \
+    rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
 EOF
+RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig
 WORKDIR /
 
 EXPOSE 8080/tcp
