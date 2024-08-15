@@ -1,11 +1,17 @@
-#
-FROM python:3.12-alpine
+FROM alpine:3.20.2
 
-# Installiere benötigte Pakete
-RUN apk add --no-cache build-base
+RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 
-# Installiere PyMuPDF und seine Abhängigkeiten
-RUN pip install --upgrade pip setuptools wheel pymupdf
+ENV VERSION=1.24.9
 
-# Erstelle ein Wheel-Paket
-RUN pip wheel pymupdf --wheel-dir=/wheels
+WORKDIR /tmp
+
+RUN <<EOF
+  pip install --break-system-packages libclang
+  wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
+  tar -xvf $VERSION.tar.gz
+  cd PyMuPDF-$VERSION
+  PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
+EOF
+
+WORKDIR /project
