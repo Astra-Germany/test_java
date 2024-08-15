@@ -34,7 +34,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         su-exec \
         # mupdf \
         gcc musl-dev linux-headers make g++ clang-dev git \
-        # mupdf \
+        mupdf \
         openssl \
         openssl-dev \
         openjdk21-jre \
@@ -65,11 +65,12 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 
 RUN python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
-    pip install --upgrade pip &&
+    pip install --upgrade pip
 
 WORKDIR /tmp
 RUN git https://github.com/Ludy87/PyMuPDF.git && cd PyMuPDF
-RUN python3 scripts/sysinstall.py --root / --mupdf-git '--branch master https://github.com/ArtifexSoftware/mupdf.git'
+RUN python3 scripts/sysinstall.py --mupdf-do 0
+WORKDIR /
 
 EXPOSE 8080/tcp
 
