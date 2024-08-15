@@ -35,7 +35,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         # pymupdf
-        musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
+        # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         # pymupdf
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         su-exec \
@@ -46,14 +46,14 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         libreoffice \
 # pdftohtml
         poppler-utils \
-# OCR MY PDF (unpaper for descew and other advanced featues)
+# OCR MY PDF (unpaper for descew and other advanced features)
         ocrmypdf \
         tesseract-ocr-data-eng \
 # CV
         py3-opencv \
 # python3/pip
         python3 \
-    py3-pip && \
+        py3-pip && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
@@ -67,17 +67,15 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-WORKDIR /tmp
-RUN <<EOF
-    pip install --break-system-packages --no-cache-dir libclang
-    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
-    tar -xvf $VERSION.tar.gz
-    cd PyMuPDF-$VERSION
-    PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install && \
-    cd .. && \
-    rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
-EOF
-RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig
+# Download and install PyMuPDF
+RUN mkdir -p /tmp/pymupdf
+
+# Download PyMuPDF build results
+RUN curl -L -o pymupdf-build.zip https://github.com/your-repo/pymupdf-build/releases/download/latest/pymupdf-build.zip && \
+    unzip pymupdf-build.zip -d /tmp/pymupdf && \
+    cp -r /tmp/pymupdf/pymupdf/* /usr/local/lib/python3.12/site-packages/ && \
+    rm -rf /tmp/pymupdf pymupdf-build.zip
+
 WORKDIR /
 
 EXPOSE 8080/tcp
