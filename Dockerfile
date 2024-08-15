@@ -32,6 +32,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         bash \
         curl \
         shadow \
+        # pymupdf
+        musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig \
         su-exec \
         openssl \
         openssl-dev \
@@ -60,6 +62,19 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
+
+ENV VERSION=1.24.9
+
+WORKDIR /tmp
+
+RUN <<EOF
+    pip install --break-system-packages libclang
+    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
+    tar -xvf $VERSION.tar.gz
+    cd PyMuPDF-$VERSION
+    PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+EOF
+WORKDIR /
 
 EXPOSE 8080/tcp
 
