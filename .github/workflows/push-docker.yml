@@ -58,6 +58,19 @@ jobs:
         id: repoowner
         run: echo "lowercase=$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
 
+      - name: Build PyMuPDF
+        uses: docker/build-push-action@v5
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./Dockerfile-PyMuPDF
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: latest
+          labels: latest
+          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+
       - name: Generate tags
         id: meta
         uses: docker/metadata-action@v5
