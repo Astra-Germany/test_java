@@ -68,7 +68,7 @@ RUN python3 -m venv /opt/venv && \
     pip install --upgrade pip
 
 WORKDIR /tmp
-RUN git https://github.com/Ludy87/PyMuPDF.git && cd PyMuPDF
+RUN git clone https://github.com/Ludy87/PyMuPDF.git && cd PyMuPDF
 RUN python3 scripts/sysinstall.py --mupdf-do 0
 WORKDIR /
 
