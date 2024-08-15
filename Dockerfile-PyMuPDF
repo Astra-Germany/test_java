@@ -6,12 +6,11 @@ ENV VERSION=1.24.9
 
 WORKDIR /tmp
 
-RUN <<EOF
-  pip install --break-system-packages libclang
-  wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
-  tar -xvf $VERSION.tar.gz
-  cd PyMuPDF-$VERSION
+RUN \
+  pip install --break-system-packages libclang && \
+  wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz && \
+  tar -xvf $VERSION.tar.gz && \
+  cd PyMuPDF-$VERSION && \
   PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
-EOF
 
 WORKDIR /
