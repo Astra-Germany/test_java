@@ -31,14 +31,6 @@ jobs:
         env:
           DOCKER_ENABLE_SECURITY: false
 
-      - name: Download PyMuPDF build results
-        uses: actions/download-artifact@v3
-        with:
-          name: pymupdf-build
-          path: /tmp/pymupdf
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
