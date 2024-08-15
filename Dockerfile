@@ -33,9 +33,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         su-exec \
-        # mupdf \
-        # gcc musl-dev linux-headers make g++ clang-dev \
-        # mupdf \
         openssl \
         openssl-dev \
         openjdk21-jre \
@@ -63,16 +60,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
-
-# RUN python3 -m venv /opt/venv && \
-#     . /opt/venv/bin/activate && \
-#     pip install --upgrade pip
-
-# WORKDIR /tmp
-# RUN git clone https://github.com/Ludy87/PyMuPDF.git
-# WORKDIR /tmp/PyMuPDF
-# RUN python3 scripts/sysinstall.py --mupdf-do 0
-# WORKDIR /
 
 EXPOSE 8080/tcp
 
