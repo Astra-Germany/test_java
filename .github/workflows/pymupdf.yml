@@ -25,23 +25,23 @@ jobs:
           pip install --break-system-packages --no-cache-dir setuptools wheel libclang
 
       - name: Create directory for artifacts
-        run: mkdir -p $HOME/pymupdf
+        run: mkdir -p ${{ github.workspace }}/pymupdf
 
       - name: Build PyMuPDF
         run: |
           wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/1.24.9.tar.gz
-          tar -xvf 1.24.9.tar.gz -C $HOME/pymupdf
-          cd $HOME/pymupdf/PyMuPDF-1.24.9
+          tar -xvf 1.24.9.tar.gz -C ${{ github.workspace }}/pymupdf
+          cd ${{ github.workspace }}/pymupdf/PyMuPDF-1.24.9
           PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
           ls -la dist  # Überprüfe, ob das Wheel im dist-Verzeichnis vorhanden ist
           cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
 
-      - name: List files in $HOME/pymupdf
-        run: ls -la $HOME/pymupdf/PyMuPDF-1.24.9/dist
+      - name: List files in ${{ github.workspace }}/pymupdf
+        run: ls -la ${{ github.workspace }}/pymupdf/PyMuPDF-1.24.9/dist
 
       - name: Upload PyMuPDF build results
         uses: actions/upload-artifact@v4
         with:
           name: pymupdf-build
-          path: $HOME/pymupdf/PyMuPDF-1.24.9/dist/*.whl
+          path: ${{ github.workspace }}/pymupdf/PyMuPDF-1.24.9/dist/*.whl
           if-no-files-found: warn
