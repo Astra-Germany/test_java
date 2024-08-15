@@ -1,5 +1,5 @@
 # Main stage
-FROM pymupdf-image:latest
+FROM ludy87/pymupdf:latest
 # alpine:3.20.2
 
 # Copy necessary files
