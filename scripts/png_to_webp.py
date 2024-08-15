@@ -1,7 +1,7 @@
 import argparse
 import cv2
 import os
-import fitz  # PyMuPDF
+import pymupdf as fitz  # PyMuPDF
 
 
 def convert_png_to_webp(input_file, output_file, quality=100):
