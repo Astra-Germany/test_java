@@ -34,7 +34,7 @@ jobs:
         run: ls -la /pymupdf
 
       - name: Upload PyMuPDF build results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pymupdf-build
           path: /pymupdf
