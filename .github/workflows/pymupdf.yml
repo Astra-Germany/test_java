@@ -30,7 +30,11 @@ jobs:
           tar -xvf 1.24.9.tar.gz -C $HOME/pymupdf
           cd $HOME/pymupdf/PyMuPDF-1.24.9
           PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+          pip show pymupdf  # Überprüfe, ob PyMuPDF installiert ist
           cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
+      - name: Check installed PyMuPDF location
+        run: |
+          python3 -c "import pymupdf; print(pymupdf.__file__)"
 
       - name: List files in $HOME/pymupdf
         run: ls -la $HOME/pymupdf
