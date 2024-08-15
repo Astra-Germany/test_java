@@ -33,14 +33,20 @@ jobs:
           tar -xvf 1.24.9.tar.gz -C $HOME/pymupdf
           cd $HOME/pymupdf/PyMuPDF-1.24.9
           PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
+          ls -la dist  # Überprüfe, ob das Wheel im dist-Verzeichnis vorhanden ist
+          pip show pymupdf  # Überprüfe, ob PyMuPDF installiert ist
           cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
 
-      - name: List files in dist directory
+      - name: Check installed PyMuPDF location
+        run: |
+          python3 -c "import pymupdf; print(pymupdf.__file__)"
+
+      - name: List files in $HOME/pymupdf
         run: ls -la $HOME/pymupdf/PyMuPDF-1.24.9/dist
 
       - name: Upload PyMuPDF build results
         uses: actions/upload-artifact@v4
         with:
           name: pymupdf-build
-          path: $HOME/pymupdf/PyMuPDF-1.24.9/dist
+          path: $HOME/pymupdf/PyMuPDF-1.24.9/dist/*.whl
           if-no-files-found: warn
