@@ -1,5 +1,6 @@
 # Main stage
-FROM alpine:3.20.2
+FROM python:3.12-alpine
+# alpine:3.20.2
 
 # Copy necessary files
 COPY scripts /scripts
@@ -63,9 +64,9 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-RUN python3 -m venv /opt/venv && \
-    . /opt/venv/bin/activate && \
-    pip install --upgrade pip
+# RUN python3 -m venv /opt/venv && \
+#     . /opt/venv/bin/activate && \
+#     pip install --upgrade pip
 
 # WORKDIR /tmp
 # RUN git clone https://github.com/Ludy87/PyMuPDF.git
