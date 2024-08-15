@@ -1,0 +1,11 @@
+#
+FROM python:3.12-alpine
+
+# Installiere benötigte Pakete
+RUN apk add --no-cache build-base
+
+# Installiere PyMuPDF und seine Abhängigkeiten
+RUN pip install --upgrade pip setuptools wheel pymupdf
+
+# Erstelle ein Wheel-Paket
+RUN pip wheel pymupdf --wheel-dir=/wheels
