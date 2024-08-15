@@ -37,11 +37,11 @@ jobs:
           python3 -c "import pymupdf; print(pymupdf.__file__)"
 
       - name: List files in $HOME/pymupdf
-        run: ls -la $HOME/pymupdf
+        run: ls -la /opt/hostedtoolcache/Python/3.12.4/x64/lib/python3.12/site-packages/pymupdf
 
       - name: Upload PyMuPDF build results
         uses: actions/upload-artifact@v4
         with:
           name: pymupdf-build
-          path: $HOME/pymupdf
+          path: /opt/hostedtoolcache/Python/3.12.4/x64/lib/python3.12/site-packages/pymupdf
           if-no-files-found: warn
