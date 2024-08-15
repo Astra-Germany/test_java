@@ -29,19 +29,15 @@ jobs:
           wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/1.24.9.tar.gz
           tar -xvf 1.24.9.tar.gz -C $HOME/pymupdf
           cd $HOME/pymupdf/PyMuPDF-1.24.9
-          PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
-          pip show pymupdf  # Überprüfe, ob PyMuPDF installiert ist
+          PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
           cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
-      - name: Check installed PyMuPDF location
-        run: |
-          python3 -c "import pymupdf; print(pymupdf.__file__)"
 
-      - name: List files in $HOME/pymupdf
-        run: ls -la /opt/hostedtoolcache/Python/3.12.4/x64/lib/python3.12/site-packages/pymupdf
+      - name: List files in dist directory
+        run: ls -la $HOME/pymupdf/PyMuPDF-1.24.9/dist
 
       - name: Upload PyMuPDF build results
         uses: actions/upload-artifact@v4
         with:
           name: pymupdf-build
-          path: /opt/hostedtoolcache/Python/3.12.4/x64/lib/python3.12/site-packages/pymupdf
+          path: $HOME/pymupdf/PyMuPDF-1.24.9/dist
           if-no-files-found: warn
