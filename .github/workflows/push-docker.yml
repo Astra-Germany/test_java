@@ -130,7 +130,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-            PYMUDF_PATH=${{ github.workspace }}/pymupdf
           platforms: linux/amd64,linux/arm64/v8
 
       # - name: Generate tags ultra-lite
