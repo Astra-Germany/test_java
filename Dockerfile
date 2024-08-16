@@ -74,8 +74,7 @@ RUN mkdir -p /tmp/pymupdf
 RUN curl -L -o pymupdf-build.zip https://raw.githubusercontent.com/Ludy87/test_java/main/pymupdf-build.zip && \
     unzip pymupdf-build.zip -d /tmp/pymupdf && \
     ls -la /tmp/pymupdf && \
-    ls -la /tmp/pymupdf/pymupdf && \
-    cp -r /tmp/pymupdf/pymupdf/* /usr/local/lib/python3.12/site-packages/ && \
+    cp -r /tmp/pymupdf/* /usr/local/lib/python3.12/site-packages/ && \
     rm -rf /tmp/pymupdf pymupdf-build.zip
 
 WORKDIR /
