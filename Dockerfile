@@ -71,7 +71,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 WORKDIR /tmp
 
 RUN <<EOF
-    pip install --break-system-packages --no-cache-dir libclang git
+    pip install --break-system-packages libclang git
     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
     tar -xvf $VERSION.tar.gz
     cd PyMuPDF-$VERSION
