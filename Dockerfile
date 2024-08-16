@@ -35,7 +35,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         # pymupdf
-        python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig \
+        musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig \
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         # pymupdf
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
@@ -70,13 +70,17 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 
 WORKDIR /tmp
 
-RUN <<EOF
-    pip install --break-system-packages libclang
-    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
-    tar -xvf $VERSION.tar.gz
-    cd PyMuPDF-$VERSION
+RUN \
+    # pip install --break-system-packages libclang && \
+    # wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz && \
+    # tar -xvf $VERSION.tar.gz && \
+    # cd PyMuPDF-$VERSION && \
+    # PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
+    pip install --break-system-packages libclang && \
+    git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git && \
+    cd PyMuPDF-julian && \
     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py bdist_wheel
-EOF
+
 
 WORKDIR /
 
