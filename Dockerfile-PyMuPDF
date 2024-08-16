@@ -29,7 +29,9 @@ WORKDIR /tmp
 #     pip install --break-system-packages libclang
 #     git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git
 #     cd PyMuPDF-julian
-#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_BUILD= python3 setup.py install
+#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_REBUILD=0 python3 setup.py install
 # EOF
 
 WORKDIR /
+
+RUN apk del mupdf python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git
