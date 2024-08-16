@@ -11,9 +11,6 @@ COPY build/libs/*.jar app.jar
 
 ARG VERSION_TAG
 
-# pymupdf
-ARG PYMUDF_PATH
-
 ENV VERSION=1.24.9
 
 # Set Environment Variables
@@ -70,7 +67,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-COPY ${PYMUDF_PATH}/ /tmp/pymupdf
+
+WORKDIR /tmp/pymupdf
 RUN python3 -c "import site; print(site.getsitepackages()[0])" > /tmp/site_packages_path.txt
 RUN SITE_PACKAGES_PATH=$(cat /tmp/site_packages_path.txt) && \
     mkdir -p ${SITE_PACKAGES_PATH} && \
