@@ -36,11 +36,10 @@ RUN pip install --break-system-packages libclang && \
 # Prepare Final Image
 FROM alpine:3.20.2
 
-# Copy necessary files from build stage
-COPY --from=build /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
-COPY --from=build /usr/local/bin/ /usr/local/bin/
-COPY --from=build /usr/lib/python3.12/ /usr/lib/python3.12/
-COPY --from=build /usr/include/python3.12/ /usr/include/python3.12/
+# Copy application files from build stage
+COPY --from=build /usr/local/lib/python3.12 /usr/local/lib/python3.12
+COPY --from=build /usr/local/bin /usr/local/bin
+COPY --from=build /usr/lib/python3.12 /usr/lib/python3.12
 
 # Install runtime dependencies
 RUN apk upgrade --no-cache -a && \
