@@ -26,10 +26,10 @@ WORKDIR /tmp
 # Erstelle und aktiviere ein virtuelles Umfeld
 RUN <<EOF
     find / -name mupdf
-
+    pip install --break-system-packages libclang
+    git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git
+    cd PyMuPDF-julian
+    PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_BUILD=../usr/bin/mupdf python3 setup.py install
 EOF
-    # pip install --break-system-packages libclang
-    # git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git
-    # cd PyMuPDF-julian
-    # PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_BUILD=/usr/bin/mupdf python3 setup.py install
+
 WORKDIR /
