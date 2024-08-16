@@ -54,7 +54,7 @@ jobs:
           wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/1.24.9.tar.gz
           tar -xvf 1.24.9.tar.gz -C ${{ github.workspace }}/pymupdf
           cd ${{ github.workspace }}/pymupdf/PyMuPDF-1.24.9
-          PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py insatll
+          PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
           cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
 
       - name: Set up Docker Buildx
