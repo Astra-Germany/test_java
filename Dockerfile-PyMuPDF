@@ -49,4 +49,18 @@ EOF
 
 WORKDIR /
 
-RUN apk del python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev cmake llvm m4 swig git build-base
+RUN apk del  python3 \
+    py3-pip \
+    musl-dev \
+    jpeg-dev \
+    zlib-dev \
+    freetype-dev \
+    clang \
+    clang-dev \
+    llvm \
+    m4 \
+    cmake \
+    python3-dev \
+    build-base \
+    swig \
+    git
