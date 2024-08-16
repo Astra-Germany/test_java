@@ -55,10 +55,8 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
 # python3/pip
         python3 \
         py3-pip && \
-        python3 -m venv /venv
-ENV PATH="/venv/bin:$PATH"
 # uno unoconv and HTML
-RUN pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint libclang && \
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint pymupdf && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
@@ -68,16 +66,18 @@ RUN pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPr
     addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
-    tesseract --list-langs && \
-    pip install --break-system-packages libclang && \
-    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz && \
-    tar -xvf $VERSION.tar.gz && \
-    cd PyMuPDF-$VERSION && \
-    PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install && \
-    cd .. && \
-    rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
+    tesseract --list-langs
 
-RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig git
+# RUN <<EOF
+#     pip install --break-system-packages libclang git
+#     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
+#     tar -xvf $VERSION.tar.gz
+#     cd PyMuPDF-$VERSION
+#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+#     cd .. && \
+#     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
+# EOF
+# RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig git
 
 EXPOSE 8080/tcp
 
