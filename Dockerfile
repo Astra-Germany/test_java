@@ -68,7 +68,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-    WORKDIR /tmp
+WORKDIR /tmp
 
 RUN <<EOF
     pip install --break-system-packages libclang
