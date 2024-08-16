@@ -41,9 +41,9 @@ WORKDIR /tmp
 # Erstelle und aktiviere ein virtuelles Umfeld
 RUN <<EOF
     pip install --break-system-packages libclang
-    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz && \
-    tar -xvf $VERSION.tar.gz && \
-    cd PyMuPDF-$VERSION && \
+    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
+    tar -xvf $VERSION.tar.gz
+    cd PyMuPDF-$VERSION
     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
     cd ..
     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
