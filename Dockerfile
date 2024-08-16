@@ -68,18 +68,14 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-WORKDIR /tmp
-
 RUN <<EOF
     pip install --break-system-packages libclang
     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
     tar -xvf $VERSION.tar.gz
     cd PyMuPDF-$VERSION
     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
-    pip uninstall libclang
 EOF
 RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig libclang
-WORKDIR /
 
 EXPOSE 8080/tcp
 
