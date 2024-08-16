@@ -72,9 +72,11 @@ RUN mkdir -p /tmp/pymupdf
 
 # Download PyMuPDF build results
 RUN curl -L -o pymupdf-build.zip https://raw.githubusercontent.com/Ludy87/test_java/main/pymupdf-build.zip && \
-    unzip pymupdf-build.zip -d /tmp/pymupdf && \
-    ls -la /tmp/pymupdf && \
-    cp -r /tmp/pymupdf/* /usr/local/lib/python3.12/site-packages/ && \
+    unzip pymupdf-build.zip -d /tmp/pymupdf
+RUN SITE_PACKAGES_PATH=$(cat /tmp/site_packages_path.txt) && \
+    echo "Site Packages Path: $SITE_PACKAGES_PATH" && \
+    mkdir -p $SITE_PACKAGES_PATH && \
+    cp -r /tmp/pymupdf/* $SITE_PACKAGES_PATH/ && \
     rm -rf /tmp/pymupdf pymupdf-build.zip
 
 WORKDIR /
