@@ -1,20 +1,20 @@
 FROM alpine:3.20.2
 
 RUN apk update --no-cache -a && \
-    apk add --no-cache python3 && \
-    py3-pip && \
-    musl-dev && \
-    jpeg-dev && \
-    zlib-dev && \
-    freetype-dev && \
-    clang && \
-    clang-dev && \
-    llvm && \
-    m4 && \
-    cmake && \
-    python3-dev && \
-    # build-base && \
-    swig && \
+    apk add --no-cache python3 \
+    py3-pip \
+    musl-dev \
+    jpeg-dev \
+    zlib-dev \
+    freetype-dev \
+    clang \
+    clang-dev \
+    llvm \
+    m4 \
+    cmake \
+    python3-dev \
+    # build-base \
+    swig \
     git
 # RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 
