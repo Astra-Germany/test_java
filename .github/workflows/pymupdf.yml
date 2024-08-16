@@ -36,8 +36,10 @@ jobs:
           ls -la dist  # Überprüfe, ob das Wheel im dist-Verzeichnis vorhanden ist
           cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
 
-      # - name: List files in ${{ github.workspace }}/pymupdf
-      #   run: ls -la ${{ github.workspace }}/pymupdf/PyMuPDF-1.24.9/dist
+      - name: List files in /pymupdf
+        run: |
+          ls -la ${{ github.workspace }}
+          ls -la ${{ github.workspace }}/pymupdf/
 
       # - name: Upload PyMuPDF build results
       #   uses: actions/upload-artifact@v4
