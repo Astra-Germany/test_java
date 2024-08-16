@@ -8,8 +8,7 @@ ENV VERSION=1.24.9
 RUN apk info -L mupdf
 RUN find / -name mupdf
 RUN which mupdf
-RUN whereis mupdf
-RUN find / -name mupdf
+RUN ls -la /usr/bin/mupdf
 
 
 
