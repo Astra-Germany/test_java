@@ -70,10 +70,12 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-# Ermitteln des Installationspfads und Speichern in einer Datei
-RUN SITE_PACKAGES_PATH=$(python3 -c "import site; print(site.getsitepackages()[0])")
-COPY ${PYMUDF_PATH}/ $SITE_PACKAGES_PATH
-
+COPY ${PYMUDF_PATH}/ /tmp/pymupdf
+RUN python3 -c "import site; print(site.getsitepackages()[0])" > /tmp/site_packages_path.txt
+RUN SITE_PACKAGES_PATH=$(cat /tmp/site_packages_path.txt) && \
+    mkdir -p ${SITE_PACKAGES_PATH} && \
+    cp -r /tmp/pymupdf/* ${SITE_PACKAGES_PATH}/ && \
+    rm -rf /tmp/pymupdf /tmp/site_packages_path.txt
 
 EXPOSE 8080/tcp
 
