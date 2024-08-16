@@ -11,6 +11,9 @@ COPY build/libs/*.jar app.jar
 
 ARG VERSION_TAG
 
+# pymupdf
+ARG PYMUDF_PATH
+
 ENV VERSION=1.24.9
 
 # Set Environment Variables
@@ -67,22 +70,10 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-# Download and install PyMuPDF
-RUN mkdir -p /tmp/pymupdf
-
-# Download PyMuPDF build results
-RUN curl -L -o pymupdf-build.zip https://raw.githubusercontent.com/Ludy87/test_java/main/pymupdf-build.zip && \
-    unzip pymupdf-build.zip -d /tmp/pymupdf
 # Ermitteln des Installationspfads und Speichern in einer Datei
-RUN python3 -c "import site; print(site.getsitepackages()[0])" > /tmp/site_packages_path.txt
+RUN SITE_PACKAGES_PATH=$(python3 -c "import site; print(site.getsitepackages()[0])")
+COPY ${PYMUDF_PATH}/ $SITE_PACKAGES_PATH
 
-RUN SITE_PACKAGES_PATH=$(cat /tmp/site_packages_path.txt) && \
-    echo "Site Packages Path: $SITE_PACKAGES_PATH" && \
-    mkdir -p $SITE_PACKAGES_PATH && \
-    cp -r /tmp/pymupdf/* $SITE_PACKAGES_PATH/ && \
-    rm -rf /tmp/pymupdf pymupdf-build.zip
-
-WORKDIR /
 
 EXPOSE 8080/tcp
 
