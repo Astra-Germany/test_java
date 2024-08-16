@@ -95,7 +95,7 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          file: ./Dockerfile-PyMuPDF
+          file: ./Dockerfile-PyMuPDF-2
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
