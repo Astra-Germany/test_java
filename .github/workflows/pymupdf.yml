@@ -33,8 +33,9 @@ jobs:
           tar -xvf 1.24.9.tar.gz -C ${{ github.workspace }}/pymupdf
           cd ${{ github.workspace }}/pymupdf/PyMuPDF-1.24.9
           PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_TGZ="git:--branch master https://github.com/ArtifexSoftware/mupdf.git" python3 setup.py install
-          ls -la dist  # Überprüfe, ob das Wheel im dist-Verzeichnis vorhanden ist
+          ls -la  # Überprüfe, ob das Wheel im dist-Verzeichnis vorhanden ist
           cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
+          ls -la  # Überprüfe, ob das Wheel im dist-Verzeichnis vorhanden ist
 
       - name: List files in /pymupdf
         run: |
