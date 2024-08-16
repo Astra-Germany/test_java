@@ -24,9 +24,9 @@ WORKDIR /tmp
     # PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
 
 # Erstelle und aktiviere ein virtuelles Umfeld
-RUN python3 -m venv /venv && \
-    . /venv/bin/activate && \
-    pip install --upgrade pip && \
+RUN python -m venv pymupdf-venv && \
+    . pymupdf-venv/bin/activate && \
+    python -m pip install --upgrade pip && \
     pip install libclang && \
     git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git && \
     cd PyMuPDF-julian && \
