@@ -1,20 +1,33 @@
 FROM alpine:3.20.2
 
-RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
+RUN apk update && apk add mupdf python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 # RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 
 ENV VERSION=1.24.9
 
+RUN apk info -L mupdf
+RUN find / -name mupdf
+RUN which mupdf
+RUN whereis mupdf
+RUN find / -name mupdf
+
+
+
 WORKDIR /tmp
 
+# RUN \
+#     pip install --break-system-packages --no-cache-dir libclang && \
+#     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz && \
+#     tar -xvf $VERSION.tar.gz && \
+#     cd PyMuPDF-$VERSION && \
+#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install && \
+#     cd .. && \
+#     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up && \
+#     apk del python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 RUN <<EOF
-  pip install --break-system-packages libclang
-  wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
-  tar -xvf $VERSION.tar.gz
-  cd PyMuPDF-$VERSION
-  PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+    pip install --break-system-packages libclang && \
+    git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git && \
+    cd PyMuPDF-julian && pip install . && \
+    # PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
 EOF
-
-RUN apk del python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
-
 WORKDIR /
