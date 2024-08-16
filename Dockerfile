@@ -74,8 +74,12 @@ COPY ${PYMUDF_PATH}/ /tmp/pymupdf
 RUN python3 -c "import site; print(site.getsitepackages()[0])" > /tmp/site_packages_path.txt
 RUN SITE_PACKAGES_PATH=$(cat /tmp/site_packages_path.txt) && \
     mkdir -p ${SITE_PACKAGES_PATH} && \
+    cd /tmp/pymupdf && \
+    wget -O pymupdf-build.zip https://raw.githubusercontent.com/Ludy87/test_java/main/pymupdf-build.zip.txt && \
+    unzip pymupdf-build.zip -d /tmp/pymupdf && \
+    ls -ls /tmp/pymupdf && \
     cp -r /tmp/pymupdf/* ${SITE_PACKAGES_PATH}/ && \
-    rm -rf /tmp/pymupdf /tmp/site_packages_path.txt
+    rm -rf /tmp/pymupdf /tmp/site_packages_path.txt pymupdf-build.zip
 
 EXPOSE 8080/tcp
 
