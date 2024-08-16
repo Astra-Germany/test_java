@@ -19,7 +19,7 @@ WORKDIR /tmp
 RUN <<EOF
     pip install --break-system-packages libclang && \
     git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git && \
-    cd PyMuPDF-julian && PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_BUILD=/usr/bin/mupdf pip install . && \
+    cd PyMuPDF-julian && PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_BUILD=/usr/bin/mupdf pip install .
 EOF
     # PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
 WORKDIR /
