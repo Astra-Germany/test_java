@@ -73,6 +73,9 @@ RUN mkdir -p /tmp/pymupdf
 # Download PyMuPDF build results
 RUN curl -L -o pymupdf-build.zip https://raw.githubusercontent.com/Ludy87/test_java/main/pymupdf-build.zip && \
     unzip pymupdf-build.zip -d /tmp/pymupdf
+# Ermitteln des Installationspfads und Speichern in einer Datei
+RUN python3 -c "import site; print(site.getsitepackages()[0])" > /tmp/site_packages_path.txt
+
 RUN SITE_PACKAGES_PATH=$(cat /tmp/site_packages_path.txt) && \
     echo "Site Packages Path: $SITE_PACKAGES_PATH" && \
     mkdir -p $SITE_PACKAGES_PATH && \
