@@ -9,7 +9,7 @@ RUN apk upgrade --no-cache -a && \
     freetype-dev \
     clang \
     clang-dev \
-    # llvm \
+    llvm \
     m4 \
     cmake \
     python3-dev \
@@ -48,4 +48,4 @@ EOF
 
 WORKDIR /
 
-RUN apk del python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev cmake m4 swig git
+RUN apk del python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev cmake llvm m4 swig git
