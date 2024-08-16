@@ -1,6 +1,21 @@
 FROM alpine:3.20.2
 
-RUN apk update && apk add mupdf python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git
+RUN apk update --no-cache -a && \
+    apk add --no-cache python3 && \
+    py3-pip && \
+    musl-dev && \
+    jpeg-dev && \
+    zlib-dev && \
+    freetype-dev && \
+    clang && \
+    clang-dev && \
+    llvm && \
+    m4 && \
+    cmake && \
+    python3-dev && \
+    # build-base && \
+    swig && \
+    git
 # RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 
 ENV VERSION=1.24.9
@@ -34,4 +49,4 @@ WORKDIR /tmp
 
 WORKDIR /
 
-RUN apk del mupdf python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git
+RUN apk del python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git
