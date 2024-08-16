@@ -13,7 +13,7 @@ RUN apk upgrade --no-cache -a && \
     m4 \
     cmake \
     python3-dev \
-    # build-base \
+    build-base \
     swig \
     git
 # RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
@@ -61,6 +61,6 @@ RUN apk del  python3 \
     m4 \
     cmake \
     python3-dev \
-    # build-base \
+    build-base \
     swig \
     git
