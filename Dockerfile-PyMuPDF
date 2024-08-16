@@ -41,8 +41,9 @@ WORKDIR /tmp
 # Erstelle und aktiviere ein virtuelles Umfeld
 RUN <<EOF
     pip install --break-system-packages libclang
-    git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git
-    cd PyMuPDF-julian
+    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz && \
+    tar -xvf $VERSION.tar.gz && \
+    cd PyMuPDF-$VERSION && \
     PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_REBUILD=0 python3 setup.py install
 EOF
 
