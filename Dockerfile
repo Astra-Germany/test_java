@@ -78,9 +78,10 @@ RUN <<EOF
     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
     cd .. && \
     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
+    pip uninstall -y libclang git
 EOF
 WORKDIR /
-RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig libclang git
+RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig git
 
 EXPOSE 8080/tcp
 
