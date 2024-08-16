@@ -36,7 +36,7 @@ WORKDIR /tmp
 #     git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git
 #     cd PyMuPDF-julian && PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_BUILD=/usr/bin/mupdf pip install .
 # EOF
-    # PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+# PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
 
 # Erstelle und aktiviere ein virtuelles Umfeld
 RUN <<EOF
@@ -45,11 +45,13 @@ RUN <<EOF
     tar -xvf $VERSION.tar.gz && \
     cd PyMuPDF-$VERSION && \
     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+    cd ..
+    rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
 EOF
 
 WORKDIR /
 
-RUN apk del  python3 \
+RUN apk del python3 \
     py3-pip \
     musl-dev \
     jpeg-dev \
