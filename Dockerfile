@@ -35,7 +35,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         # pymupdf
-        python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig \
+        python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git \
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         # pymupdf
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
