@@ -68,8 +68,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-WORKDIR /tmp
-
 RUN <<EOF
     pip install --break-system-packages libclang git
     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
@@ -79,7 +77,6 @@ RUN <<EOF
     cd .. && \
     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
 EOF
-WORKDIR /
 RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig git
 
 EXPOSE 8080/tcp
