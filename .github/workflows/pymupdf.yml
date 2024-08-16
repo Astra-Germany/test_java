@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Python packages
         run: |
-          pip install --break-system-packages libclang git
+          pip install --break-system-packages libclang
 
       - name: Create directory for artifacts
         run: mkdir -p ${{ github.workspace }}/pymupdf
