@@ -67,6 +67,5 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.metamu.outputs.tags }}
           labels: ${{ steps.metamu.outputs.labels }}
-          build-args: |
-            PYMUPDF_VERSION=${{ steps.pymupdf_version.outputs.versionNumber }}
+          build-args: PYMUPDF_VERSION=${{ steps.pymupdf_version.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
