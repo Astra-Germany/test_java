@@ -12,29 +12,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 20  # Stellt sicher, dass die letzten zwei Commits abgerufen werden
+          fetch-depth: 20  # Ensure the last 20 commits are fetched to allow a proper diff
 
       - name: Parse CODEOWNERS and request reviews
         id: codeowners
         run: |
           echo "Parsing CODEOWNERS file..."
-          # Pfad zur CODEOWNERS-Datei
+          # Path to the CODEOWNERS file
           CODEOWNERS_FILE=CODEOWNERS
-          # Geänderte Dateien im Pull Request
+          # Changed files in the Pull Request
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
 
           REVIEWERS=""
 
-          # Parse CODEOWNERS Datei
+          # Parse the CODEOWNERS file
           while IFS= read -r line; do
-            # Zeilen mit Kommentaren oder leere Zeilen ignorieren
+            # Ignore lines with comments or empty lines
             [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
 
-            # Extrahiere Pfadmuster und Benutzer
+            # Extract pattern and users
             PATTERN=$(echo $line | awk '{print $1}')
             USERS=$(echo $line | awk '{$1=""; print $0}' | tr ' ' ',')
 
-            # Überprüfe, ob geänderte Dateien dem aktuellen Pfadmuster entsprechen
+            # Check if changed files match the current pattern
             for FILE in $CHANGED_FILES; do
               if [[ "$FILE" == $PATTERN* ]]; then
                 if [[ -z "$REVIEWERS" ]]; then
@@ -46,7 +46,7 @@ jobs:
             done
           done < $CODEOWNERS_FILE
 
-          # Entferne doppelte Reviewer und führende/trailing Kommata
+          # Remove duplicate reviewers and leading/trailing commas
           REVIEWERS=$(echo $REVIEWERS | tr ',' '\n' | sort | uniq | tr '\n' ',' | sed 's/^,*//;s/,*$//')
 
           echo "Reviewers to be requested: $REVIEWERS"

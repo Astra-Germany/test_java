@@ -7,7 +7,6 @@ on:
     paths:
       - "build.gradle"
       - "src/main/resources/messages_*.properties"
-      - "scripts/translation_status.toml"
       - "scripts/ignore_translation.toml"
 
 permissions:
@@ -52,6 +51,7 @@ jobs:
             [1]: https://github.com/peter-evans/create-pull-request
           draft: false
           delete-branch: true
+          labels: github-actions
   sync-readme:
     runs-on: ubuntu-latest
     steps:
@@ -89,4 +89,4 @@ jobs:
             [1]: https://github.com/peter-evans/create-pull-request
           draft: false
           delete-branch: true
-          labels: documentation,translation
+          labels: Documentation,Translation,github-actions
