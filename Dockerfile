@@ -1,5 +1,5 @@
 # Main stage
-FROM ludy87/pymupdf:latest
+FROM ludy87/pymupdf:1.24.9
 # FROM alpine:3.20.2
 
 # Copy necessary files
