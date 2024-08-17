@@ -80,29 +80,33 @@ jobs:
         id: repoowner
         run: echo "lowercase=$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
 
-      # - name: Generate tags PyMuPDF
-      #   id: metamu
-      #   uses: docker/metadata-action@v5
-      #   with:
-      #     images: |
-      #       ${{ secrets.DOCKER_HUB_USERNAME }}/pymupdf
-      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/pymupdf
-      #     tags: |
-      #       type=raw,value=1.24.9,enable=${{ github.ref == 'refs/heads/main' }}
+      - name: Generate current date
+        id: generate_date
+        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      # - name: Build PyMuPDF and push main Dockerfile
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./Dockerfile-PyMuPDF
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.metamu.outputs.tags }}
-      #     labels: ${{ steps.metamu.outputs.labels }}
-      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-      #     platforms: linux/amd64,linux/arm64/v8
+      - name: Generate tags PyMuPDF
+        id: metamu
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/pymupdf
+            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/pymupdf
+          tags: |
+            type=raw,value=1.24.9-${{ steps.generate_date.outputs.DATE }},enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build PyMuPDF and push main Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./Dockerfile-PyMuPDF
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.metamu.outputs.tags }}
+          labels: ${{ steps.metamu.outputs.labels }}
+          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+          platforms: linux/amd64,linux/arm64/v8
 
       # - name: Generate tags
       #   id: meta
@@ -163,32 +167,32 @@ jobs:
       #     docker pull ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
       #     docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
 
-      - name: Generate tags fat
-        id: meta3
-        uses: docker/metadata-action@v5
-        # if: github.ref != 'refs/heads/main'
-        with:
-          images: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-          tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat,enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value=latest-fat,enable=${{ github.ref == 'refs/heads/main' }}
+      # - name: Generate tags fat
+      #   id: meta3
+      #   uses: docker/metadata-action@v5
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     images: |
+      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
+      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+      #     tags: |
+      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat,enable=${{ github.ref == 'refs/heads/main' }}
+      #       type=raw,value=latest-fat,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build and push main Dockerfile fat
-        uses: docker/build-push-action@v6
-        # if: github.ref != 'refs/heads/main'
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: ./Dockerfile-fat
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.meta3.outputs.tags }}
-          labels: ${{ steps.meta3.outputs.labels }}
-          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-          platforms: linux/amd64,linux/arm64/v8
+      # - name: Build and push main Dockerfile fat
+      #   uses: docker/build-push-action@v6
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./Dockerfile-fat
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta3.outputs.tags }}
+      #     labels: ${{ steps.meta3.outputs.labels }}
+      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+      #     platforms: linux/amd64,linux/arm64/v8
 
       # - name: Generate tags fat self build
       #   id: meta4
