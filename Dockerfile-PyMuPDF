@@ -16,27 +16,10 @@ RUN apk upgrade --no-cache -a && \
     build-base \
     swig \
     git
-# RUN apk update && apk add python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
 
 ENV VERSION=1.24.9
 
 WORKDIR /tmp
-
-# RUN \
-#     pip install --break-system-packages --no-cache-dir libclang && \
-#     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz && \
-#     tar -xvf $VERSION.tar.gz && \
-#     cd PyMuPDF-$VERSION && \
-#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install && \
-#     cd .. && \
-#     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up && \
-#     apk del python3 py3-pip musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig
-# RUN <<EOF
-#     pip install --break-system-packages libclang
-#     git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git
-#     cd PyMuPDF-julian && PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_BUILD=/usr/bin/mupdf pip install .
-# EOF
-# PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
 
 # Erstelle und aktiviere ein virtuelles Umfeld
 RUN <<EOF
@@ -51,18 +34,18 @@ EOF
 
 WORKDIR /
 
-RUN apk del python3 \
-    py3-pip \
-    musl-dev \
-    jpeg-dev \
-    zlib-dev \
-    freetype-dev \
-    clang \
-    clang-dev \
-    llvm \
-    m4 \
-    cmake \
-    python3-dev \
-    build-base \
-    swig \
-    git
+# RUN apk del python3 \
+#     py3-pip \
+#     musl-dev \
+#     jpeg-dev \
+#     zlib-dev \
+#     freetype-dev \
+#     clang \
+#     clang-dev \
+#     llvm \
+#     m4 \
+#     cmake \
+#     python3-dev \
+#     build-base \
+#     swig \
+#     git
