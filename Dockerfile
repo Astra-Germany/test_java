@@ -1,6 +1,6 @@
 # Main stage
-# FROM ludy87/pymupdf:latest
-FROM alpine:3.20.2
+FROM ludy87/pymupdf:latest
+# FROM alpine:3.20.2
 
 # Copy necessary files
 COPY scripts /scripts
@@ -35,7 +35,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         # pymupdf
-        python3 py3-pip py3-wheel musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git \
+        # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git \
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         # pymupdf
         # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
@@ -68,7 +68,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-WORKDIR /tmp
+# WORKDIR /tmp
 
 # RUN <<EOF
 #   pip install --break-system-packages libclang
@@ -77,14 +77,14 @@ WORKDIR /tmp
 #   cd PyMuPDF-$VERSION
 #   PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
 # EOF
-RUN <<EOF
-    pip install --break-system-packages libclang && \
-    git clone https://github.com/ArtifexSoftware/PyMuPDF-julian.git && \
-    cd PyMuPDF-julian && \
-    PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
-EOF
+# RUN <<EOF
+#     pip install --break-system-packages libclang && \
+#     git clone https://github.com/pymupdf/PyMuPDF-julian.git && \
+#     cd PyMuPDF-julian && \
+#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+# EOF
 
-WORKDIR /
+# WORKDIR /
 
 # RUN <<EOF
 #     pip install --break-system-packages libclang git
