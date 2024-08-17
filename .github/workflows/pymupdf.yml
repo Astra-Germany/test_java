@@ -1,4 +1,4 @@
-name: Check PyMuPDF Version
+name: Check PyMuPDF Version & Build docker image
 
 on:
   push:
