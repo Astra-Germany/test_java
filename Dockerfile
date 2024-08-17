@@ -1,5 +1,5 @@
 # Main stage
-FROM ludy87/pymupdf:1.24.9
+FROM ludy87/pymupdf:latest
 # FROM alpine:3.20.2
 
 # Copy necessary files
@@ -10,8 +10,6 @@ COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
 COPY build/libs/*.jar app.jar
 
 ARG VERSION_TAG
-
-ENV VERSION=1.24.9
 
 # Set Environment Variables
 ENV DOCKER_ENABLE_SECURITY=false \
@@ -34,11 +32,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         bash \
         curl \
         shadow \
-        # pymupdf
-        # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake python3-dev build-base swig git \
-        # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
-        # pymupdf
-        # musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig \
         su-exec \
         openssl \
         openssl-dev \
@@ -68,34 +61,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
-# WORKDIR /tmp
-
-# RUN <<EOF
-#   pip install --break-system-packages libclang
-#   wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
-#   tar -xvf $VERSION.tar.gz
-#   cd PyMuPDF-$VERSION
-#   PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
-# EOF
-# RUN <<EOF
-#     pip install --break-system-packages libclang && \
-#     git clone https://github.com/pymupdf/PyMuPDF-julian.git && \
-#     cd PyMuPDF-julian && \
-#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
-# EOF
-
-# WORKDIR /
-
-# RUN <<EOF
-#     pip install --break-system-packages libclang git
-#     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
-#     tar -xvf $VERSION.tar.gz
-#     cd PyMuPDF-$VERSION
-#     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
-#     cd .. && \
-#     rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
-# EOF
-# RUN apk del musl-dev jpeg-dev zlib-dev freetype-dev clang clang-dev llvm m4 cmake build-base swig git
 
 EXPOSE 8080/tcp
 

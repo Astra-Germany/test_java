@@ -31,27 +31,6 @@ jobs:
         env:
           DOCKER_ENABLE_SECURITY: false
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      # - name: Install Python packages
-      #   run: |
-      #     pip install --break-system-packages --no-cache-dir setuptools wheel libclang
-
-      # - name: Create directory for artifacts
-      #   run: mkdir -p ${{ github.workspace }}/pymupdf
-
-      # - name: Build PyMuPDF
-      #   id: pyMuPDF
-      #   run: |
-      #     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/1.24.9.tar.gz
-      #     tar -xvf 1.24.9.tar.gz -C ${{ github.workspace }}/pymupdf
-      #     cd ${{ github.workspace }}/pymupdf/PyMuPDF-1.24.9
-      #     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
-      #     cd .. && rm -rf PyMuPDF-1.24.9 1.24.9.tar.gz
-
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
@@ -80,9 +59,9 @@ jobs:
         id: repoowner
         run: echo "lowercase=$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
 
-      - name: Generate current date
-        id: generate_date
-        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      - name: Set version pyMuPDF
+        id: pymupdf_version
+        run: echo "version=1.24.9" >> $GITHUB_OUTPUT
 
       - name: Generate tags PyMuPDF
         id: metamu
@@ -92,7 +71,8 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/pymupdf
             ghcr.io/${{ steps.repoowner.outputs.lowercase }}/pymupdf
           tags: |
-            type=raw,value=1.24.9-${{ steps.generate_date.outputs.DATE }},enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=${{ steps.pymupdf_version.outputs.version }},enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build PyMuPDF and push main Dockerfile
         uses: docker/build-push-action@v5
@@ -105,7 +85,9 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.metamu.outputs.tags }}
           labels: ${{ steps.metamu.outputs.labels }}
-          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+          build-args: |
+            VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+            PYMUPDF_VERSION=${{ steps.pymupdf_version.outputs.version }}
           platforms: linux/amd64,linux/arm64/v8
 
       - name: Generate tags
@@ -193,84 +175,3 @@ jobs:
           labels: ${{ steps.meta3.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
-
-      # - name: Generate tags fat self build
-      #   id: meta4
-      #   uses: docker/metadata-action@v5
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     images: |
-      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-      #     tags: |
-      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
-      #       type=raw,value=latest-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
-
-      # - name: Build and push main Dockerfile fat self build
-      #   uses: docker/build-push-action@v6
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./Dockerfile-fat-Self-Build
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta4.outputs.tags }}
-      #     labels: ${{ steps.meta4.outputs.labels }}
-      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-      #     platforms: linux/amd64,linux/arm64/v8
-
-      # - name: Generate tags self build
-      #   id: meta5
-      #   uses: docker/metadata-action@v5
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     images: |
-      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-      #     tags: |
-      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
-      #       type=raw,value=latest-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
-
-      # - name: Build and push main Dockerfile self build
-      #   uses: docker/build-push-action@v6
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./Dockerfile-Self-Build
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta5.outputs.tags }}
-      #     labels: ${{ steps.meta5.outputs.labels }}
-      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-      #     platforms: linux/amd64,linux/arm64/v8
-
-      # - name: Generate tags ultra lite Self Build
-      #   id: meta6
-      #   uses: docker/metadata-action@v5
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     images: |
-      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-      #     tags: |
-      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
-      #       type=raw,value=latest-ultra-lite-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
-
-      # - name: Build and push main Dockerfile ultra lite Self Build
-      #   uses: docker/build-push-action@v6
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./Dockerfile-ultra-lite-Self-Build
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta6.outputs.tags }}
-      #     labels: ${{ steps.meta6.outputs.labels }}
-      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-      #     platforms: linux/amd64,linux/arm64/v8

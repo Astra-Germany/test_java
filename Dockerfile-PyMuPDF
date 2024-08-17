@@ -1,5 +1,7 @@
 FROM alpine:3.20.2
 
+ARG PYMUPDF_VERSION
+
 RUN apk upgrade --no-cache -a && \
     apk add --no-cache python3 \
     py3-pip \
@@ -17,19 +19,17 @@ RUN apk upgrade --no-cache -a && \
     swig \
     git
 
-ENV VERSION=1.24.9
-
 WORKDIR /tmp
 
 # Erstelle und aktiviere ein virtuelles Umfeld
 RUN <<EOF
     pip install --break-system-packages libclang
-    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$VERSION.tar.gz
-    tar -xvf $VERSION.tar.gz
-    cd PyMuPDF-$VERSION
+    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$PYMUPDF_VERSION.tar.gz
+    tar -xvf $PYMUPDF_VERSION.tar.gz
+    cd PyMuPDF-$PYMUPDF_VERSION
     PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
     cd ..
-    rm -rf PyMuPDF-$VERSION $VERSION.tar.gz  # Clean up
+    rm -rf PyMuPDF-$PYMUPDF_VERSION $PYMUPDF_VERSION.tar.gz  # Clean up
 EOF
 
 WORKDIR /
