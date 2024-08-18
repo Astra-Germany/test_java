@@ -31,6 +31,16 @@ jobs:
       run: |
         git clone https://github.com/ArtifexSoftware/mupdf.git
 
+    - name: List files in the MuPDF directory
+      run: |
+        cd mupdf
+        ls -la
+
+    - name: Check the setup.py script
+      run: |
+        cd mupdf
+        head -n 20 setup.py
+
     - name: Build MuPDF package
       run: |
         cd mupdf
