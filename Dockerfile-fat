@@ -9,7 +9,7 @@ COPY . .
 
 # Build the application with DOCKER_ENABLE_SECURITY=false
 RUN DOCKER_ENABLE_SECURITY=true \
-./gradlew clean build
+./gradlew clean build --scan
 
 # Main stage
 FROM ludy87/pymupdf:latest
