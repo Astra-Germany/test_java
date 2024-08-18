@@ -33,7 +33,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         curl \
         shadow \
         su-exec \
-        libmupdf \
+        python-pymupdf \
         openssl \
         openssl-dev \
         openjdk21-jre \
