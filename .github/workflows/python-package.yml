@@ -40,6 +40,7 @@ jobs:
     - name: Build MuPDF
       run: |
         cd mupdf
+        make clean
         make prefix=/usr/local install
 
     - name: Validate installation
