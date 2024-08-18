@@ -64,7 +64,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         python3 \
         py3-pip && \
 # uno unoconv and HTML
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint pymupdf && \
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint python-mupdf && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
