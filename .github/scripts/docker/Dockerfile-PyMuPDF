@@ -27,7 +27,7 @@ RUN <<EOF
     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$PYMUPDF_VERSION.tar.gz
     tar -xvf $PYMUPDF_VERSION.tar.gz
     cd PyMuPDF-$PYMUPDF_VERSION
-    PYMUPDF_SETUP_MUPDF_TESSERACT=0 python3 setup.py install
+    PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_THIRD=0 python3 setup.py install
     cd ..
     rm -rf PyMuPDF-$PYMUPDF_VERSION $PYMUPDF_VERSION.tar.gz  # Clean up
 EOF
