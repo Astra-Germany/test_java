@@ -22,18 +22,17 @@ RUN apk upgrade --no-cache -a && \
 
 WORKDIR /tmp
 
-RUN apk info mupdf-dev
-
 # Erstelle und aktiviere ein virtuelles Umfeld
 RUN <<EOF
+    ls -l /usr/lib/
     pip install --break-system-packages libclang
     wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$PYMUPDF_VERSION.tar.gz
     tar -xvf $PYMUPDF_VERSION.tar.gz
     cd PyMuPDF-$PYMUPDF_VERSION
-    PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_THIRD=0 PYMUPDF_MUPDF_LIB=/usr/lib/ PYMUPDF_SETUP_MUPDF_REBUILD=0 python3 setup.py install
+    PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_MUPDF_LIB=/usr/lib/ PYMUPDF_SETUP_MUPDF_REBUILD=0 python3 setup.py install
     cd ..
     rm -rf PyMuPDF-$PYMUPDF_VERSION $PYMUPDF_VERSION.tar.gz  # Clean up
-    ls
+    ls .
 EOF
 
 WORKDIR /
