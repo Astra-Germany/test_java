@@ -26,45 +26,58 @@
                 </div>
               </form>
               <script>
-                document.getElementById('fileInput-input').addEventListener('change', async () => {
-                  pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs-legacy/pdf.worker.mjs';
-                  const fileInput = document.getElementById('fileInput-input');
-                  // const resultDiv = document.getElementById('result');
-                  
-                  // if (!fileInput.files.length) {
-                  //     resultDiv.textContent = 'Please select a PDF file first.';
-                  //     return;
-                  // }
+                document
+                  .getElementById("fileInput-input")
+                  .addEventListener("change", async () => {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc =
+                      "./pdfjs-legacy/pdf.worker.mjs";
+                    const fileInput =
+                      document.getElementById("fileInput-input");
+                    // const resultDiv = document.getElementById('result');
 
-                  const file = fileInput.files[0];
-                  
-                  const arrayBuffer = await file.arrayBuffer();
+                    // if (!fileInput.files.length) {
+                    //     resultDiv.textContent = 'Please select a PDF file first.';
+                    //     return;
+                    // }
 
-                  try {
-                      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                      
+                    const file = fileInput.files[0];
+
+                    const arrayBuffer = await file.arrayBuffer();
+
+                    try {
+                      const pdf = await pdfjsLib.getDocument({
+                        data: arrayBuffer,
+                      }).promise;
+
                       let hasSignature = false;
 
                       for (let i = 1; i <= pdf.numPages; i++) {
-                          const page = await pdf.getPage(i);
-                          const annotations = await page.getAnnotations({ intent: 'display' });
+                        const page = await pdf.getPage(i);
+                        const annotations = await page.getAnnotations({
+                          intent: "display",
+                        });
 
-                          annotations.forEach(annotation => {
-                              if (annotation.subtype === 'Widget' && annotation.fieldType === 'Sig') {
-                                  hasSignature = true;
-                              }
-                          });
+                        annotations.forEach((annotation) => {
+                          if (
+                            annotation.subtype === "Widget" &&
+                            annotation.fieldType === "Sig"
+                          ) {
+                            hasSignature = true;
+                          }
+                        });
                       }
 
                       if (hasSignature) {
-                          console.log('The PDF contains a digital signature.');
+                        console.log("The PDF contains a digital signature.");
                       } else {
-                          console.log('The PDF does not contain a digital signature.');
+                        console.log(
+                          "The PDF does not contain a digital signature.",
+                        );
                       }
                     } catch (error) {
-                        console.log('Error reading the PDF: ' + error.message);
+                      console.log("Error reading the PDF: " + error.message);
                     }
-                });
+                  });
               </script>
             </div>
           </div>
