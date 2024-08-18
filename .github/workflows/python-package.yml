@@ -36,6 +36,7 @@ jobs:
     - name: Clone MuPDF repository
       run: |
         git clone https://github.com/ArtifexSoftware/mupdf.git
+        git submodule update --init --recursive
 
     - name: Build MuPDF
       run: |
