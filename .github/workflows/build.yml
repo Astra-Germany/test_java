@@ -42,7 +42,7 @@ jobs:
           gradle-version: 8.7
 
       - name: Build with Gradle
-        run: ./gradlew build --no-build-cache
+        run: ./gradlew build --no-build-cache --scan
 
   docker-compose-tests:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main' ||
