@@ -64,7 +64,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         python3 \
         py3-pip && \
 # uno unoconv and HTML
-    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint pymupdf && \
+    pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders && \
     fc-cache -f -v && \
@@ -76,6 +76,16 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     tesseract --list-langs
 
+# Erstelle und aktiviere ein virtuelles Umfeld
+RUN <<EOF
+    pip install --break-system-packages libclang
+    wget https://github.com/pymupdf/PyMuPDF/archive/refs/tags/$PYMUPDF_VERSION.tar.gz
+    tar -xvf $PYMUPDF_VERSION.tar.gz
+    cd PyMuPDF-$PYMUPDF_VERSION
+    PYMUPDF_SETUP_MUPDF_TESSERACT=0 PYMUPDF_SETUP_MUPDF_THIRD=0 PYMUPDF_MUPDF_LIB=/usr/lib/ python3 setup.py install
+    cd ..
+    rm -rf PyMuPDF-$PYMUPDF_VERSION $PYMUPDF_VERSION.tar.gz  # Clean up
+EOF
 
 RUN apk del \
     clang \
