@@ -28,8 +28,18 @@ jobs:
         sudo apt-get install -y xorg-dev mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev \
         libxcursor-dev libxrandr-dev libxinerama-dev build-essential
 
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel  # Install necessary build tools
+
+    - name: Clone MuPDF repository
+      run: |
+        git clone https://github.com/ArtifexSoftware/mupdf.git
+
     - name: Build MuPDF
       run: |
+        cd mupdf
         make prefix=/usr/local install
 
     - name: Validate installation
