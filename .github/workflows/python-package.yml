@@ -27,9 +27,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel  # Install necessary build tools
 
-    - name: Build package
+    - name: Clone MuPDF repository
       run: |
         git clone https://github.com/ArtifexSoftware/mupdf.git
+
+    - name: Build MuPDF package
+      run: |
         cd mupdf
         python setup.py sdist bdist_wheel
 
