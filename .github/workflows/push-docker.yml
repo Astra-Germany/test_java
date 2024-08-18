@@ -83,7 +83,9 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+          build-args: |
+            VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+            PYMUPDF_VERSION=1.24.9
           platforms: linux/amd64,linux/arm64/v8
 
       # - name: Generate tags ultra-lite
