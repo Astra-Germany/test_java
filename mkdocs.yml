@@ -18,7 +18,7 @@ theme:
   language: en
   icon:
     repo: fontawesome/brands/github
-  # custom_dir: docs/.overrides
+  custom_dir: docs/overrides
   features:
     - announce.dismiss
     - content.code.copy
@@ -70,12 +70,12 @@ plugins:
       implicit_index: true
   - git-revision-date-localized:
       enable_creation_date: true
-  - git-committers:
-      repository: Stirling-Tools/Stirling-PDF
-      branch: main
-      token: !ENV ["GITHUB_TOKEN"]
-      exclude:
-        - README.md
+  # - git-committers:
+  #     repository: Stirling-Tools/Stirling-PDF
+  #     branch: main
+  #     token: !ENV ["GITHUB_TOKEN"]
+  #     exclude:
+  #       - README.md
   - git-authors
 
 markdown_extensions:
@@ -137,6 +137,7 @@ nav:
       - use/docker.md
       - use/docker-fat.md
     - Advanced Configuration:
+      - use/advanced/index.md
       - use/advanced/add_configurations.md
   - Contribute:
     - contribute/index.md
