@@ -68,12 +68,12 @@ plugins:
   - literate-nav:
       nav_file: README.md
       implicit_index: true
-  # - git-revision-date-localized:
-  #     enable_creation_date: true
-  # - git-committers:
-  #     repository: Stirling-Tools/Stirling-PDF
-  #     branch: main
-  # - git-authors
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - git-committers:
+      repository: Stirling-Tools/Stirling-PDF
+      branch: main
+  - git-authors
 
 markdown_extensions:
   - abbr
