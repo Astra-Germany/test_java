@@ -53,10 +53,10 @@ theme:
         name: Switch to system preference
 
 plugins:
-  - info
+  # - info
   - search:
       lang: en
-  - tags
+  # - tags
   - minify:
       minify_html: true
       minify_js: true
