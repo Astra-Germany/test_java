@@ -8,6 +8,10 @@ docs_dir: docs
 copyright: Copyright © 2024 Stirling-PDF
 strict: true
 
+watch:
+  - docs
+  - custom_theme
+
 theme:
   name: material
   logo: stirling.png
@@ -70,12 +74,12 @@ plugins:
       implicit_index: true
   - git-revision-date-localized:
       enable_creation_date: true
-  - git-committers:
-      repository: Stirling-Tools/Stirling-PDF
-      branch: main
-      token: !ENV ["GITHUB_TOKEN"]
-      exclude:
-        - README.md
+  # - git-committers:
+  #     repository: Stirling-Tools/Stirling-PDF
+  #     branch: main
+  #     token: !ENV ["GITHUB_TOKEN"]
+  #     exclude:
+  #       - README.md
   - git-authors
 
 markdown_extensions:
