@@ -73,6 +73,9 @@ plugins:
   - git-committers:
       repository: Stirling-Tools/Stirling-PDF
       branch: main
+      token: !ENV ["GITHUB_TOKEN"]
+      exclude:
+        - README.md
   - git-authors
 
 markdown_extensions:
