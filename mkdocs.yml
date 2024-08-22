@@ -70,12 +70,12 @@ plugins:
       implicit_index: true
   - git-revision-date-localized:
       enable_creation_date: true
-  # - git-committers:
-  #     repository: Stirling-Tools/Stirling-PDF
-  #     branch: main
-  #     token: !ENV ["GITHUB_TOKEN"]
-  #     exclude:
-  #       - README.md
+  - git-committers:
+      repository: Stirling-Tools/Stirling-PDF
+      branch: main
+      token: !ENV ["GITHUB_TOKEN"]
+      exclude:
+        - README.md
   - git-authors
 
 markdown_extensions:
