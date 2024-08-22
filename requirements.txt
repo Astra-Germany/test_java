@@ -2,3 +2,4 @@ mkdocs-material[imaging]==9.5.32
 mkdocs-macros-plugin==1.0.5
 mkdocs-click
 mkdocs-minify-plugin
+mkdocs-autorefs
