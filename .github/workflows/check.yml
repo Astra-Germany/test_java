@@ -12,7 +12,7 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # Um die Historie für PR-Branch zu erhalten
+          fetch-depth: 20 # Um die Historie für PR-Branch zu erhalten
 
       - name: Checkout main branch
         uses: actions/checkout@v4
