@@ -25,6 +25,8 @@ jobs:
         with:
           python-version: "3.x" # Die Python-Version, die du benötigst
 
+      - run: git diff --name-only ${{ github.event.before }} ${{ github.sha }}
+
       - name: Determine if reference file is from PR branch
         id: determine-file
         run: |
