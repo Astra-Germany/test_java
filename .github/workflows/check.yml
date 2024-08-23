@@ -12,25 +12,28 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Um die Historie für PR-Branch zu erhalten
+          fetch-depth: 2 # Um die Historie für PR-Branch zu erhalten
 
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
-          path: main-branch  # Pfad zum Checkout des main-Branches
+          path: main-branch # Pfad zum Checkout des main-Branches
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'  # Die Python-Version, die du benötigst
+          python-version: "3.x" # Die Python-Version, die du benötigst
 
-      - name: Install dependencies
+      - name: Determine if reference file is from PR branch
+        id: determine-file
         run: |
-          pip install -r requirements.txt  # Installiere Abhängigkeiten, falls vorhanden
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^src/main/resources/messages_en_GB.properties$'; then
+              echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          else
+              echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          fi
 
       - name: Run Python script to check file
         run: |
-          python .github/scripts/check_language_files.py  # Führe dein Python-Skript aus
-        env:
-          REFERENCE_FILE: main-branch/src/main/resources/messages_en_GB.properties
+          python .github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }}
