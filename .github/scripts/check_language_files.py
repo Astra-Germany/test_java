@@ -44,6 +44,8 @@ def check_defference(reference_file, file_list):
         exit(1)
     print("Check success")
 
+def list_of_strings(arg):
+    return arg.split(',')
 
 if __name__ == "__main__":
     directory = os.getcwd() + "/src/main/resources"
@@ -55,7 +57,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--files",
-        type=str,
+        type=list_of_strings,
         required=True,
         help="List of changed files separated by spaces",
     )
