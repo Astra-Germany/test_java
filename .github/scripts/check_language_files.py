@@ -14,33 +14,34 @@ def check_defference(reference_file, file_list):
     reference_list = read_properties(reference_file)
     isDiff = False
 
-    # for file_path in glob.glob(os.path.join(directory, "messages_*.properties")):
-    for file_path in file_list:
-        if (
-            file_path == reference_file
-            or file_path.endswith("GB.properties")
-            or not file_path.endswith(".properties")
-            or not os.path.basename(file_path).startswith("messages_")
-        ):
-            continue
-        current_list = read_properties(file_path)
-        reference_list_len = len(reference_list)
-        current_list_len = len(current_list)
+    for file_paths in file_list:
+        print(file_paths[0])
+        for file_path in glob.glob(file_paths[0]):
+            if (
+                file_path == reference_file
+                or file_path.endswith("GB.properties")
+                or not file_path.endswith(".properties")
+                or not os.path.basename(file_path).startswith("messages_")
+            ):
+                continue
+            current_list = read_properties(file_path)
+            reference_list_len = len(reference_list)
+            current_list_len = len(current_list)
 
-        if reference_list_len != current_list_len:
-            print(f"Differenz in der Datei: {os.path.basename(file_path)}")
-            isDiff = True
-        if reference_list_len > current_list_len:
-            print(
-                f"Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
-            )
-        elif reference_list_len < current_list_len:
-            print(
-                f"Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
-            )
+            if reference_list_len != current_list_len:
+                print(f"Differenz in der Datei: {os.path.basename(file_path)}")
+                isDiff = True
+            if reference_list_len > current_list_len:
+                print(
+                    f"Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
+                )
+            elif reference_list_len < current_list_len:
+                print(
+                    f"Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
+                )
     if isDiff:
         print("Check fail")
-        print(reference_list)
+        # print(reference_list)
         exit(1)
     print("Check success")
 
@@ -58,12 +59,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--files",
         type=list_of_strings,
+        nargs='+',
         required=True,
         help="List of changed files separated by spaces",
     )
     args = parser.parse_args()
 
     # Split the files into a list
-    file_list = args.files.split()
+    # file_list = args.files.split()
 
-    check_defference(args.reference_file, file_list)
+    check_defference(args.reference_file, args.files)
