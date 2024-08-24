@@ -62,4 +62,4 @@ jobs:
 
       - name: Run Python script to check files
         run: |
-          python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.CHANGED_FILES }} --files ${{ env.CHANGED_FILES }}
+          python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }}
