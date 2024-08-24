@@ -12,46 +12,30 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Ensure full history
+          fetch-depth: 20 # Um die Historie für PR-Branch zu erhalten
 
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
-          path: main-branch
-          fetch-depth: 0
+          path: main-branch # Pfad zum Checkout des main-Branches
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.x" # Die Python-Version, die du benötigst
 
-      - name: Fetch and show branches
-        run: |
-          echo "Fetching changes..."
-          git fetch origin
-          echo "Current branch:"
-          git branch --show-current
-          echo "Remote branches:"
-          git branch -r
-          echo "Comparing changes..."
-          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
-          echo "$CHANGED_FILES"
+      - run: echo "CHANGED_FILES=$(git diff --name-only origin/main...HEAD)" >> $GITHUB_ENV
 
       - name: Determine if reference file is from PR branch
         id: determine-file
         run: |
-          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
-          echo "$CHANGED_FILES"
-
-          if echo "$CHANGED_FILES" | awk '/^src\/main\/resources\/messages_en_GB.properties$/ {found=1} END {exit !found}'; then
+          echo  ${{ env.CHANGED_FILES }}
+          if git diff --name-only origin/main...HEAD | grep '^src/main/resources/messages_en_GB.properties$'; then
               echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
-
-      - name: Show REFERENCE_FILE
-        run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
       - name: Run Python script to check file
         run: |
