@@ -53,6 +53,11 @@ jobs:
       - name: Show REFERENCE_FILE
         run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
+      - name: Display REFERENCE_FILE Content
+        run: |
+          echo "Content of REFERENCE_FILE:"
+          cat ${{ env.REFERENCE_FILE }}
+
       - name: Run Python script to check file
         run: |
           python .github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }}
