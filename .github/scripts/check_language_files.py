@@ -7,7 +7,7 @@ def read_properties(file_path):
         return file.read().splitlines()
 
 
-def check_difference(reference_file, file_list):
+def check_difference(reference_file, file_list, branch):
     print(reference_file)
     print(file_list)
     reference_list = read_properties(reference_file)
@@ -15,18 +15,18 @@ def check_difference(reference_file, file_list):
 
     for file_path in file_list:
         if (
-            file_path == reference_file
+            branch + "/" + file_path == reference_file
             or not file_path.endswith(".properties")
-            or not os.path.basename(file_path).startswith("messages_")
+            or not os.path.basename(branch + "/" + file_path).startswith("messages_")
         ):
             continue
 
-        current_list = read_properties(file_path)
+        current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
-            print(f"Differenz in der Datei: {os.path.basename(file_path)}")
+            print(f"Differenz in der Datei: {os.path.basename(branch + "/" + file_path)}")
             is_diff = True
         if reference_list_len > current_list_len:
             print(
@@ -57,7 +57,13 @@ if __name__ == "__main__":
         required=True,
         help="Liste der geänderten Dateien, durch Leerzeichen getrennt.",
     )
+    parser.add_argument(
+        "--branch",
+        type=str,
+        required=True,
+        help="",
+    )
     args = parser.parse_args()
 
     file_list = args.files.split()
-    check_difference(args.reference_file, file_list)
+    check_difference(args.reference_file, file_list, args.branch)
