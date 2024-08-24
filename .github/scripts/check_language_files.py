@@ -34,6 +34,7 @@ def check_defference(reference_file, directory):
             )
     if isDiff:
         print("Check fail")
+        print(reference_list_len)
         exit(1)
     print("Check success")
 
