@@ -12,34 +12,44 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 20 # Um die Historie für PR-Branch zu erhalten
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x" # Die Python-Version, die du benötigst
-
-      - run: |
-          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
-          echo "$CHANGED_FILES"
-          echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
-          echo  ${{ env.CHANGED_FILES }}
+          fetch-depth: 0
 
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-            ref: main
-            path: main-branch # Pfad zum Checkout des main-Branches
+          ref: main
+          path: main-branch
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh
+
+      - name: Fetch PR changed files
+        id: fetch-pr-changes
+        run: |
+          echo "Fetching PR changed files..."
+          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
+          CHANGED_FILES=$(cat changed_files.txt)
+          echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
+          echo "$CHANGED_FILES"
 
       - name: Determine if reference file is from PR branch
         id: determine-file
         run: |
-          echo  ${{ env.CHANGED_FILES }}
-          if git diff --name-only origin/main...HEAD | grep '^src/main/resources/messages_en_GB.properties$'; then
+          echo "Checking for reference file..."
+          if echo "${{ env.CHANGED_FILES }}" | grep -q '^src/main/resources/messages_en_GB.properties$'; then
               echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
+
+      - name: Show REFERENCE_FILE
+        run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
       - name: Run Python script to check file
         run: |
