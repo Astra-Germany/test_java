@@ -40,6 +40,7 @@ jobs:
           cd pr-branch
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > ../changed_files.txt
           cd ..
+          echo §(cat changed_files.txt)
           BRANCH_PATH="pr-branch"
           CHANGED_FILES=$(cat changed_files.txt | sed "s|^|$BRANCH_PATH/|" | tr '\n' '\x1e') # Use a non-printable character as delimiter
           echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
