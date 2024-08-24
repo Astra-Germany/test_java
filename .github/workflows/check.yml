@@ -42,6 +42,7 @@ jobs:
           cd ..
           echo $(cat changed_files.txt)
           BRANCH_PATH="pr-branch"
+          echo "BRANCH_PATH=${BRANCH_PATH}" >> $GITHUB_ENV
           CHANGED_FILES=$(cat changed_files.txt | tr '\n' ' ')
           echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
           echo "Changed files: ${CHANGED_FILES}"
