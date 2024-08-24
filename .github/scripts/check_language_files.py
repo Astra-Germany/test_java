@@ -8,6 +8,8 @@ def read_properties(file_path):
 
 
 def check_difference(reference_file, file_list):
+    print(reference_file)
+    print(file_list)
     reference_list = read_properties(reference_file)
     is_diff = False
 
