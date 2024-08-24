@@ -1,11 +1,11 @@
-name: Check File in PR
+name: Check Properties Files in PR
 
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
 jobs:
-  check-file:
+  check-files:
     runs-on: ubuntu-latest
 
     steps:
@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
-          path: ca-${{ github.head_ref }}
+          path: pr-branch
           fetch-depth: 0
 
       - name: Checkout main branch
@@ -38,24 +38,26 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
-          BRANCH_PATH="ca-${{ github.head_ref }}"
+          BRANCH_PATH="pr-branch"
           CHANGED_FILES=$(cat changed_files.txt | sed "s|^|$BRANCH_PATH/|")
           echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
-          echo "Changed files with branch path: ${CHANGED_FILES}"
+          echo "Changed files: ${CHANGED_FILES}"
 
-      - name: Determine if reference file is from PR branch
+      - name: Determine reference file
         id: determine-file
         run: |
-          echo "Checking for reference file..."
-          if echo "${{ env.CHANGED_FILES }}" | grep -q 'src/main/resources/messages_en_GB.properties'; then
-              echo "REFERENCE_FILE=ca-${{ github.head_ref }}/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          echo "Determining reference file..."
+          # Check if the PR contains the reference file
+          if grep -q 'src/main/resources/messages_en_GB.properties' <<< "${{ env.CHANGED_FILES }}"; then
+              echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
+          echo "REFERENCE_FILE=${{ env.REFERENCE_FILE }}"
 
       - name: Show REFERENCE_FILE
         run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
-      - name: Run Python script to check file
+      - name: Run Python script to check files
         run: |
           python .github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --files ${{ env.CHANGED_FILES }}
