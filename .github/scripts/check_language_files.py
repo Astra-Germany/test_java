@@ -26,7 +26,9 @@ def check_difference(reference_file, file_list, branch):
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
-            print(f"Differenz in der Datei: {os.path.basename(branch + "/" + file_path)}")
+            print(
+                f"Differenz in der Datei: {os.path.basename(branch + "/" + file_path)}"
+            )
             is_diff = True
         if reference_list_len > current_list_len:
             print(
@@ -59,11 +61,11 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--files",
-        nargs='+',
+        nargs="+",
         required=True,
         help="Liste der geänderten Dateien, durch Leerzeichen getrennt.",
     )
     args = parser.parse_args()
 
-    file_list = args.files.split()
+    file_list = args.files  # .split()
     check_difference(args.reference_file, file_list, args.branch)
