@@ -59,7 +59,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--files",
-        type=str,
+        nargs='+',
         required=True,
         help="Liste der geänderten Dateien, durch Leerzeichen getrennt.",
     )
