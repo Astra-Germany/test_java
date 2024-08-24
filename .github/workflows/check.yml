@@ -56,7 +56,7 @@ jobs:
       - name: Display REFERENCE_FILE Content
         run: |
           echo "Content of REFERENCE_FILE:"
-          cat ${{ env.REFERENCE_FILE }}
+          printf "%s" "$(cat ${{ env.REFERENCE_FILE }})"
 
       - name: Run Python script to check file
         run: |
