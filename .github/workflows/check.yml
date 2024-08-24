@@ -37,7 +37,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching PR changed files..."
-          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
+          cd pr-branch
+          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > ../changed_files.txt
+          cd ..
           BRANCH_PATH="pr-branch"
           CHANGED_FILES=$(cat changed_files.txt | sed "s|^|$BRANCH_PATH/|")
           echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
@@ -47,8 +49,7 @@ jobs:
         id: determine-file
         run: |
           echo "Determining reference file..."
-          # Check if the PR contains the reference file
-          if grep -q 'src/main/resources/messages_en_GB.properties' <<< "${{ env.CHANGED_FILES }}"; then
+          if echo "${{ env.CHANGED_FILES }}" | grep -q 'src/main/resources/messages_en_GB.properties'; then
               echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
