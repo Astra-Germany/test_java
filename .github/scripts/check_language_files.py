@@ -52,16 +52,16 @@ if __name__ == "__main__":
         help="Pfad zur Referenzdatei.",
     )
     parser.add_argument(
-        "--files",
-        type=str,
-        required=True,
-        help="Liste der geänderten Dateien, durch Leerzeichen getrennt.",
-    )
-    parser.add_argument(
         "--branch",
         type=str,
         required=True,
         help="",
+    )
+    parser.add_argument(
+        "--files",
+        type=str,
+        required=True,
+        help="Liste der geänderten Dateien, durch Leerzeichen getrennt.",
     )
     args = parser.parse_args()
 
