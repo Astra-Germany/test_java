@@ -12,7 +12,7 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Ensure full history
 
       - name: Checkout main branch
         uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Fetch and show changes
+      - name: Fetch and show branches
         run: |
           echo "Fetching changes..."
           git fetch origin
@@ -34,16 +34,14 @@ jobs:
           git branch --show-current
           echo "Remote branches:"
           git branch -r
-          echo "Changed files:"
-          CHANGED_FILES=$(git diff --name-only main...HEAD)
+          echo "Comparing changes..."
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
           echo "$CHANGED_FILES"
 
       - name: Determine if reference file is from PR branch
         id: determine-file
         run: |
-          echo "Checking for file changes..."
-          CHANGED_FILES=$(git diff --name-only main...HEAD)
-          echo "Changed files:"
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
           echo "$CHANGED_FILES"
 
           if echo "$CHANGED_FILES" | awk '/^src\/main\/resources\/messages_en_GB.properties$/ {found=1} END {exit !found}'; then
