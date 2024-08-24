@@ -45,6 +45,7 @@ jobs:
           CHANGED_FILES=$(cat changed_files.txt | tr '\n' ' ')
           echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
           echo "Changed files: ${CHANGED_FILES}"
+          echo "Branch: ${BRANCH_PATH}"
 
       - name: Determine reference file
         id: determine-file
