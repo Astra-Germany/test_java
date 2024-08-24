@@ -10,12 +10,18 @@ def read_properties(file_path):
         return file.read().splitlines()
 
 
-def check_defference(reference_file, directory):
+def check_defference(reference_file, file_list):
     reference_list = read_properties(reference_file)
     isDiff = False
 
-    for file_path in glob.glob(os.path.join(directory, "messages_*.properties")):
-        if file_path == reference_file or file_path.endswith("GB.properties"):
+    # for file_path in glob.glob(os.path.join(directory, "messages_*.properties")):
+    for file_path in file_list:
+        if (
+            file_path == reference_file
+            or file_path.endswith("GB.properties")
+            or not file_path.endswith(".properties")
+            or not os.path.basename(file_path).startswith("messages_")
+        ):
             continue
         current_list = read_properties(file_path)
         reference_list_len = len(reference_list)
@@ -47,6 +53,15 @@ if __name__ == "__main__":
         default=os.path.join(directory, "messages_en_GB.properties"),
         help="Pfad zur Referenzdatei aus dem main-Branch.",
     )
+    parser.add_argument(
+        "--files",
+        type=str,
+        required=True,
+        help="List of changed files separated by spaces",
+    )
     args = parser.parse_args()
 
-    check_defference(args.reference_file, directory)
+    # Split the files into a list
+    file_list = args.files.split()
+
+    check_defference(args.reference_file, file_list)
