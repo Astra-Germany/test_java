@@ -30,15 +30,19 @@ jobs:
         run: |
           echo "Fetching changes..."
           git fetch origin
+          echo "Current branch:"
+          git branch --show-current
+          echo "Remote branches:"
+          git branch -r
           echo "Changed files:"
-          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+          CHANGED_FILES=$(git diff --name-only main...HEAD)
           echo "$CHANGED_FILES"
 
       - name: Determine if reference file is from PR branch
         id: determine-file
         run: |
           echo "Checking for file changes..."
-          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+          CHANGED_FILES=$(git diff --name-only main...HEAD)
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
