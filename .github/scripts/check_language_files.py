@@ -8,7 +8,9 @@ def read_properties(file_path):
 
 
 def check_difference(reference_file, file_list, branch):
-    print("Prüfung mit der Datei: {} - Überprüft wird der Branch: {}", reference_file, branch)
+    print(
+        f"Prüfung mit der Datei: {reference_file} - Überprüft wird der Branch: {branch}"
+    )
     reference_list = read_properties(reference_file)
     is_diff = False
 
@@ -18,28 +20,38 @@ def check_difference(reference_file, file_list, branch):
             or not file_path.endswith(".properties")
             or not os.path.basename(file_path).startswith("messages_")
         ):
-            print("Datei '{}' wird ignoriert.", os.path.basename(branch + "/" + file_path))
+            print(
+                f"Datei '{os.path.basename(branch + "/" + file_path)}' wird ignoriert."
+            )
             continue
 
-        print("Überprüfung der Sprachdatei '{}'...", os.path.basename(branch + "/" + file_path))
+        print(
+            f"Überprüfung der Sprachdatei '{os.path.basename(branch + "/" + file_path)}'..."
+        )
 
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
+            print("Test 1 nicht bestanden!")
             print(
                 f"Differenz in der Datei: {os.path.basename(branch + "/" + file_path)}"
             )
             is_diff = True
-        if reference_list_len > current_list_len:
-            print(
-                f"Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
-            )
-        elif reference_list_len < current_list_len:
-            print(
-                f"Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
-            )
+            if reference_list_len > current_list_len:
+                print(
+                    f"Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
+                )
+            elif reference_list_len < current_list_len:
+                print(
+                    f"Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
+                )
+        else:
+            print("Test 1 bestanden")
+            for item in current_list:
+                print(item)
+
 
     if is_diff:
         print("Check fail")
