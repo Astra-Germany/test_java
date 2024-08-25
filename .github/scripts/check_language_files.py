@@ -13,7 +13,7 @@ def check_difference(reference_file, file_list, branch):
 
     report = []
     report.append(
-        f"### Prüfung mit der Datei `{basename_reference_file}` aus dem `{reference_branch}` Branch - Überprüft wird der `{branch}` Branch"
+        f"### Checking with the file `{basename_reference_file}` from the `{reference_branch}` branch - Checking the `{branch}` branch"
     )
     reference_list = read_properties(reference_file)
     is_diff = False
@@ -25,27 +25,27 @@ def check_difference(reference_file, file_list, branch):
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
-            # report.append(f"Datei '{basename_current_file}' wird ignoriert.")
+            # report.append(f"File '{basename_current_file}' is ignored.")
             continue
-        report.append(f"Überprüfung der Sprachdatei `{basename_current_file}`...")
+        report.append(f"Checking the language file `{basename_current_file}`...")
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
             report.append("")
-            report.append("- ❌ Test 1 nicht bestanden! Differenz in der Datei!")
+            report.append("- ❌ Test 1 failed! Difference in the file!")
             is_diff = True
             if reference_list_len > current_list_len:
                 report.append(
-                    f"  - Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
+                    f"  - Missing lines! Either comments, empty lines, or translation strings are missing! {reference_list_len}:{current_list_len}"
                 )
             elif reference_list_len < current_list_len:
                 report.append(
-                    f"  - Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
+                    f"  - Too many lines! Check your translation files! {reference_list_len}:{current_list_len}"
                 )
         else:
-            report.append("- ✅ Test 1 bestanden")
+            report.append("- ✅ Test 1 passed")
         if 1 == 1:
             current_keys = []
             reference_keys = []
@@ -69,17 +69,17 @@ def check_difference(reference_file, file_list, branch):
                 is_diff = True
                 set_test1_list = "`, `".join(set_test1_list)
                 set_test2_list = "`, `".join(set_test2_list)
-                report.append("- ❌ Test 2 nicht bestanden")
+                report.append("- ❌ Test 2 failed")
                 if len(set_test1_list) > 0:
                     report.append(
-                        f"  - Es gibt keys in ***{basename_current_file}*** `{set_test1_list}` die in ***{basename_reference_file}*** nicht vorhanden sind!"
+                        f"  - There are keys in ***{basename_current_file}*** `{set_test1_list}` that are not present in ***{basename_reference_file}***!"
                     )
                 if len(set_test2_list) > 0:
                     report.append(
-                        f"  - Es gibt keys in ***{basename_reference_file}*** `{set_test2_list}` die in ***{basename_current_file}*** nicht vorhanden sind!"
+                        f"  - There are keys in ***{basename_reference_file}*** `{set_test2_list}` that are not present in ***{basename_current_file}***!"
                     )
             else:
-                report.append("- ✅ Test 2 bestanden")
+                report.append("- ✅ Test 2 passed")
         report.append("")
 
     if is_diff:
@@ -92,23 +92,23 @@ def check_difference(reference_file, file_list, branch):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Find missing Keys")
+    parser = argparse.ArgumentParser(description="Find missing keys")
     parser.add_argument(
         "--reference-file",
         required=True,
-        help="Pfad zur Referenzdatei.",
+        help="Path to the reference file.",
     )
     parser.add_argument(
         "--branch",
         type=str,
         required=True,
-        help="Branch Name.",
+        help="Branch name.",
     )
     parser.add_argument(
         "--files",
         nargs="+",
         required=True,
-        help="Liste der geänderten Dateien, durch Leerzeichen getrennt.",
+        help="List of changed files, separated by spaces.",
     )
     args = parser.parse_args()
 
