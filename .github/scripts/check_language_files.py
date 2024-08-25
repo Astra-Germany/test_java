@@ -15,29 +15,23 @@ def check_difference(reference_file, file_list, branch):
     is_diff = False
 
     for file_path in file_list:
+        basename_current_file = os.path.basename(branch + "/" + file_path)
         if (
             branch + "/" + file_path == reference_file
             or not file_path.endswith(".properties")
-            or not os.path.basename(file_path).startswith("messages_")
+            or not basename_current_file.startswith("messages_")
         ):
-            print(
-                f"Datei '{os.path.basename(branch + "/" + file_path)}' wird ignoriert."
-            )
+            print(f"Datei '{basename_current_file}' wird ignoriert.")
             continue
 
-        print(
-            f"Überprüfung der Sprachdatei '{os.path.basename(branch + "/" + file_path)}'..."
-        )
+        print(f"Überprüfung der Sprachdatei '{basename_current_file}'...")
 
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
-            print("Test 1 nicht bestanden!")
-            print(
-                f"Differenz in der Datei: {os.path.basename(branch + "/" + file_path)}"
-            )
+            print(f"{basename_current_file} - Test 1 nicht bestanden! Differenz in der Datei!")
             is_diff = True
             if reference_list_len > current_list_len:
                 print(
@@ -50,8 +44,9 @@ def check_difference(reference_file, file_list, branch):
         else:
             print("Test 1 bestanden")
             for item in current_list:
-                print(item)
-
+                if not item.startswith("#") and item != "" and "=" in item:
+                    key, value = item.split("=", 1)
+                    print(key)
 
     if is_diff:
         print("Check fail")
