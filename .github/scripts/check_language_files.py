@@ -8,8 +8,7 @@ def read_properties(file_path):
 
 
 def check_difference(reference_file, file_list, branch):
-    print(reference_file)
-    print(file_list)
+    print("Prüfung mit der Datei: {} - Überprüft wird der Branch: {}", reference_file, branch)
     reference_list = read_properties(reference_file)
     is_diff = False
 
@@ -17,9 +16,12 @@ def check_difference(reference_file, file_list, branch):
         if (
             branch + "/" + file_path == reference_file
             or not file_path.endswith(".properties")
-            or not os.path.basename(branch + "/" + file_path).startswith("messages_")
+            or not os.path.basename(file_path).startswith("messages_")
         ):
+            print("Datei '{}' wird ignoriert.", os.path.basename(branch + "/" + file_path))
             continue
+
+        print("Überprüfung der Sprachdatei '{}'...", os.path.basename(branch + "/" + file_path))
 
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
@@ -41,7 +43,6 @@ def check_difference(reference_file, file_list, branch):
 
     if is_diff:
         print("Check fail")
-        print(reference_list)
         exit(1)
     print("Check success")
 
