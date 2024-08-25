@@ -7,7 +7,6 @@ on:
     paths:
       - "src/main/resources/messages_*.properties"
 
-
 jobs:
   check-files:
     runs-on: ubuntu-latest
