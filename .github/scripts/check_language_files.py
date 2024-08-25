@@ -70,6 +70,7 @@ def check_difference(reference_file, file_list, branch):
 
     if is_diff:
         report.append("Check fail")
+        print("\n".join(report))
         exit(1)
     print("Check success")
 
