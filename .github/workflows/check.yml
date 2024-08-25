@@ -78,6 +78,7 @@ jobs:
             echo "ERROR_OUTPUT<<EOF" >> $GITHUB_ENV
             echo "$ERROR_OUTPUT" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
+            echo $ERROR_OUTPUT
           fi
 
       - name: Post comment on PR
