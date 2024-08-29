@@ -104,7 +104,7 @@ jobs:
 
       - name: add translation keys
         run: |
-          git add src/main/resources/*
+          git add ${{ env.BRANCH_PATH }}/src/main/resources/*
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
 
       - name: Create Pull Request
