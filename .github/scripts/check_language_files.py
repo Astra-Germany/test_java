@@ -76,7 +76,7 @@ def write_json_file(file_path, updated_current_json):
 
 def push_difference_keys(reference_file, file_list, branch=""):
     reference_json = parse_properties_file(reference_file)
-
+    print(f"BRANCH {branch}")
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + file_path)
         if (
