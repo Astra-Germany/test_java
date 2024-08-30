@@ -223,6 +223,6 @@ if __name__ == "__main__":
 
     file_list = args.files
     print(file_list)
-    if (len(file_list) < 1):
+    if file_list is None:
         file_list = glob.glob(os.getcwd() + "/src/**/messages_*.properties", recursive=True)
     check_difference(args.reference_file, file_list, args.branch)
