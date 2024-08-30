@@ -85,6 +85,7 @@ def push_difference_keys(reference_file, file_list, branch=""):
         ):
             continue
         print(f"BRANCH {branch}")
+        print(f"reference_file {reference_file}")
         print(f"basename_current_file {basename_current_file}")
         print(f"file_path {file_path}")
 
