@@ -99,6 +99,7 @@ def push_difference_keys(reference_file, file_list, branch=""):
                     if reference["key"] == current["key"]:
                         reference["value"] = current["value"]
             ref_json.append(reference)
+            print(reference)
         write_json_file(branch + file_path, ref_json)
 
 
