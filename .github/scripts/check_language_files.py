@@ -1,3 +1,4 @@
+import glob
 import os
 import argparse
 import re
@@ -222,5 +223,6 @@ if __name__ == "__main__":
 
     file_list = args.files
     print(file_list)
-    # file_paths = glob.glob(os.getcwd() + "/src/**/messages_*.properties", recursive=True)
+    if (len(file_list) < 1):
+        file_list = glob.glob(os.getcwd() + "/src/**/messages_*.properties", recursive=True)
     check_difference(args.reference_file, file_list, args.branch)

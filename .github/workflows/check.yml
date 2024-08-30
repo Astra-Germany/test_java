@@ -133,7 +133,7 @@ jobs:
         if: github.event_name == 'push'
         id: run-check
         run: |
-          python .github/scripts/check_language_files.py --reference-file src/main/resources/messages_en_GB.properties --branch main --files
+          python .github/scripts/check_language_files.py --reference-file src/main/resources/messages_en_GB.properties --branch main
 
       - name: Set up git config
         if: github.event_name == 'push'
