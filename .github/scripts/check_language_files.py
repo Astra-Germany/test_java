@@ -215,10 +215,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--files",
         nargs="+",
-        required=True,
+        required=False,
         help="List of changed files, separated by spaces.",
     )
     args = parser.parse_args()
 
     file_list = args.files
+    print(file_list)
+    # file_paths = glob.glob(os.getcwd() + "/src/**/messages_*.properties", recursive=True)
     check_difference(args.reference_file, file_list, args.branch)
