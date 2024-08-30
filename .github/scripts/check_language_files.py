@@ -78,15 +78,15 @@ def push_difference_keys(reference_file, file_list, branch=""):
     reference_json = parse_properties_file(reference_file)
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + file_path)
-        print(f"BRANCH {branch}")
-        print(f"basename_current_file {basename_current_file}")
-        print(f"file_path {file_path}")
         if (
             branch + file_path == reference_file
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
             continue
+        print(f"BRANCH {branch}")
+        print(f"basename_current_file {basename_current_file}")
+        print(f"file_path {file_path}")
 
         current_json = parse_properties_file(branch + file_path)
         ref_json = []
