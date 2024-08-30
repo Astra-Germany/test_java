@@ -76,9 +76,11 @@ def write_json_file(file_path, updated_current_json):
 
 def push_difference_keys(reference_file, file_list, branch=""):
     reference_json = parse_properties_file(reference_file)
-    print(f"BRANCH {branch}")
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + file_path)
+        print(f"BRANCH {branch}")
+        print(f"basename_current_file {basename_current_file}")
+        print(f"file_path {file_path}")
         if (
             branch + file_path == reference_file
             or not file_path.endswith(".properties")
@@ -248,7 +250,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     file_list = args.files
-    print(file_list)
     if file_list is None:
         file_list = glob.glob(
             os.getcwd() + "/src/**/messages_*.properties", recursive=True
