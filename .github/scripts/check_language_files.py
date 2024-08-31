@@ -211,7 +211,7 @@ def check_for_differences(reference_file, file_list, branch):
         report.append("---")
         report.append("")
     update_file_list = glob.glob(branch + "/src/**/messages_*.properties", recursive=True)
-    update_missing_keys(reference_file, update_file_list, branch + "/")
+    update_missing_keys(reference_file, update_file_list)
     # report.append("---")
     # report.append("")
     if has_differences:
