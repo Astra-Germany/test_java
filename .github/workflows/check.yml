@@ -136,8 +136,8 @@ jobs:
 
       - name: Set up git config
         run: |
-          git config --global user.email "GitHub Action <action@github.com>"
-          git config --global user.name "GitHub Action <action@github.com>"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
 
       - name: Add translation keys
         run: |
@@ -170,8 +170,8 @@ jobs:
 
       - name: Set up git config
         run: |
-          git config --global user.email "GitHub Action <action@github.com>"
-          git config --global user.name "GitHub Action <action@github.com>"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
 
       - name: Add translation keys
         run: |
