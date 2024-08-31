@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - "src/main/resources/messages_en_GB.properties"
+      - "pr-branch/src/main/resources/messages_*.properties"
 
 permissions:
   contents: write
