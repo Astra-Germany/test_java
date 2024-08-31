@@ -251,3 +251,4 @@ if __name__ == "__main__":
         update_missing_keys(args.reference_file, file_list)
     else:
         check_for_differences(args.reference_file, file_list, args.branch)
+        update_missing_keys(args.reference_file, file_list)
