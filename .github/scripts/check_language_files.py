@@ -130,7 +130,7 @@ def check_for_differences(reference_file, file_list, branch):
 
     report = []
     report.append(
-        f"#### 📋 Checking with the file `{basename_reference_file}` from the `{reference_branch}` - Checking the `{branch}`"
+        f"### 📋 Checking with the file `{basename_reference_file}` from the `{reference_branch}` - Checking the `{branch}`"
     )
     reference_lines = read_properties(reference_file)
     has_differences = False
@@ -146,7 +146,7 @@ def check_for_differences(reference_file, file_list, branch):
         ):
             continue
         only_reference_file = False
-        report.append(f"🗂️ **Checking File:** `{basename_current_file}`...")
+        report.append(f"#### 🗂️ **Checking File:** `{basename_current_file}`...")
         current_lines = read_properties(branch + "/" + file_path)
         reference_line_count = len(reference_lines)
         current_line_count = len(current_lines)
