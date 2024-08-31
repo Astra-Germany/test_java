@@ -205,7 +205,7 @@ def check_for_differences(reference_file, file_list, branch):
             report.append("")
             report.append(f"#### ***{basename_current_file}*** will be corrected...")
             report.append("")
-            update_missing_keys(reference_file, [file_path], branch)
+            update_missing_keys(reference_file, [file_path], branch + "/")
         else:
             report.append("- ✅ Test 2 passed")
         report.append("")
