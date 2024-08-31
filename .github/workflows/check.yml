@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch
-        if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
@@ -27,7 +26,6 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout main branch
-        if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v4
         with:
           ref: main
@@ -35,17 +33,14 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python
-        if: github.event_name == 'pull_request_target'
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
       - name: Install GitHub CLI
-        if: github.event_name == 'pull_request_target'
         run: sudo apt-get update && sudo apt-get install -y gh
 
       - name: Fetch PR changed files
-        if: github.event_name == 'pull_request_target'
         id: fetch-pr-changes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +58,6 @@ jobs:
           echo "Branch: ${BRANCH_PATH}"
 
       - name: Determine reference file
-        if: github.event_name == 'pull_request_target'
         id: determine-file
         run: |
           echo "Determining reference file..."
@@ -75,17 +69,14 @@ jobs:
           echo "REFERENCE_FILE=${{ env.REFERENCE_FILE }}"
 
       - name: Show REFERENCE_FILE
-        if: github.event_name == 'pull_request_target'
         run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
       - name: Run Python script to check files
-        if: github.event_name == 'pull_request_target'
         id: run-check
         run: |
           python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }} > failure.txt || true
 
       - name: Capture output
-        if: github.event_name == 'pull_request_target'
         id: capture-output
         run: |
           if [ -f failure.txt ] && [ -s failure.txt ]; then
@@ -101,7 +92,7 @@ jobs:
           fi
 
       - name: Post comment on PR
-        if: github.event_name == 'pull_request_target' && env.ERROR_OUTPUT != ''
+        if: env.ERROR_OUTPUT != ''
         uses: actions/github-script@v7
         with:
           script: |
@@ -116,20 +107,18 @@ jobs:
             });
 
       - name: Set up git config
-        if: github.event_name == 'pull_request_target'
         run: |
           git config --global user.email "GitHub Action <action@github.com>"
           git config --global user.name "GitHub Action <action@github.com>"
 
       - name: Add translation keys
-        if: github.event_name == 'pull_request_target'
         run: |
           cd ${{ env.BRANCH_PATH }}
           git add src/main/resources/messages_*.properties
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
           git commit -m "Update translation files" || echo "No changes to commit"
       - name: Push
-        if: github.event_name == 'pull_request_target' && env.CHANGES_DETECTED == 'true'
+        if: env.CHANGES_DETECTED == 'true'
         run: |
           cd pr-branch
           git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
@@ -139,36 +128,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        if: github.event_name == 'push'
         uses: actions/checkout@v4
 
       - name: Set up Python
-        if: github.event_name == 'push'
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
       - name: Run Python script to check files
-        if: github.event_name == 'push'
         id: run-check
         run: |
           python .github/scripts/check_language_files.py --reference-file src/main/resources/messages_en_GB.properties --branch main
 
       - name: Set up git config
-        if: github.event_name == 'push'
         run: |
           git config --global user.email "GitHub Action <action@github.com>"
           git config --global user.name "GitHub Action <action@github.com>"
 
       - name: Add translation keys
-        if: github.event_name == 'push'
         run: |
           git add src/main/resources/messages_*.properties
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
 
       - name: Create Pull Request
         id: cpr
-        if: env.CHANGES_DETECTED == 'true' && github.event_name == 'push'
+        if: env.CHANGES_DETECTED == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -5,33 +5,37 @@ import re
 
 
 def parse_properties_file(file_path):
-    """Parst eine .properties-Datei und gibt eine Liste von Objekten (mit Kommentaren, leeren Zeilen und Zeilennummern) zurück."""
+    """Parses a .properties file and returns a list of objects (including comments, empty lines, and line numbers)."""
     properties_list = []
     with open(file_path, "r", encoding="utf-8") as file:
         for line_number, line in enumerate(file, start=1):
             stripped_line = line.strip()
 
-            # Leere Zeilen
+            # Empty lines
             if not stripped_line:
                 properties_list.append(
-                    {"line": line_number, "type": "empty", "content": ""}
+                    {"line_number": line_number, "type": "empty", "content": ""}
                 )
                 continue
 
-            # Kommentare
+            # Comments
             if stripped_line.startswith("#"):
                 properties_list.append(
-                    {"line": line_number, "type": "comment", "content": stripped_line}
+                    {
+                        "line_number": line_number,
+                        "type": "comment",
+                        "content": stripped_line,
+                    }
                 )
                 continue
 
-            # Schlüssel-Wert-Paare
+            # Key-value pairs
             match = re.match(r"^([^=]+)=(.*)$", line)
             if match:
                 key, value = match.groups()
                 properties_list.append(
                     {
-                        "line": line_number,
+                        "line_number": line_number,
                         "type": "entry",
                         "key": key.strip(),
                         "value": value.strip(),
@@ -41,10 +45,10 @@ def parse_properties_file(file_path):
     return properties_list
 
 
-def write_json_file(file_path, updated_current_json):
-    updated_lines = {entry["line"]: entry for entry in updated_current_json}
+def write_json_file(file_path, updated_properties):
+    updated_lines = {entry["line_number"]: entry for entry in updated_properties}
 
-    # Sortiere nach Zeilennummern und behalte Kommentare und leere Zeilen bei
+    # Sort by line numbers and retain comments and empty lines
     all_lines = sorted(set(updated_lines.keys()))
 
     original_format = []
@@ -57,26 +61,26 @@ def write_json_file(file_path, updated_current_json):
         if ref_entry["type"] in ["comment", "empty"]:
             original_format.append(ref_entry)
         elif entry is None:
-            # Füge fehlende Einträge aus der Referenzdatei hinzu
+            # Add missing entries from the reference file
             original_format.append(ref_entry)
         elif entry["type"] == "entry":
-            # Ersetze Einträge mit denen aus der aktuellen JSON
+            # Replace entries with those from the current JSON
             original_format.append(entry)
 
-    # Schreibe ins ursprüngliche Format zurück
-    with open(file_path, "w", encoding="utf-8") as f:
-        print("schreibe")
+    # Write back in the original format
+    with open(file_path, "w", encoding="utf-8") as file:
+        print("Writing")
         for entry in original_format:
             if entry["type"] == "comment":
-                f.write(f"{entry['content']}\n")
+                file.write(f"{entry['content']}\n")
             elif entry["type"] == "empty":
-                f.write(f"{entry['content']}\n")
+                file.write(f"{entry['content']}\n")
             elif entry["type"] == "entry":
-                f.write(f"{entry['key']}={entry['value']}\n")
+                file.write(f"{entry['key']}={entry['value']}\n")
 
 
-def push_difference_keys(reference_file, file_list, branch=""):
-    reference_json = parse_properties_file(reference_file)
+def update_missing_keys(reference_file, file_list, branch=""):
+    reference_properties = parse_properties_file(reference_file)
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + file_path)
         if (
@@ -86,21 +90,21 @@ def push_difference_keys(reference_file, file_list, branch=""):
         ):
             continue
 
-        current_json = parse_properties_file(branch + file_path)
-        ref_json = []
-        for reference in reference_json:
-            for current in current_json:
-                if current["type"] == "entry":
-                    if reference["type"] != "entry":
+        current_properties = parse_properties_file(branch + file_path)
+        updated_properties = []
+        for ref_entry in reference_properties:
+            for current_entry in current_properties:
+                if current_entry["type"] == "entry":
+                    if ref_entry["type"] != "entry":
                         continue
-                    if reference["key"] == current["key"]:
-                        reference["value"] = current["value"]
-            ref_json.append(reference)
-        write_json_file(branch + file_path, ref_json)
+                    if ref_entry["key"] == current_entry["key"]:
+                        ref_entry["value"] = current_entry["value"]
+            updated_properties.append(ref_entry)
+        write_json_file(branch + file_path, updated_properties)
 
 
-def check_difference_keys(reference_file, file_list, branch):
-    push_difference_keys(reference_file, file_list, branch + "/")
+def check_for_missing_keys(reference_file, file_list, branch):
+    update_missing_keys(reference_file, file_list, branch + "/")
 
 
 def read_properties(file_path):
@@ -108,7 +112,7 @@ def read_properties(file_path):
         return file.read().splitlines()
 
 
-def check_difference(reference_file, file_list, branch):
+def check_for_differences(reference_file, file_list, branch):
     reference_branch = reference_file.split("/")[0]
     basename_reference_file = os.path.basename(reference_file)
 
@@ -116,10 +120,10 @@ def check_difference(reference_file, file_list, branch):
     report.append(
         f"#### Checking with the file `{basename_reference_file}` from the `{reference_branch}` - Checking the `{branch}`"
     )
-    reference_list = read_properties(reference_file)
-    is_diff = False
+    reference_lines = read_properties(reference_file)
+    has_differences = False
 
-    only_ref_file = True
+    only_reference_file = True
 
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + "/" + file_path)
@@ -128,79 +132,79 @@ def check_difference(reference_file, file_list, branch):
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
-            # report.append(f"File '{basename_current_file}' is ignored.")
             continue
-        only_ref_file = False
+        only_reference_file = False
         report.append(f"Checking the language file `{basename_current_file}`...")
-        current_list = read_properties(branch + "/" + file_path)
-        reference_list_len = len(reference_list)
-        current_list_len = len(current_list)
+        current_lines = read_properties(branch + "/" + file_path)
+        reference_line_count = len(reference_lines)
+        current_line_count = len(current_lines)
 
-        if reference_list_len != current_list_len:
+        if reference_line_count != current_line_count:
             report.append("")
             report.append("- ❌ Test 1 failed! Difference in the file!")
-            is_diff = True
-            if reference_list_len > current_list_len:
+            has_differences = True
+            if reference_line_count > current_line_count:
                 report.append(
-                    f"  - Missing lines! Either comments, empty lines, or translation strings are missing! {reference_list_len}:{current_list_len}"
+                    f"  - Missing lines! Either comments, empty lines, or translation strings are missing! {reference_line_count}:{current_line_count}"
                 )
-            elif reference_list_len < current_list_len:
+            elif reference_line_count < current_line_count:
                 report.append(
-                    f"  - Too many lines! Check your translation files! {reference_list_len}:{current_list_len}"
+                    f"  - Too many lines! Check your translation files! {reference_line_count}:{current_line_count}"
                 )
             report.append("")
-            report.append(f"#### ***{basename_current_file}*** wird korrigiert...")
+            report.append(f"#### ***{basename_current_file}*** will be corrected...")
             report.append("")
-            check_difference_keys(reference_file, [file_path], branch)
+            update_missing_keys(reference_file, [file_path], branch)
         else:
             report.append("- ✅ Test 1 passed")
-        if 1 == 1:
-            current_keys = []
-            reference_keys = []
-            for item in current_list:
-                if not item.startswith("#") and item != "" and "=" in item:
-                    key, _ = item.split("=", 1)
-                    current_keys.append(key)
-            for item in reference_list:
-                if not item.startswith("#") and item != "" and "=" in item:
-                    key, _ = item.split("=", 1)
-                    reference_keys.append(key)
 
-            current_set = set(current_keys)
-            reference_set = set(reference_keys)
-            set_test1 = current_set.difference(reference_set)
-            set_test2 = reference_set.difference(current_set)
-            set_test1_list = list(set_test1)
-            set_test2_list = list(set_test2)
+        # Check for missing or extra keys
+        current_keys = []
+        reference_keys = []
+        for line in current_lines:
+            if not line.startswith("#") and line != "" and "=" in line:
+                key, _ = line.split("=", 1)
+                current_keys.append(key)
+        for line in reference_lines:
+            if not line.startswith("#") and line != "" and "=" in line:
+                key, _ = line.split("=", 1)
+                reference_keys.append(key)
 
-            if len(set_test1_list) > 0 or len(set_test2_list) > 0:
-                is_diff = True
-                set_test1_list = "`, `".join(set_test1_list)
-                set_test2_list = "`, `".join(set_test2_list)
-                report.append("- ❌ Test 2 failed")
-                if len(set_test1_list) > 0:
-                    report.append(
-                        f"  - There are keys in ***{basename_current_file}*** `{set_test1_list}` that are not present in ***{basename_reference_file}***!"
-                    )
-                if len(set_test2_list) > 0:
-                    report.append(
-                        f"  - There are keys in ***{basename_reference_file}*** `{set_test2_list}` that are not present in ***{basename_current_file}***!"
-                    )
-                report.append("")
-                report.append(f"#### ***{basename_current_file}*** wird korrigiert...")
-                report.append("")
-                check_difference_keys(reference_file, [file_path], branch)
-            else:
-                report.append("- ✅ Test 2 passed")
+        current_keys_set = set(current_keys)
+        reference_keys_set = set(reference_keys)
+        missing_keys = current_keys_set.difference(reference_keys_set)
+        extra_keys = reference_keys_set.difference(current_keys_set)
+        missing_keys_list = list(missing_keys)
+        extra_keys_list = list(extra_keys)
+
+        if missing_keys_list or extra_keys_list:
+            has_differences = True
+            missing_keys_str = "`, `".join(missing_keys_list)
+            extra_keys_str = "`, `".join(extra_keys_list)
+            report.append("- ❌ Test 2 failed")
+            if missing_keys_list:
+                report.append(
+                    f"  - There are keys in ***{basename_current_file}*** `{missing_keys_str}` that are not present in ***{basename_reference_file}***!"
+                )
+            if extra_keys_list:
+                report.append(
+                    f"  - There are keys in ***{basename_reference_file}*** `{extra_keys_str}` that are not present in ***{basename_current_file}***!"
+                )
+            report.append("")
+            report.append(f"#### ***{basename_current_file}*** will be corrected...")
+            report.append("")
+            update_missing_keys(reference_file, [file_path], branch)
+        else:
+            report.append("- ✅ Test 2 passed")
         report.append("")
 
     report.append("")
-    if is_diff:
+    if has_differences:
         report.append("## ❌ Check fail")
     else:
         report.append("## ✅ Check success")
 
-    if not only_ref_file:
+    if not only_reference_file:
         print("\n".join(report))
 
 
@@ -230,6 +234,6 @@ if __name__ == "__main__":
         file_list = glob.glob(
             os.getcwd() + "/src/**/messages_*.properties", recursive=True
         )
-        push_difference_keys(args.reference_file, file_list)
+        update_missing_keys(args.reference_file, file_list)
     else:
-        check_difference(args.reference_file, file_list, args.branch)
+        check_for_differences(args.reference_file, file_list, args.branch)
