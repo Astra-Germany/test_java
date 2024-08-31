@@ -82,7 +82,6 @@ def write_json_file(file_path, updated_properties):
 
     # Write back in the original format
     with open(file_path, "w", encoding="utf-8") as file:
-        print("Writing")
         for entry in original_format:
             if entry["type"] == "comment":
                 file.write(f"{entry['content']}\n")
