@@ -206,11 +206,11 @@ def check_for_differences(reference_file, file_list, branch):
             report.append("")
             report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
             report.append("")
-            report.append("---")
+        report.append("---")
         report.append("")
 
-    report.append("---")
-    report.append("")
+    # report.append("---")
+    # report.append("")
     if has_differences:
         report.append("## ❌ Overall Check Status: **_Failed_**")
     else:
