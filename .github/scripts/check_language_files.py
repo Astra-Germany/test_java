@@ -142,7 +142,7 @@ def check_for_differences(reference_file, file_list, branch):
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + "/" + file_path)
         if (
-            branch + "/" + file_path == reference_file
+            basename_current_file == basename_reference_file
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
