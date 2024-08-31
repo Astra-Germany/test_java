@@ -11,6 +11,7 @@ adjusting the format.
 Usage:
     python script_name.py --reference-file <path_to_reference_file> --branch <branch_name> [--files <list_of_changed_files>]
 """
+import copy
 import glob
 import os
 import argparse
@@ -96,7 +97,7 @@ def update_missing_keys(reference_file, file_list, branch=""):
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + file_path)
         if (
-            branch + file_path == reference_file
+            basename_current_file == os.path.basename(reference_file)
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
@@ -105,13 +106,14 @@ def update_missing_keys(reference_file, file_list, branch=""):
         current_properties = parse_properties_file(branch + file_path)
         updated_properties = []
         for ref_entry in reference_properties:
+            ref_entry_copy = copy.deepcopy(ref_entry)
             for current_entry in current_properties:
                 if current_entry["type"] == "entry":
-                    if ref_entry["type"] != "entry":
+                    if ref_entry_copy["type"] != "entry":
                         continue
-                    if ref_entry["key"] == current_entry["key"]:
-                        ref_entry["value"] = current_entry["value"]
-            updated_properties.append(ref_entry)
+                    if ref_entry_copy["key"] == current_entry["key"]:
+                        ref_entry_copy["value"] = current_entry["value"]
+            updated_properties.append(ref_entry_copy)
         write_json_file(branch + file_path, updated_properties)
 
 
