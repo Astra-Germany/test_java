@@ -163,9 +163,6 @@ def check_for_differences(reference_file, file_list, branch):
                 report.append(
                     f"  - **Issue:** Too many lines! Check your translation files! Details: {reference_line_count} (reference) vs {current_line_count} (current)."
                 )
-            # report.append("")
-            # report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
-            # report.append("")
             update_missing_keys(reference_file, [file_path], branch + "/")
         else:
             report.append("- Test 1 Status: ✅ Passed")
@@ -202,9 +199,6 @@ def check_for_differences(reference_file, file_list, branch):
                 report.append(
                     f"  - **Issue:** There are keys in ***{basename_reference_file}*** `{extra_keys_str}` that are not present in ***{basename_current_file}***!"
                 )
-            # report.append("")
-            # report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
-            # report.append("")
             update_missing_keys(reference_file, [file_path], branch + "/")
         else:
             report.append("- Test 2 Status: ✅ Passed")
@@ -212,6 +206,7 @@ def check_for_differences(reference_file, file_list, branch):
             report.append("")
             report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
             report.append("")
+            report.append("---")
         report.append("")
 
     report.append("---")
