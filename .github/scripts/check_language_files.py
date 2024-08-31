@@ -1,3 +1,16 @@
+"""
+Author: Ludy87
+Description: This script processes .properties files for localization checks. It compares translation files in a branch with
+a reference file to ensure consistency. The script performs two main checks:
+1. Verifies that the number of lines (including comments and empty lines) in the translation files matches the reference file.
+2. Ensures that all keys in the translation files are present in the reference file and vice versa.
+
+The script also provides functionality to update the translation files to match the reference file by adding missing keys and
+adjusting the format.
+
+Usage:
+    python script_name.py --reference-file <path_to_reference_file> --branch <branch_name> [--files <list_of_changed_files>]
+"""
 import glob
 import os
 import argparse
