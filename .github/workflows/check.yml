@@ -144,7 +144,7 @@ jobs:
           cd ${{ env.BRANCH_PATH }}
           git add src/main/resources/messages_*.properties
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
-          git commit -m "Update translation files `${{ env.CHANGED_FILES }}`" || echo "No changes to commit"
+          git commit -m "Update translation files" || echo "No changes to commit"
       - name: Push
         if: env.CHANGES_DETECTED == 'true'
         run: |
