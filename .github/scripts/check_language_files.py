@@ -146,14 +146,14 @@ def check_for_differences(reference_file, file_list, branch):
         ):
             continue
         only_reference_file = False
-        report.append(f"🗂️ Checking File: `{basename_current_file}`...")
+        report.append(f"🗂️ **Checking File:** `{basename_current_file}`...")
         current_lines = read_properties(branch + "/" + file_path)
         reference_line_count = len(reference_lines)
         current_line_count = len(current_lines)
 
         if reference_line_count != current_line_count:
             report.append("")
-            report.append("- Test 1 Status: ❌ Failed")
+            report.append("- **Test 1 Status:** ❌ Failed")
             has_differences = True
             if reference_line_count > current_line_count:
                 report.append(
@@ -165,7 +165,7 @@ def check_for_differences(reference_file, file_list, branch):
                 )
             update_missing_keys(reference_file, [file_path], branch + "/")
         else:
-            report.append("- Test 1 Status: ✅ Passed")
+            report.append("- **Test 1 Status:** ✅ Passed")
 
         # Check for missing or extra keys
         current_keys = []
@@ -190,7 +190,7 @@ def check_for_differences(reference_file, file_list, branch):
             has_differences = True
             missing_keys_str = "`, `".join(missing_keys_list)
             extra_keys_str = "`, `".join(extra_keys_list)
-            report.append("- Test 2 Status: ❌ Failed")
+            report.append("- **Test 2 Status:** ❌ Failed")
             if missing_keys_list:
                 report.append(
                     f"  - **Issue:** There are keys in ***{basename_current_file}*** `{missing_keys_str}` that are not present in ***{basename_reference_file}***!"
@@ -201,7 +201,7 @@ def check_for_differences(reference_file, file_list, branch):
                 )
             update_missing_keys(reference_file, [file_path], branch + "/")
         else:
-            report.append("- Test 2 Status: ✅ Passed")
+            report.append("- **Test 2 Status:** ✅ Passed")
         if has_differences:
             report.append("")
             report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
@@ -212,9 +212,9 @@ def check_for_differences(reference_file, file_list, branch):
     report.append("---")
     report.append("")
     if has_differences:
-        report.append("## ❌ Overall Check Status: Failed")
+        report.append("## ❌ Overall Check Status: **_Failed_**")
     else:
-        report.append("## ✅ Overall Check Status: Success")
+        report.append("## ✅ Overall Check Status: **_Success_**")
 
     if not only_reference_file:
         print("\n".join(report))
